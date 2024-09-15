@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameLogicManager : MonoBehaviour
 {
     public static GameLogicManager Instance;
-    public float gameState {get; set;}
+    private int timer = 3000;
 
     void Awake()
     {
@@ -17,17 +16,14 @@ public class GameLogicManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        LoadGameState();
     }
 
     void Update()
     {
-        //
-    }
-
-    private void LoadGameState()
-    {
-        //
+        timer -= 1;
+        if(timer == 0)
+        {
+            SceneManager.LoadScene("MenuScene");
+        }
     }
 }
