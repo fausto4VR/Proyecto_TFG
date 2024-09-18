@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class PlayerLogicManager : MonoBehaviour
 {
+    public Sprite playerImage;
+    public string playerName = "Player";
+
     void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.G))
+    { 
+        /*if(Input.GetKeyDown(KeyCode.G))
         {
             GameStateManager.Instance.SaveData();
         }
@@ -19,6 +22,6 @@ public class PlayerLogicManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             GameStateManager.Instance.ResetData();
-        }
+        }*/
     }
 }
