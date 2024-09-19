@@ -10,6 +10,7 @@ public class GameStateManager : MonoBehaviour
     private string firstClue = "";
     private string secondClue = "";
     private string thirdClue = "";
+    private int storyPhase;
     
     void Awake()
     {
@@ -33,7 +34,8 @@ public class GameStateManager : MonoBehaviour
         firstClue = GameLogicManager.Instance.firstClue;
         secondClue = GameLogicManager.Instance.secondClue;
         thirdClue = GameLogicManager.Instance.thirdClue;
-        SaveManager.SaveGameData(sceneName, guilty, firstClue, secondClue, thirdClue);
+        storyPhase = GameLogicManager.Instance.storyPhase;
+        SaveManager.SaveGameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase);
 
         Debug.Log("Datos guardados");
     }
@@ -45,6 +47,7 @@ public class GameStateManager : MonoBehaviour
         GameLogicManager.Instance.firstClue = gameData.gameFirstClue;
         GameLogicManager.Instance.secondClue = gameData.gameSecondClue;
         GameLogicManager.Instance.thirdClue = gameData.gameThirdClue;
+        GameLogicManager.Instance.storyPhase = gameData.gameStoryPhase;
         SceneManager.LoadScene(gameData.gameScene);
 
         // Evento que se dispara cuando la escena está cargada

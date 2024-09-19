@@ -1,16 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MultipleChoiceScript : MonoBehaviour
+public class MultipleChoiceDialogueScript : MonoBehaviour
 {
+
     [SerializeField, TextArea(4,5)] private string[] firstDialogueLines;
-    [SerializeField] private string[] firstChracterNameLines;
+    [SerializeField] private string[] firstCharacterNameLines;
     [SerializeField, TextArea(4,5)] private string[] secondDialogueLines;
-    [SerializeField] private string[] secondChracterNameLines;
+    [SerializeField] private string[] secondCharacterNameLines;
     [SerializeField, TextArea(4,5)] private string[] thirdDialogueLines;
-    [SerializeField] private string[] thirdChracterNameLines;
+    [SerializeField] private string[] thirdCharacterNameLines;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject thirdOptionKey;
     [SerializeField] private GameObject thirdOptionButton;
@@ -20,6 +18,7 @@ public class MultipleChoiceScript : MonoBehaviour
     public GameObject choicePanel;
     public bool didDialogueStart;
     public bool didConversationStart;
+    
     private bool isDialogueUnlock;
 
     void Update()
@@ -52,21 +51,21 @@ public class MultipleChoiceScript : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
             {
                 GetComponent<DialogueScript>().dialogueLines = firstDialogueLines;
-                GetComponent<DialogueScript>().chracterNameLines = firstChracterNameLines;
+                GetComponent<DialogueScript>().characterNameLines = firstCharacterNameLines;
                 GoToConversation();
             }
 
             if(Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
             {
                 GetComponent<DialogueScript>().dialogueLines = secondDialogueLines;
-                GetComponent<DialogueScript>().chracterNameLines = secondChracterNameLines;
+                GetComponent<DialogueScript>().characterNameLines = secondCharacterNameLines;
                 GoToConversation();
             }
 
             if(Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3) && isDialogueUnlock)
             {
                 GetComponent<DialogueScript>().dialogueLines = thirdDialogueLines;
-                GetComponent<DialogueScript>().chracterNameLines = thirdChracterNameLines;
+                GetComponent<DialogueScript>().characterNameLines = thirdCharacterNameLines;
                 GoToConversation();
             }
         }
@@ -98,6 +97,7 @@ public class MultipleChoiceScript : MonoBehaviour
     private void StartDialogue()
     {
         player.GetComponent<PlayerMovement>().isPlayerTalking = true;
+        choicePanel.SetActive(true);
         dialoguePanel.SetActive(true);
         didDialogueStart = true;
         didConversationStart = false;
@@ -106,6 +106,7 @@ public class MultipleChoiceScript : MonoBehaviour
     private void EndDialogue()
     {
         player.GetComponent<PlayerMovement>().isPlayerTalking = false;
+        choicePanel.SetActive(false);
         dialoguePanel.SetActive(false);
         didDialogueStart = false;
     }

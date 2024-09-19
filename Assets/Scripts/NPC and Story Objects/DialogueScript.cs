@@ -7,7 +7,7 @@ public class DialogueScript : MonoBehaviour
 {
     [SerializeField] private GameObject dialogueMark;
     [SerializeField] private TMP_Text dialogueText;
-    [SerializeField] private TMP_Text chracterNameText;
+    [SerializeField] private TMP_Text characterNameText;
     [SerializeField] private GameObject player;
     [SerializeField] private Image profileImage;
     [SerializeField] private Sprite characterImage;
@@ -15,33 +15,67 @@ public class DialogueScript : MonoBehaviour
 
     public GameObject conversationPanel;
     public string[] dialogueLines;
-    public string[] chracterNameLines;
+    public string[] characterNameLines;
 
     public bool isPlayerInRange;
     public bool didConversationStart;
     private int lineIndex;
+    private MultipleChoiceDialogueScript multipleChoiceDialogueScript;
+    private StoryPhaseDialogueScript storyPhaseDialogueScript;
+
+    void Start()
+    {
+        multipleChoiceDialogueScript = GetComponent<MultipleChoiceDialogueScript>();
+        storyPhaseDialogueScript = GetComponent<StoryPhaseDialogueScript>();
+    }
 
     void Update()
     {
-        if(isPlayerInRange == true && GetComponent<MultipleChoiceScript>().didDialogueStart == true && !didConversationStart
-            && GetComponent<MultipleChoiceScript>().didConversationStart)
+        if(multipleChoiceDialogueScript != null)
         {
-            StartDialogue();
+            if(isPlayerInRange == true && multipleChoiceDialogueScript.didDialogueStart == true && !didConversationStart
+                && multipleChoiceDialogueScript.didConversationStart)
+            {
+                StartDialogue();
+            }
+
+            if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.Space) && multipleChoiceDialogueScript.didDialogueStart == true
+                && didConversationStart) 
+            {
+                if(dialogueText.text == dialogueLines[lineIndex])
+                {
+                    NextDialogueLine();
+                }
+                else
+                {
+                    StopAllCoroutines();
+                    characterNameText.text = characterNameLines[lineIndex];
+                    SelectProfileImage();
+                    dialogueText.text = dialogueLines[lineIndex];
+                }
+            }
         }
 
-        if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.Space) && GetComponent<MultipleChoiceScript>().didDialogueStart == true
-            && didConversationStart) 
+        if(storyPhaseDialogueScript != null)
         {
-            if(dialogueText.text == dialogueLines[lineIndex])
+            if(isPlayerInRange == true && !didConversationStart && storyPhaseDialogueScript.didConversationStart)
             {
-                NextDialogueLine();
+                StartDialogue();
             }
-            else
+
+            if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.Space) && didConversationStart) 
             {
-                StopAllCoroutines();
-                chracterNameText.text = chracterNameLines[lineIndex];
-                SelectProfileImage();
-                dialogueText.text = dialogueLines[lineIndex];
+                if(dialogueText.text == dialogueLines[lineIndex])
+                {
+                    NextDialogueLine();
+                }
+                else
+                {
+                    StopAllCoroutines();
+                    characterNameText.text = characterNameLines[lineIndex];
+                    SelectProfileImage();
+                    dialogueText.text = dialogueLines[lineIndex];
+                }
             }
         }
     }
@@ -49,11 +83,16 @@ public class DialogueScript : MonoBehaviour
     private void StartDialogue()
     {
         didConversationStart = true;
-        GetComponent<MultipleChoiceScript>().choicePanel.SetActive(false);
+
+        if(multipleChoiceDialogueScript != null)
+        {
+            multipleChoiceDialogueScript.choicePanel.SetActive(false);
+        }
+
         conversationPanel.SetActive(true);
         dialogueMark.SetActive(false);
         lineIndex = 0;
-        chracterNameText.text = chracterNameLines[lineIndex];
+        characterNameText.text = characterNameLines[lineIndex];
         SelectProfileImage();
         StartCoroutine(ShowLine());
     }
@@ -64,7 +103,7 @@ public class DialogueScript : MonoBehaviour
 
         if(lineIndex < dialogueLines.Length)
         {
-            chracterNameText.text = chracterNameLines[lineIndex];
+            characterNameText.text = characterNameLines[lineIndex];
             SelectProfileImage();
             StartCoroutine(ShowLine());
         }
@@ -72,9 +111,18 @@ public class DialogueScript : MonoBehaviour
         {
             didConversationStart = false;
             conversationPanel.SetActive(false);
-            GetComponent<MultipleChoiceScript>().choicePanel.SetActive(true);
-            GetComponent<MultipleChoiceScript>().dialoguePanel.SetActive(false);
-            GetComponent<MultipleChoiceScript>().didDialogueStart = false;
+
+            if(multipleChoiceDialogueScript != null)
+            {
+                multipleChoiceDialogueScript.dialoguePanel.SetActive(false);
+                multipleChoiceDialogueScript.didDialogueStart = false;
+            }
+            if(storyPhaseDialogueScript != null)
+            {
+                storyPhaseDialogueScript.dialoguePanel.SetActive(false);
+                storyPhaseDialogueScript.didConversationStart = false;
+            }
+
             dialogueMark.SetActive(true);
             player.GetComponent<PlayerMovement>().isPlayerTalking = false;
         }
@@ -82,7 +130,7 @@ public class DialogueScript : MonoBehaviour
 
     private void SelectProfileImage()
     {
-        if(player.GetComponent<PlayerLogicManager>().playerName == chracterNameLines[lineIndex])
+        if(player.GetComponent<PlayerLogicManager>().playerName == characterNameLines[lineIndex])
         {
             profileImage.sprite = player.GetComponent<PlayerLogicManager>().playerImage;
         }

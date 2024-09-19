@@ -6,9 +6,11 @@ public class GameLogicManager : MonoBehaviour
     public static GameLogicManager Instance;
     public List<string> guiltyNames = new List<string> { "guilty1", "guilty2", "guilty3", "guilty4", "guilty5", "guilty6", "guilty7", "guilty8" };
     public string guilty;
-    public string firstClue = "";
-    public string secondClue = "";
-    public string thirdClue = "";
+    public string firstClue;
+    public string secondClue;
+    public string thirdClue;
+    public int storyPhase;
+    private GameData gameData;
 
     void Awake()
     {
@@ -24,16 +26,16 @@ public class GameLogicManager : MonoBehaviour
 
     void Start()
     {
-        FoundGuilty();
-        FoundClues();
-        GameStateManager.Instance.SaveData();            
+        gameData = SaveManager.LoadGameData();
+        FoundGuilty(gameData);
+        FoundClues(gameData);
+        FoundGamePhase(gameData);
+        GameStateManager.Instance.SaveData();     
     }
 
-    private void FoundGuilty()
+    private void FoundGuilty(GameData gameData)
     {
-        GameData gameData = SaveManager.LoadGameData();
-        
-        if(gameData.gameGuilty == "" || gameData.gameGuilty == null)
+        if(string.IsNullOrEmpty(gameData.gameGuilty))
         {
             int randomIndex = Random.Range(0, guiltyNames.Count);
             guilty = guiltyNames[randomIndex];
@@ -44,10 +46,8 @@ public class GameLogicManager : MonoBehaviour
         }
     }
 
-    private void FoundClues()
+    private void FoundClues(GameData gameData)
     {
-        GameData gameData = SaveManager.LoadGameData();
-
         if(!string.IsNullOrEmpty(gameData.gameFirstClue))
         {
             firstClue = gameData.gameFirstClue;
@@ -61,6 +61,17 @@ public class GameLogicManager : MonoBehaviour
         if(!string.IsNullOrEmpty(gameData.gameThirdClue))
         {
             thirdClue = gameData.gameThirdClue;
+        }
+    }
+    private void FoundGamePhase(GameData gameData)
+    {
+        if(gameData.gameStoryPhase != 0)
+        {
+            storyPhase = gameData.gameStoryPhase;
+        }
+        else
+        {
+            storyPhase = 0;
         }
     }
 }
