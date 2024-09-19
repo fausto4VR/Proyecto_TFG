@@ -6,28 +6,31 @@ using UnityEngine.UI;
 public class DialogueScript : MonoBehaviour
 {
     [SerializeField] private GameObject dialogueMark;
-    [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private TMP_Text chracterNameText;
     [SerializeField] private GameObject player;
     [SerializeField] private Image profileImage;
     [SerializeField] private Sprite characterImage;
-    [SerializeField, TextArea(4,5)] private string[] dialogueLines;
-    [SerializeField] private string[] chracterNameLines;
     [SerializeField]private float typingTime = 0.05f;
 
-    private bool isPlayerInRange;
-    private bool didDialogueStart;
+    public GameObject conversationPanel;
+    public string[] dialogueLines;
+    public string[] chracterNameLines;
+
+    public bool isPlayerInRange;
+    public bool didConversationStart;
     private int lineIndex;
 
     void Update()
     {
-        if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.E) && !didDialogueStart) 
+        if(isPlayerInRange == true && GetComponent<MultipleChoiceScript>().didDialogueStart == true && !didConversationStart
+            && GetComponent<MultipleChoiceScript>().didConversationStart)
         {
             StartDialogue();
         }
 
-        if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.Space) && didDialogueStart) 
+        if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.Space) && GetComponent<MultipleChoiceScript>().didDialogueStart == true
+            && didConversationStart) 
         {
             if(dialogueText.text == dialogueLines[lineIndex])
             {
@@ -45,13 +48,13 @@ public class DialogueScript : MonoBehaviour
 
     private void StartDialogue()
     {
-        didDialogueStart = true;
-        dialoguePanel.SetActive(true);
+        didConversationStart = true;
+        GetComponent<MultipleChoiceScript>().choicePanel.SetActive(false);
+        conversationPanel.SetActive(true);
         dialogueMark.SetActive(false);
         lineIndex = 0;
         chracterNameText.text = chracterNameLines[lineIndex];
         SelectProfileImage();
-        player.GetComponent<PlayerMovement>().isPlayerTalking = true;
         StartCoroutine(ShowLine());
     }
 
@@ -67,8 +70,11 @@ public class DialogueScript : MonoBehaviour
         }
         else
         {
-            didDialogueStart = false;
-            dialoguePanel.SetActive(false);
+            didConversationStart = false;
+            conversationPanel.SetActive(false);
+            GetComponent<MultipleChoiceScript>().choicePanel.SetActive(true);
+            GetComponent<MultipleChoiceScript>().dialoguePanel.SetActive(false);
+            GetComponent<MultipleChoiceScript>().didDialogueStart = false;
             dialogueMark.SetActive(true);
             player.GetComponent<PlayerMovement>().isPlayerTalking = false;
         }
@@ -112,7 +118,7 @@ public class DialogueScript : MonoBehaviour
         {
             dialogueMark.SetActive(false);
             isPlayerInRange = false;
-            didDialogueStart = false;
+            didConversationStart = false;
         }
     }
 }

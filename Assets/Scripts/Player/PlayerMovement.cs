@@ -17,14 +17,20 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         if(!isPlayerTalking)
-        {
+        {  
             float moveX = Input.GetAxisRaw("Horizontal");
             float moveY = Input.GetAxisRaw("Vertical");
-            moveInput = new Vector2(moveX, moveY).normalized;    
+            moveInput = new Vector2(moveX, moveY).normalized;
 
             playerAnimator.SetFloat("Horizontal", moveX);
             playerAnimator.SetFloat("Vertical", moveY);
             playerAnimator.SetFloat("Speed", moveInput.sqrMagnitude);
+        }
+        else
+        {
+            playerAnimator.SetFloat("Horizontal", 0f);
+            playerAnimator.SetFloat("Vertical", 0f);
+            playerAnimator.SetFloat("Speed", 0f);
         }    
     }
 

@@ -48,17 +48,17 @@ public class GameLogicManager : MonoBehaviour
     {
         GameData gameData = SaveManager.LoadGameData();
 
-        if(!(gameData.gameFirstClue == "" || gameData.gameFirstClue == null))
+        if(!string.IsNullOrEmpty(gameData.gameFirstClue))
         {
             firstClue = gameData.gameFirstClue;
         }
 
-        if(!(gameData.gameSecondClue == "" || gameData.gameSecondClue == null))
+        if(!string.IsNullOrEmpty(gameData.gameSecondClue))
         {
             secondClue = gameData.gameSecondClue;
         }
 
-        if(!(gameData.gameThirdClue == "" || gameData.gameThirdClue == null))
+        if(!string.IsNullOrEmpty(gameData.gameThirdClue))
         {
             thirdClue = gameData.gameThirdClue;
         }
