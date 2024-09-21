@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SortingOrderController : MonoBehaviour
+public class SortingOrderManager : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     public int sortingOrderOffset = 0;

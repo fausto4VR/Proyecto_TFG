@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoryPhaseDialogueScript : MonoBehaviour
+public class StoryPhaseDialogue : MonoBehaviour
 {
     [SerializeField, TextArea(4,5)] private string[] defaultDialogueLines;
     [SerializeField] private string[] defaultCharacterNameLines;
@@ -49,13 +49,14 @@ public class StoryPhaseDialogueScript : MonoBehaviour
 
     void Update()
     {
-        if (GetComponent<DialogueScript>().isPlayerInRange)
+        if (GetComponent<DialogueManager>().isPlayerInRange)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
                 dialoguePanel.SetActive(true);
                 didConversationStart = true;
                 storyPhaseIndex = GameLogicManager.Instance.storyPhase;
+                player.GetComponent<PlayerMovement>().isPlayerTalking = true;
 
                 int dialogueIndex = -1;
                 for (int i = 0; i < storyPhasesToUnlockDialogue.Length; i++)
@@ -68,13 +69,13 @@ public class StoryPhaseDialogueScript : MonoBehaviour
 
                 if(dialogueIndex == -1)
                 {
-                    GetComponent<DialogueScript>().dialogueLines = defaultDialogueLines;
-                    GetComponent<DialogueScript>().characterNameLines = defaultCharacterNameLines;
+                    GetComponent<DialogueManager>().dialogueLines = defaultDialogueLines;
+                    GetComponent<DialogueManager>().characterNameLines = defaultCharacterNameLines;
                 }
                 else
                 {
-                    GetComponent<DialogueScript>().dialogueLines = dialogueLinesList[dialogueIndex];
-                    GetComponent<DialogueScript>().characterNameLines = characterNamesList[dialogueIndex];
+                    GetComponent<DialogueManager>().dialogueLines = dialogueLinesList[dialogueIndex];
+                    GetComponent<DialogueManager>().characterNameLines = characterNamesList[dialogueIndex];
                 }                
             }
         }

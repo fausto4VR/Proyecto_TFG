@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Animator playerAnimator;
     public bool isPlayerTalking = false;
+    public bool isPlayerInspecting = false;
 
     void Start()
     {
@@ -16,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if(!isPlayerTalking)
+        if(!isPlayerTalking && !isPlayerInspecting)
         {  
             float moveX = Input.GetAxisRaw("Horizontal");
             float moveY = Input.GetAxisRaw("Vertical");
@@ -36,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!isPlayerTalking)
+        if(!isPlayerTalking && !isPlayerInspecting)
         {
             playerRb.MovePosition(playerRb.position + moveInput * speed * Time.fixedDeltaTime);
         }

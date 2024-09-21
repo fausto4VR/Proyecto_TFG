@@ -10,6 +10,7 @@ public class GameLogicManager : MonoBehaviour
     public string secondClue;
     public string thirdClue;
     public int storyPhase;
+    
     private GameData gameData;
 
     void Awake()
