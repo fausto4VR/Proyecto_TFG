@@ -24,7 +24,6 @@ public class DialogueManager : MonoBehaviour
     private StoryPhaseDialogue storyPhaseDialogue;
     private InspectDialogue inspectDialogue;
     private PlayerLogicManager playerLogicManager;
-
     void Start()
     {
         multipleChoiceDialogue = GetComponent<MultipleChoiceDialogue>();
@@ -57,10 +56,7 @@ public class DialogueManager : MonoBehaviour
                 }
                 else
                 {
-                    StopAllCoroutines();
-                    characterNameText.text = characterNameLines[lineIndex];
-                    SelectProfileImage();
-                    dialogueText.text = dialogueLines[lineIndex];
+                    ShowLineDirectly();
                 }
             }
         }
@@ -80,10 +76,7 @@ public class DialogueManager : MonoBehaviour
                 }
                 else
                 {
-                    StopAllCoroutines();
-                    characterNameText.text = characterNameLines[lineIndex];
-                    SelectProfileImage();
-                    dialogueText.text = dialogueLines[lineIndex];
+                    ShowLineDirectly();
                 }
             }
         }
@@ -104,10 +97,7 @@ public class DialogueManager : MonoBehaviour
                 }
                 else
                 {
-                    StopAllCoroutines();
-                    characterNameText.text = characterNameLines[lineIndex];
-                    SelectProfileImage();
-                    dialogueText.text = dialogueLines[lineIndex];
+                    ShowLineDirectly();
                 }
             }
         }
@@ -129,10 +119,7 @@ public class DialogueManager : MonoBehaviour
                 }
                 else
                 {
-                    StopAllCoroutines();
-                    characterNameText.text = characterNameLines[lineIndex];
-                    SelectProfileImage();
-                    dialogueText.text = dialogueLines[lineIndex];
+                    ShowLineDirectly();
                 }
             }
         }
@@ -199,11 +186,29 @@ public class DialogueManager : MonoBehaviour
                 inspectDialogue.dialoguePanel.SetActive(false);
                 inspectDialogue.didConversationStart = false;
                 player.GetComponent<PlayerLogicManager>().isObjectInspected = false;
+
+                if(inspectDialogue.didObjectAdvanceStory)
+                {
+                    if(GetComponent<AvanceStory>() != null)
+                    {
+                        inspectDialogue.isStoryAdvanced = true;
+                    }
+                    
+                    inspectDialogue.didObjectAdvanceStory = false;
+                }
             }
 
             player.GetComponent<PlayerMovement>().isPlayerTalking = false;
             player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
         }
+    }
+
+    private void ShowLineDirectly()
+    {
+        StopAllCoroutines();
+        characterNameText.text = characterNameLines[lineIndex];
+        SelectProfileImage();
+        dialogueText.text = dialogueLines[lineIndex];
     }
 
     private void SelectCharacterName()

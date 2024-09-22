@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameLogicManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class GameLogicManager : MonoBehaviour
     public string secondClue;
     public string thirdClue;
     public int storyPhase;
+    public string lastPuzzleComplete;
+    public bool[] knownSuspects;
     
     private GameData gameData;
 
@@ -31,7 +34,11 @@ public class GameLogicManager : MonoBehaviour
         FoundGuilty(gameData);
         FoundClues(gameData);
         FoundGamePhase(gameData);
-        GameStateManager.Instance.SaveData();     
+        FoundStatistics(gameData);
+        if(SceneManager.GetActiveScene().name == "SampleScene")
+        {
+            GameStateManager.Instance.SaveData(); 
+        }    
     }
 
     private void FoundGuilty(GameData gameData)
@@ -64,6 +71,7 @@ public class GameLogicManager : MonoBehaviour
             thirdClue = gameData.gameThirdClue;
         }
     }
+
     private void FoundGamePhase(GameData gameData)
     {
         if(gameData.gameStoryPhase != 0)
@@ -73,6 +81,27 @@ public class GameLogicManager : MonoBehaviour
         else
         {
             storyPhase = 0;
+        }
+    }
+
+    private void FoundStatistics(GameData gameData)
+    {
+        if(!string.IsNullOrEmpty(gameData.gameLastPuzzleComplete))
+        {
+            lastPuzzleComplete = gameData.gameLastPuzzleComplete;
+        }
+
+        if(gameData.gameKnownSuspects != null && gameData.gameKnownSuspects.Length > 0)
+        {
+            knownSuspects = gameData.gameKnownSuspects;
+        }
+        else
+        {
+            knownSuspects = new bool[8]; 
+            for (int i = 0; i < guiltyNames.Count; i++)
+            {
+                knownSuspects[i] = false;
+            }
         }
     }
 }

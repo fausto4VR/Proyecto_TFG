@@ -4,6 +4,10 @@ using UnityEngine.SceneManagement;
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance;
+    public bool isPuzzleRecentlyCompleted;
+    public float[] actualPlayerPosition;
+    public float[] actualCameraPosition;
+
     private GameObject player;
     private string sceneName;
     private string guilty;
@@ -11,6 +15,8 @@ public class GameStateManager : MonoBehaviour
     private string secondClue = "";
     private string thirdClue = "";
     private int storyPhase;
+    private string lastPuzzleComplete;
+    public bool[] knownSuspects;
     
     void Awake()
     {
@@ -35,7 +41,9 @@ public class GameStateManager : MonoBehaviour
         secondClue = GameLogicManager.Instance.secondClue;
         thirdClue = GameLogicManager.Instance.thirdClue;
         storyPhase = GameLogicManager.Instance.storyPhase;
-        SaveManager.SaveGameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase);
+        lastPuzzleComplete = GameLogicManager.Instance.lastPuzzleComplete;
+        knownSuspects = GameLogicManager.Instance.knownSuspects;
+        SaveManager.SaveGameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase, lastPuzzleComplete, knownSuspects);
 
         Debug.Log("Datos guardados");
     }
@@ -48,6 +56,8 @@ public class GameStateManager : MonoBehaviour
         GameLogicManager.Instance.secondClue = gameData.gameSecondClue;
         GameLogicManager.Instance.thirdClue = gameData.gameThirdClue;
         GameLogicManager.Instance.storyPhase = gameData.gameStoryPhase;
+        GameLogicManager.Instance.lastPuzzleComplete = gameData.gameLastPuzzleComplete;
+        GameLogicManager.Instance.knownSuspects = gameData.gameKnownSuspects;
         SceneManager.LoadScene(gameData.gameScene);
 
         // Evento que se dispara cuando la escena está cargada

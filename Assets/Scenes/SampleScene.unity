@@ -308,11 +308,12 @@ GameObject:
   - component: {fileID: 142074244}
   - component: {fileID: 142074243}
   - component: {fileID: 142074250}
-  - component: {fileID: 142074242}
   - component: {fileID: 142074246}
+  - component: {fileID: 142074242}
   - component: {fileID: 142074247}
   - component: {fileID: 142074249}
   - component: {fileID: 142074251}
+  - component: {fileID: 142074252}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -462,12 +463,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab1403919cdcb9247b66530d2fac40dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inspectLayout: {fileID: 446763194}
   inspectProgressBar: {fileID: 737450575}
   holdInspectKeyTime: 2
+  defaultInspectDialogueLines:
+  - "Aqu\xED no hay nada relevante para la investigaci\xF3n."
+  defaultInspectCharacterNameLines:
+  - Player
+  inspectLayout: {fileID: 446763194}
+  dialoguePanel: {fileID: 991598121}
   playerImage: {fileID: 21300000, guid: bbe78296baa58c643858674b93881a6d, type: 3}
   playerName: Player
   isObjectInspected: 0
+  isEmptyInspected: 0
+  isInspectInRange: 0
+  didConversationStart: 0
 --- !u!114 &142074249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -530,6 +539,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inspectLayoutTransform: {fileID: 446763195}
   positionOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &142074252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142074241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1b9cded66d8f864d9c0e607009f96f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueMark: {fileID: 0}
+  dialogueText: {fileID: 2077252771}
+  characterNameText: {fileID: 975407987}
+  player: {fileID: 0}
+  profileImage: {fileID: 894504163}
+  characterImage: {fileID: 21300000, guid: 201453ebc52a1dd40b735547cd964b26, type: 3}
+  typingTime: 0.05
+  conversationPanel: {fileID: 1005877472}
+  dialogueLines: []
+  characterNameLines: []
+  isPlayerInRange: 0
+  didConversationStart: 0
 --- !u!1 &156784199
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,7 +910,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 446763194}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1846,6 +1879,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e24e22a3bb74c2847866121d9abe9cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPuzzleRecentlyCompleted: 0
+  actualPlayerPosition: []
+  actualCameraPosition: []
+  knownSuspects: 
 --- !u!4 &1204544365
 Transform:
   m_ObjectHideFlags: 0
@@ -2001,6 +2038,8 @@ MonoBehaviour:
   secondClue: 
   thirdClue: 
   storyPhase: 0
+  lastPuzzleComplete: 
+  knownSuspects: 
 --- !u!4 &1235000529
 Transform:
   m_ObjectHideFlags: 0
@@ -2865,11 +2904,12 @@ GameObject:
   - component: {fileID: 1898753646}
   - component: {fileID: 1898753645}
   - component: {fileID: 1898753644}
+  - component: {fileID: 1898753640}
+  - component: {fileID: 1898753639}
   - component: {fileID: 1898753643}
   - component: {fileID: 1898753642}
   - component: {fileID: 1898753641}
-  - component: {fileID: 1898753640}
-  - component: {fileID: 1898753639}
+  - component: {fileID: 1898753647}
   m_Layer: 0
   m_Name: Story Object
   m_TagString: Untagged
@@ -2984,14 +3024,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 142074241}
-  dialoguePanel: {fileID: 991598121}
   dialogueLines:
   - "He encontrado un rejoj. \xBFSer\xE1 lo que estoy buscando?"
   - "(Parece que s\xED)"
   characterNameLines:
   - Player
   - Player
+  dialogueLinesToRecentPhase:
+  - (En ese caso debo ir al reactor nuclear)
+  characterNameLinesToRecentPhase:
+  - Player
+  dialogueLinesToPastPhase:
+  - "Esto ya lo inspeccion\xE9 antes. No hay nada m\xE1s aqu\xED de relevancia."
+  characterNameLinesToPastPhase:
+  - Player
+  storyPhaseToUnlockDialogue: 0
   didConversationStart: 0
+  dialoguePanel: {fileID: 991598121}
+  isPuzzleTriggerObject: 1
+  puzzleAssociated: Puzzle1
+  isStoryAdvanced: 0
+  didObjectAdvanceStory: 0
+  isPuzzleReturn: 0
 --- !u!114 &1898753643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3099,6 +3153,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1898753647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898753638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330dae0e0f9aea04cb8a188842ceb5e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextStoryPhase: 1
+  puzzleScene: Puzzle1Scene
+  player: {fileID: 142074241}
+  virtualCamara: {fileID: 49334487}
 --- !u!1 &1918991554
 GameObject:
   m_ObjectHideFlags: 0
@@ -3597,7 +3667,7 @@ Transform:
   m_GameObject: {fileID: 1013225095892379532}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.88, z: -1}
+  m_LocalPosition: {x: 0, y: 0.88, z: 0}
   m_LocalScale: {x: 0.13472441, y: 0.13472441, z: 0.13472441}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -3648,6 +3718,7 @@ MonoBehaviour:
   thirdOptionKey: {fileID: 1222474402}
   thirdOptionButton: {fileID: 1719180528}
   clueToUnlockDialogue: 0
+  suspectIndex: 0
   dialoguePanel: {fileID: 991598121}
   choicePanel: {fileID: 862731326}
   didDialogueStart: 0
@@ -3664,10 +3735,10 @@ GameObject:
   - component: {fileID: 1395330476624013211}
   - component: {fileID: 6148656583870578238}
   - component: {fileID: 8524209798615949446}
-  - component: {fileID: 8524209798615949447}
-  - component: {fileID: 2252977481783516359}
   - component: {fileID: 6855582315705476442}
   - component: {fileID: 373746288566150863}
+  - component: {fileID: 8524209798615949447}
+  - component: {fileID: 2252977481783516359}
   m_Layer: 0
   m_Name: Supporting NPC
   m_TagString: Untagged
@@ -3900,10 +3971,10 @@ GameObject:
   - component: {fileID: 8018718230047313846}
   - component: {fileID: 4715246533738101687}
   - component: {fileID: 4384914931190569830}
-  - component: {fileID: 589757658638173911}
-  - component: {fileID: 5875558993024713067}
   - component: {fileID: 2371932218023709484}
   - component: {fileID: 8878843323968982003}
+  - component: {fileID: 589757658638173911}
+  - component: {fileID: 5875558993024713067}
   m_Layer: 0
   m_Name: Suspect NPC
   m_TagString: Untagged
@@ -4136,7 +4207,7 @@ Transform:
   m_GameObject: {fileID: 2709124057688959019}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.88, z: -1}
+  m_LocalPosition: {x: 0, y: 0.88, z: 0}
   m_LocalScale: {x: 0.13472441, y: 0.13472441, z: 0.13472441}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -4242,7 +4313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDialogueLines:
-  - "Creo que no deber\xEDa hablar con \xE9l a\xFAn"
+  - "Creo que no deber\xEDa hablar con esta persona a\xFAn"
   defaultCharacterNameLines:
   - Player
   firstDialogueLines:
@@ -4262,7 +4333,7 @@ MonoBehaviour:
   fifthCharacterNameLines: []
   sixthDialogueLines: []
   sixthCharacterNameLines: []
-  storyPhasesToUnlockDialogue: 00000000
+  storyPhasesToUnlockDialogue: 01000000
   player: {fileID: 142074241}
   dialoguePanel: {fileID: 991598121}
   didConversationStart: 0

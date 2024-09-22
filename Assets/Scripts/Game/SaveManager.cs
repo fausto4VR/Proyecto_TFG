@@ -43,9 +43,11 @@ public static class SaveManager
         fileStream.Close(); 
     }
 
-    public static void SaveGameData(string sceneName, string guilty, string firstClue, string secondClue, string thirdClue, int storyPhase)
+    public static void SaveGameData(string sceneName, string guilty, string firstClue, string secondClue, string thirdClue, 
+        int storyPhase, string lastPuzzleComplete, bool[] knownSuspects)
     {
-        GameData gameData = new GameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase);
+        GameData gameData = new GameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase, lastPuzzleComplete, 
+            knownSuspects);
         string gameDataPath = Application.persistentDataPath + "/game.save";
         FileStream fileStream = new FileStream(gameDataPath, FileMode.Create);
         BinaryFormatter binaryFormatter = new BinaryFormatter();

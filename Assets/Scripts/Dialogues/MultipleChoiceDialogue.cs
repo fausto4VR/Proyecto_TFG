@@ -13,6 +13,7 @@ public class MultipleChoiceDialogue: MonoBehaviour
     [SerializeField] private GameObject thirdOptionKey;
     [SerializeField] private GameObject thirdOptionButton;
     [SerializeField] private int clueToUnlockDialogue;
+    [SerializeField] private int suspectIndex;
 
     public GameObject dialoguePanel;
     public GameObject choicePanel;
@@ -35,6 +36,8 @@ public class MultipleChoiceDialogue: MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
+                GameLogicManager.Instance.knownSuspects[suspectIndex] = true;
+                
                 if (!didDialogueStart)
                 {
                     StartDialogue();
