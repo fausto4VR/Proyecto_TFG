@@ -49,6 +49,8 @@ public class PlayerLogicManager : MonoBehaviour
             Debug.Log("Last Puzzle Complete: " + GameLogicManager.Instance.lastPuzzleComplete);
             string suspectsContent = string.Join(", ", GameLogicManager.Instance.knownSuspects);
             Debug.Log("Known Suspects: " + suspectsContent);
+            string tutorialsContent = string.Join(", ", GameLogicManager.Instance.knownTutorials);
+            Debug.Log("Known Suspects: " + tutorialsContent);
         }
 
         if(Input.GetKeyDown(KeyCode.M))

@@ -13,6 +13,7 @@ public class GameLogicManager : MonoBehaviour
     public int storyPhase;
     public string lastPuzzleComplete;
     public bool[] knownSuspects;
+    public bool[] knownTutorials;
     
     private GameData gameData;
 
@@ -101,6 +102,19 @@ public class GameLogicManager : MonoBehaviour
             for (int i = 0; i < guiltyNames.Count; i++)
             {
                 knownSuspects[i] = false;
+            }
+        }
+
+        if(gameData.gameKnownTutorials != null && gameData.gameKnownTutorials.Length > 0)
+        {
+            knownTutorials = gameData.gameKnownTutorials;
+        }
+        else
+        {
+            knownTutorials = new bool[8]; 
+            for (int i = 0; i < knownTutorials.Length; i++)
+            {
+                knownTutorials[i] = false;
             }
         }
     }

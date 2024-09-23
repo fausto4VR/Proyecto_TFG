@@ -55,6 +55,7 @@ public class InspectDialogue : MonoBehaviour
             {
                 didConversationStart = true;
                 isPuzzleReturn = false;
+                player.GetComponent<PlayerMovement>().isPlayerTalking = true;
                 GetComponent<DialogueManager>().dialogueLines = dialogueLinesToRecentPhase;
                 GetComponent<DialogueManager>().characterNameLines = characterNameLinesToRecentPhase;
             }
