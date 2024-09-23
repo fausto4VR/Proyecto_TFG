@@ -14,6 +14,7 @@ public class GameLogicManager : MonoBehaviour
     public string lastPuzzleComplete;
     public bool[] knownSuspects;
     public bool[] knownTutorials;
+    public bool[] knownDialogues;
     
     private GameData gameData;
 
@@ -115,6 +116,20 @@ public class GameLogicManager : MonoBehaviour
             for (int i = 0; i < knownTutorials.Length; i++)
             {
                 knownTutorials[i] = false;
+            }
+        }
+
+        if(gameData.gameKnownDialogues != null && gameData.gameKnownDialogues.Length > 0)
+        {
+            knownDialogues = gameData.gameKnownDialogues;
+        }
+        else
+        {
+            knownDialogues = new bool[8];
+            knownDialogues[0] = true; 
+            for (int i = 1; i < knownDialogues.Length; i++)
+            {
+                knownDialogues[i] = false;
             }
         }
     }

@@ -50,7 +50,9 @@ public class PlayerLogicManager : MonoBehaviour
             string suspectsContent = string.Join(", ", GameLogicManager.Instance.knownSuspects);
             Debug.Log("Known Suspects: " + suspectsContent);
             string tutorialsContent = string.Join(", ", GameLogicManager.Instance.knownTutorials);
-            Debug.Log("Known Suspects: " + tutorialsContent);
+            Debug.Log("Known Tutorials: " + tutorialsContent);
+            string dialoguesContent = string.Join(", ", GameLogicManager.Instance.knownDialogues);
+            Debug.Log("Known Dialogues: " + dialoguesContent);
         }
 
         if(Input.GetKeyDown(KeyCode.M))

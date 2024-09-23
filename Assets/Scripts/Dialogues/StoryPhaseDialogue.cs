@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class StoryPhaseDialogue : MonoBehaviour
@@ -19,6 +20,8 @@ public class StoryPhaseDialogue : MonoBehaviour
     [SerializeField] private string[] sixthCharacterNameLines;
     [SerializeField] private int[] storyPhasesToUnlockDialogue;
     [SerializeField] private GameObject player;
+    [SerializeField] private bool isTriggerDialogue;    
+    [SerializeField] private int knownDialogueIndex;
     
     public GameObject dialoguePanel;
     public bool didConversationStart;
@@ -26,6 +29,7 @@ public class StoryPhaseDialogue : MonoBehaviour
     private List<string[]> dialogueLinesList;
     private List<string[]> characterNamesList;
     private int storyPhaseIndex;
+    private bool didDialogueTrigger;
 
     void Start()
     {
@@ -45,16 +49,26 @@ public class StoryPhaseDialogue : MonoBehaviour
         characterNamesList.Add(fourthCharacterNameLines);
         characterNamesList.Add(fifthCharacterNameLines);
         characterNamesList.Add(sixthCharacterNameLines);
+
+        // Para esperar que esté inicializada la lista de knownDialogues
+        StartCoroutine(ExecuteAfterDelay());
     }
 
     void Update()
     {
         if (GetComponent<DialogueManager>().isPlayerInRange)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) || (isTriggerDialogue && !didDialogueTrigger))
             {
                 dialoguePanel.SetActive(true);
                 didConversationStart = true;
+
+                if(!didDialogueTrigger)
+                {
+                    didDialogueTrigger = true;
+                    GameLogicManager.Instance.knownDialogues[knownDialogueIndex] = true;
+                }
+
                 storyPhaseIndex = GameLogicManager.Instance.storyPhase;
                 player.GetComponent<PlayerMovement>().isPlayerTalking = true;
 
@@ -78,6 +92,16 @@ public class StoryPhaseDialogue : MonoBehaviour
                     GetComponent<DialogueManager>().characterNameLines = characterNamesList[dialogueIndex];
                 }                
             }
+        }
+    }
+
+    private IEnumerator ExecuteAfterDelay()
+    {
+        yield return null;
+
+        if (isTriggerDialogue)
+        {
+            didDialogueTrigger = GameLogicManager.Instance.knownDialogues[knownDialogueIndex];
         }
     }
 }

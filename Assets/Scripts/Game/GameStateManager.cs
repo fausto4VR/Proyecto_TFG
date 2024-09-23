@@ -18,6 +18,7 @@ public class GameStateManager : MonoBehaviour
     private string lastPuzzleComplete;
     private bool[] knownSuspects;
     private bool[] knownTutorials;
+    private bool[] knownDialogues;
     
     void Awake()
     {
@@ -44,9 +45,10 @@ public class GameStateManager : MonoBehaviour
         storyPhase = GameLogicManager.Instance.storyPhase;
         lastPuzzleComplete = GameLogicManager.Instance.lastPuzzleComplete;
         knownSuspects = GameLogicManager.Instance.knownSuspects;
-        knownTutorials = GameLogicManager.Instance.knownTutorials;
+        knownTutorials = GameLogicManager.Instance.knownTutorials;        
+        knownDialogues = GameLogicManager.Instance.knownDialogues;
         SaveManager.SaveGameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase, lastPuzzleComplete, 
-            knownSuspects, knownTutorials);
+            knownSuspects, knownTutorials, knownDialogues);
 
         Debug.Log("Datos guardados");
     }
@@ -62,6 +64,7 @@ public class GameStateManager : MonoBehaviour
         GameLogicManager.Instance.lastPuzzleComplete = gameData.gameLastPuzzleComplete;
         GameLogicManager.Instance.knownSuspects = gameData.gameKnownSuspects;
         GameLogicManager.Instance.knownTutorials = gameData.gameKnownTutorials;
+        GameLogicManager.Instance.knownDialogues = gameData.gameKnownDialogues;
         SceneManager.LoadScene(gameData.gameScene);
 
         // Evento que se dispara cuando la escena está cargada

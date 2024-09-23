@@ -44,10 +44,10 @@ public static class SaveManager
     }
 
     public static void SaveGameData(string sceneName, string guilty, string firstClue, string secondClue, string thirdClue, 
-        int storyPhase, string lastPuzzleComplete, bool[] knownSuspects, bool[] knownTutorials)
+        int storyPhase, string lastPuzzleComplete, bool[] knownSuspects, bool[] knownTutorials, bool[] knownDialogues)
     {
         GameData gameData = new GameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase, lastPuzzleComplete, 
-            knownSuspects, knownTutorials);
+            knownSuspects, knownTutorials, knownDialogues);
         string gameDataPath = Application.persistentDataPath + "/game.save";
         FileStream fileStream = new FileStream(gameDataPath, FileMode.Create);
         BinaryFormatter binaryFormatter = new BinaryFormatter();
