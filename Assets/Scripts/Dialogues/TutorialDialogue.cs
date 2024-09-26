@@ -48,6 +48,7 @@ public class TutorialDialogue : MonoBehaviour
         if(isPlayerInRange && !isTutorialDone && !GameLogicManager.Instance.knownTutorials[tutorialIndexOrder])
         {
             player.GetComponent<PlayerMovement>().isPlayerDoingTutorial = true;
+            player.GetComponent<PlayerLogicManager>().isTutorialInProgress = true;
             tutorialPanel.SetActive(true);
 
             if(turorialDialogueLines.Count() == 1)
@@ -100,6 +101,7 @@ public class TutorialDialogue : MonoBehaviour
     {
         isTutorialDone = true;
         player.GetComponent<PlayerMovement>().isPlayerDoingTutorial = false;
+        player.GetComponent<PlayerLogicManager>().isTutorialInProgress = false;
         ShowVisualSupport(false);
         tutorialPanel.SetActive(false);
         GameLogicManager.Instance.knownTutorials[tutorialIndexOrder] = true;

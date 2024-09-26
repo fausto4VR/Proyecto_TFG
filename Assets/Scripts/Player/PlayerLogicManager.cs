@@ -17,12 +17,16 @@ public class PlayerLogicManager : MonoBehaviour
     public bool isEmptyInspected = false;
     public bool isInspectInRange;
     public bool didConversationStart;
+    public bool isTutorialInProgress;
 
     private float holdInspectKeyDuration = 0f;
 
     void Update()
     {
-        InspectCheck();
+        if(!isTutorialInProgress && !GetComponent<PlayerMovement>().isPlayerTalking)
+        {
+            InspectCheck();
+        }
  
         if(Input.GetKeyDown(KeyCode.G))
         {
@@ -53,6 +57,9 @@ public class PlayerLogicManager : MonoBehaviour
             Debug.Log("Known Tutorials: " + tutorialsContent);
             string dialoguesContent = string.Join(", ", GameLogicManager.Instance.knownDialogues);
             Debug.Log("Known Dialogues: " + dialoguesContent);
+            string supportsContent = string.Join(", ", GameStateManager.Instance.lastPuzzleSupports);
+            Debug.Log("Last Puzzle Supports: " + supportsContent);
+            Debug.Log("Last Puzzle Points: " + GameStateManager.Instance.lastPuzzlePoints);
         }
 
         if(Input.GetKeyDown(KeyCode.M))

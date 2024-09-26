@@ -21,7 +21,7 @@ public class StoryPhaseDialogue : MonoBehaviour
     [SerializeField] private int[] storyPhasesToUnlockDialogue;
     [SerializeField] private GameObject player;
     [SerializeField] private bool isTriggerDialogue;    
-    [SerializeField] private int knownDialogueIndex;
+    [SerializeField] private int knownDialogueIndex = 0;
     
     public GameObject dialoguePanel;
     public bool didConversationStart;
@@ -56,7 +56,7 @@ public class StoryPhaseDialogue : MonoBehaviour
 
     void Update()
     {
-        if (GetComponent<DialogueManager>().isPlayerInRange)
+        if (GetComponent<DialogueManager>().isPlayerInRange && !player.GetComponent<PlayerMovement>().isPlayerDoingTutorial)
         {
             if (Input.GetKeyDown(KeyCode.E) || (isTriggerDialogue && !didDialogueTrigger))
             {

@@ -34,10 +34,10 @@ public class MultipleChoiceDialogue: MonoBehaviour
 
         if (GetComponent<DialogueManager>().isPlayerInRange)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !player.GetComponent<PlayerMovement>().isPlayerDoingTutorial)
             {
                 GameLogicManager.Instance.knownSuspects[suspectIndex] = true;
-                
+
                 if (!didDialogueStart)
                 {
                     StartDialogue();

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class AvanceStory : MonoBehaviour
 {
-    [SerializeField] private int nextStoryPhase = 5;
+    [SerializeField] private int nextStoryPhase;
     [SerializeField] private string puzzleScene;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject virtualCamara;
@@ -54,6 +54,11 @@ public class AvanceStory : MonoBehaviour
             GameStateManager.Instance.isPuzzleRecentlyCompleted = false;
             GameLogicManager.Instance.storyPhase = nextStoryPhase;
             GetComponent<InspectDialogue>().isPuzzleReturn = true;
+
+            if(SceneManager.GetActiveScene().name == "SampleScene")
+            {
+                GameStateManager.Instance.SaveData(); 
+            }
         }
     }
 

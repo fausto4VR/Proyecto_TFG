@@ -5,6 +5,7 @@ using UnityEngine;
 public class InspectDialogue : MonoBehaviour
 {
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject virtualCamara;
     [SerializeField, TextArea(4,5)] private string[] dialogueLines;
     [SerializeField] private string[] characterNameLines;
     [SerializeField, TextArea(4,5)] private string[] dialogueLinesToRecentPhase;
@@ -59,6 +60,17 @@ public class InspectDialogue : MonoBehaviour
                 GetComponent<DialogueManager>().dialogueLines = dialogueLinesToRecentPhase;
                 GetComponent<DialogueManager>().characterNameLines = characterNameLinesToRecentPhase;
             }
+        }
+
+        if(GameStateManager.Instance.isPuzzleIncomplete)
+        {
+            GameStateManager.Instance.isPuzzleIncomplete = false;
+
+            player.transform.position = new Vector3(GameStateManager.Instance.actualPlayerPosition[0],
+                GameStateManager.Instance.actualPlayerPosition[1], GameStateManager.Instance.actualPlayerPosition[2]);
+
+            virtualCamara.transform.position = new Vector3(GameStateManager.Instance.actualCameraPosition[0],
+                GameStateManager.Instance.actualCameraPosition[1], GameStateManager.Instance.actualPlayerPosition[2]);
         }        
     }
 }

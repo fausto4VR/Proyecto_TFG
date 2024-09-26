@@ -45,40 +45,73 @@ public class GameLogicManager : MonoBehaviour
 
     private void FoundGuilty(GameData gameData)
     {
-        if(string.IsNullOrEmpty(gameData.gameGuilty))
-        {
-            int randomIndex = Random.Range(0, guiltyNames.Count);
-            guilty = guiltyNames[randomIndex];
+        if(gameData != null){
+            if(string.IsNullOrEmpty(gameData.gameGuilty))
+            {
+                int randomIndex = Random.Range(0, guiltyNames.Count);
+                guilty = guiltyNames[randomIndex];
+            }
+            else
+            {
+                guilty = gameData.gameGuilty;
+            }
         }
         else
         {
-            guilty = gameData.gameGuilty;
+            int randomIndex = Random.Range(0, guiltyNames.Count);
+            guilty = guiltyNames[randomIndex];
         }
     }
 
     private void FoundClues(GameData gameData)
     {
-        if(!string.IsNullOrEmpty(gameData.gameFirstClue))
-        {
-            firstClue = gameData.gameFirstClue;
-        }
+        if(gameData != null){
+            if(!string.IsNullOrEmpty(gameData.gameFirstClue))
+            {
+                firstClue = gameData.gameFirstClue;
+            }
+            else
+            {
+                firstClue = "";
+            }
 
-        if(!string.IsNullOrEmpty(gameData.gameSecondClue))
-        {
-            secondClue = gameData.gameSecondClue;
-        }
+            if(!string.IsNullOrEmpty(gameData.gameSecondClue))
+            {
+                secondClue = gameData.gameSecondClue;
+            }
+            else
+            {
+                secondClue = "";
+            }
 
-        if(!string.IsNullOrEmpty(gameData.gameThirdClue))
+            if(!string.IsNullOrEmpty(gameData.gameThirdClue))
+            {
+                thirdClue = gameData.gameThirdClue;
+            }
+            else
+            {
+                thirdClue = "";
+            }
+        }
+        else
         {
-            thirdClue = gameData.gameThirdClue;
+            firstClue = "";
+            secondClue = "";
+            thirdClue = "";
         }
     }
 
     private void FoundGamePhase(GameData gameData)
     {
-        if(gameData.gameStoryPhase != 0)
-        {
-            storyPhase = gameData.gameStoryPhase;
+        if(gameData != null){
+            if(gameData.gameStoryPhase != 0)
+            {
+                storyPhase = gameData.gameStoryPhase;
+            }
+            else
+            {
+                storyPhase = 0;
+            }
         }
         else
         {
@@ -88,43 +121,72 @@ public class GameLogicManager : MonoBehaviour
 
     private void FoundStatistics(GameData gameData)
     {
-        if(!string.IsNullOrEmpty(gameData.gameLastPuzzleComplete))
-        {
-            lastPuzzleComplete = gameData.gameLastPuzzleComplete;
-        }
+        if(gameData != null){
+            if(!string.IsNullOrEmpty(gameData.gameLastPuzzleComplete))
+            {
+                lastPuzzleComplete = gameData.gameLastPuzzleComplete;
+            }
+            else
+            {
+                lastPuzzleComplete = "";
+            }
 
-        if(gameData.gameKnownSuspects != null && gameData.gameKnownSuspects.Length > 0)
-        {
-            knownSuspects = gameData.gameKnownSuspects;
+            if(gameData.gameKnownSuspects != null && gameData.gameKnownSuspects.Length > 0)
+            {
+                knownSuspects = gameData.gameKnownSuspects;
+            }
+            else
+            {
+                knownSuspects = new bool[8]; 
+                for (int i = 0; i < guiltyNames.Count; i++)
+                {
+                    knownSuspects[i] = false;
+                }
+            }
+
+            if(gameData.gameKnownTutorials != null && gameData.gameKnownTutorials.Length > 0)
+            {
+                knownTutorials = gameData.gameKnownTutorials;
+            }
+            else
+            {
+                knownTutorials = new bool[8]; 
+                for (int i = 0; i < knownTutorials.Length; i++)
+                {
+                    knownTutorials[i] = false;
+                }
+            }
+
+            if(gameData.gameKnownDialogues != null && gameData.gameKnownDialogues.Length > 0)
+            {
+                knownDialogues = gameData.gameKnownDialogues;
+            }
+            else
+            {
+                knownDialogues = new bool[8];
+                knownDialogues[0] = true; 
+                for (int i = 1; i < knownDialogues.Length; i++)
+                {
+                    knownDialogues[i] = false;
+                }
+            }
         }
         else
         {
+            lastPuzzleComplete = "";
+
             knownSuspects = new bool[8]; 
             for (int i = 0; i < guiltyNames.Count; i++)
             {
                 knownSuspects[i] = false;
             }
-        }
 
-        if(gameData.gameKnownTutorials != null && gameData.gameKnownTutorials.Length > 0)
-        {
-            knownTutorials = gameData.gameKnownTutorials;
-        }
-        else
-        {
             knownTutorials = new bool[8]; 
             for (int i = 0; i < knownTutorials.Length; i++)
             {
                 knownTutorials[i] = false;
             }
-        }
 
-        if(gameData.gameKnownDialogues != null && gameData.gameKnownDialogues.Length > 0)
-        {
-            knownDialogues = gameData.gameKnownDialogues;
-        }
-        else
-        {
             knownDialogues = new bool[8];
             knownDialogues[0] = true; 
             for (int i = 1; i < knownDialogues.Length; i++)

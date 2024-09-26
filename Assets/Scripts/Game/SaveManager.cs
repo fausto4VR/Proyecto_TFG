@@ -28,7 +28,7 @@ public static class SaveManager
         }
         else
         {
-            Debug.LogError("No se encontró el archivo de jugador guardado.");
+            Debug.Log("No se encontró el archivo de jugador guardado.");
             return null;
         }
     }
@@ -69,7 +69,7 @@ public static class SaveManager
         }
         else
         {
-            Debug.LogError("No se encontró el archivo de estado del juego guardado.");
+            Debug.Log("No se encontró el archivo de estado del juego guardado.");
             return null;
         }
     }
@@ -81,6 +81,50 @@ public static class SaveManager
         FileStream fileStream = new FileStream(gameDataPath, FileMode.Create);
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         binaryFormatter.Serialize(fileStream, gameData);
+        fileStream.Close();
+    }
+
+    public static void SavePuzzleData(bool[] puzzle1Supports, int puzzle1Points, bool[] puzzle2Supports, int puzzle2Points,
+        bool[] puzzle3Supports, int puzzle3Points, bool[] puzzle4Supports, int puzzle4Points, 
+        bool[] puzzle5Supports, int puzzle5Points, bool[] puzzle6Supports, int puzzle6Points,
+        bool[] puzzle7Supports, int puzzle7Points, bool[] puzzle8Supports, int puzzle8Points)
+    {
+        PuzzleData puzzleData = new PuzzleData(puzzle1Supports, puzzle1Points, puzzle2Supports, puzzle2Points, 
+            puzzle3Supports, puzzle3Points, puzzle4Supports, puzzle4Points, puzzle5Supports, puzzle5Points, 
+            puzzle6Supports, puzzle6Points, puzzle7Supports, puzzle7Points, puzzle8Supports, puzzle8Points);
+        string puzzleDataPath = Application.persistentDataPath + "/puzzle.save";
+        FileStream fileStream = new FileStream(puzzleDataPath, FileMode.Create);
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        binaryFormatter.Serialize(fileStream, puzzleData);
+        fileStream.Close(); 
+    }
+
+    public static PuzzleData LoadPuzzleData()
+    {
+        string puzzleDataPath = Application.persistentDataPath + "/puzzle.save";
+
+        if(File.Exists(puzzleDataPath))
+        {
+            FileStream fileStream = new FileStream(puzzleDataPath, FileMode.Open);
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            PuzzleData puzzleData = (PuzzleData) binaryFormatter.Deserialize(fileStream);
+            fileStream.Close();
+            return puzzleData; 
+        }
+        else
+        {
+            Debug.Log("No se encontró el archivo de estado de los puzzles guardado.");
+            return null;
+        }
+    }
+
+    public static void ResetPuzzleData()
+    {
+        PuzzleData puzzleData = new PuzzleData();
+        string puzzleDataPath = Application.persistentDataPath + "/puzzle.save";
+        FileStream fileStream = new FileStream(puzzleDataPath, FileMode.Create);
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        binaryFormatter.Serialize(fileStream, puzzleData);
         fileStream.Close();
     }
 }
