@@ -27,7 +27,6 @@ public class AvanceStory : MonoBehaviour
     {
         if(nextStoryPhase == (GameLogicManager.Instance.storyPhase + 1) && inspectDialogue.isStoryAdvanced)
         {
-            
             inspectDialogue.isStoryAdvanced = false;
 
             if(!isPuzzleTriggerObject)

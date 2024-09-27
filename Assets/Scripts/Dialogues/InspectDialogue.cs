@@ -21,6 +21,7 @@ public class InspectDialogue : MonoBehaviour
     public bool isStoryAdvanced;
     public bool didObjectAdvanceStory;
     public bool isPuzzleReturn = false;
+    public bool isClueDialogueFinish = false;
 
     void Update()
     {
@@ -34,6 +35,11 @@ public class InspectDialogue : MonoBehaviour
                     didObjectAdvanceStory = true;
                     GetComponent<DialogueManager>().dialogueLines = dialogueLines;
                     GetComponent<DialogueManager>().characterNameLines = characterNameLines;
+
+                    if(GetComponent<DialogueManager>().isClueUnlockTrigger)
+                    {
+                        isClueDialogueFinish = true;
+                    }
                 }
                 else if(storyPhaseToUnlockDialogue == (GameLogicManager.Instance.storyPhase - 1))
                 {
@@ -56,6 +62,7 @@ public class InspectDialogue : MonoBehaviour
             {
                 didConversationStart = true;
                 isPuzzleReturn = false;
+                isClueDialogueFinish = true;
                 player.GetComponent<PlayerMovement>().isPlayerTalking = true;
                 GetComponent<DialogueManager>().dialogueLines = dialogueLinesToRecentPhase;
                 GetComponent<DialogueManager>().characterNameLines = characterNameLinesToRecentPhase;

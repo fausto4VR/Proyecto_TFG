@@ -11,8 +11,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private Image profileImage;
     [SerializeField] private Sprite characterImage;
-    [SerializeField]private float typingTime = 0.05f;
-
+    [SerializeField]private float typingTime = 0.05f;    
+    
+    public bool isClueUnlockTrigger;
+    public bool isClueUnlock;
     public GameObject conversationPanel;
     public string[] dialogueLines;
     public string[] characterNameLines;
@@ -195,6 +197,16 @@ public class DialogueManager : MonoBehaviour
                     }
                     
                     inspectDialogue.didObjectAdvanceStory = false;
+                }
+
+                if(isClueUnlockTrigger && GetComponent<InspectDialogue>().isClueDialogueFinish)
+                {
+                    isClueUnlock = true;
+                    GetComponent<InspectDialogue>().isClueDialogueFinish = false;
+                }
+                else
+                {
+                    GetComponent<InspectDialogue>().isClueDialogueFinish = false;
                 }
             }
 

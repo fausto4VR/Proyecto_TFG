@@ -1,4 +1,5 @@
-using System;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,16 +7,22 @@ public class PuzzleLogicManager : MonoBehaviour
 {
     [SerializeField] private string puzzleScene;
     [SerializeField] private string puzzleName;
+    [SerializeField] private TMP_Text puzzleStatement;    
+    [SerializeField, TextArea(20, 40)] private string puzzleStatementText;
+    [SerializeField]private float typingTime = 0.02f;
+    [SerializeField]private GameObject spaceKeyStatement;    
 
     public bool[] puzzleSupports;
     public int puzzlePoints;
 
     private PuzzleData puzzleData;
+    private bool isStatementComplete;
 
     void Start()
     {
         puzzleData = SaveManager.LoadPuzzleData();
         SelectPuzzleData(puzzleData);
+        ShowStatement();
     }
 
     void Update()
@@ -25,6 +32,14 @@ public class PuzzleLogicManager : MonoBehaviour
             string supportsContent = string.Join(", ", puzzleSupports);
             Debug.Log("Puzzle Supports: " + supportsContent);
             Debug.Log("Puzzle Points: " + puzzlePoints);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space) && !isStatementComplete) 
+        {
+            StopAllCoroutines();
+            puzzleStatement.text = puzzleStatementText;
+            isStatementComplete = true;
+            spaceKeyStatement.SetActive(false);
         }
 
         if(Input.GetKeyDown(KeyCode.Space) && GetComponent<PuzzleUIManager>().isSuccessPanelShown)
@@ -41,7 +56,30 @@ public class PuzzleLogicManager : MonoBehaviour
         if(GetComponent<PuzzleUIManager>().isPuzzleSkipped)
         {
             puzzlePoints = 1;
+            GameLogicManager.Instance.isBadEnding = true;
             CompleteAndFinishPuzzle();
+        }
+    }
+
+    private void ShowStatement()
+    {   
+        isStatementComplete = false;     
+        StartCoroutine(ShowLine());
+    }
+
+    private IEnumerator ShowLine() 
+    {
+        puzzleStatement.text = string.Empty;
+
+        foreach(char ch in puzzleStatementText)
+        {
+            puzzleStatement.text += ch;
+            yield return new WaitForSeconds(typingTime);
+        }
+
+        if(puzzleStatement.text == puzzleStatementText)
+        {
+            spaceKeyStatement.SetActive(false);
         }
     }
 

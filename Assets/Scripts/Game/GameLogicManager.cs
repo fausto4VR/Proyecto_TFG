@@ -15,6 +15,7 @@ public class GameLogicManager : MonoBehaviour
     public bool[] knownSuspects;
     public bool[] knownTutorials;
     public bool[] knownDialogues;
+    public bool isBadEnding;
     
     private GameData gameData;
 
@@ -37,6 +38,7 @@ public class GameLogicManager : MonoBehaviour
         FoundClues(gameData);
         FoundGamePhase(gameData);
         FoundStatistics(gameData);
+        FoundEnding(gameData);
         if(SceneManager.GetActiveScene().name == "SampleScene")
         {
             GameStateManager.Instance.SaveData(); 
@@ -45,7 +47,8 @@ public class GameLogicManager : MonoBehaviour
 
     private void FoundGuilty(GameData gameData)
     {
-        if(gameData != null){
+        if(gameData != null)
+        {
             if(string.IsNullOrEmpty(gameData.gameGuilty))
             {
                 int randomIndex = Random.Range(0, guiltyNames.Count);
@@ -65,7 +68,8 @@ public class GameLogicManager : MonoBehaviour
 
     private void FoundClues(GameData gameData)
     {
-        if(gameData != null){
+        if(gameData != null)
+        {
             if(!string.IsNullOrEmpty(gameData.gameFirstClue))
             {
                 firstClue = gameData.gameFirstClue;
@@ -103,7 +107,8 @@ public class GameLogicManager : MonoBehaviour
 
     private void FoundGamePhase(GameData gameData)
     {
-        if(gameData != null){
+        if(gameData != null)
+        {
             if(gameData.gameStoryPhase != 0)
             {
                 storyPhase = gameData.gameStoryPhase;
@@ -121,7 +126,8 @@ public class GameLogicManager : MonoBehaviour
 
     private void FoundStatistics(GameData gameData)
     {
-        if(gameData != null){
+        if(gameData != null)
+        {
             if(!string.IsNullOrEmpty(gameData.gameLastPuzzleComplete))
             {
                 lastPuzzleComplete = gameData.gameLastPuzzleComplete;
@@ -193,6 +199,18 @@ public class GameLogicManager : MonoBehaviour
             {
                 knownDialogues[i] = false;
             }
+        }
+    }
+
+    private void FoundEnding(GameData gameData)
+    {
+        if(gameData != null)
+        {
+            isBadEnding = gameData.gameIsBadEnding;
+        }
+        else
+        {
+            isBadEnding = false;
         }
     }
 }

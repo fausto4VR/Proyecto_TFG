@@ -8,7 +8,7 @@ public class Puzzle1Logic : MonoBehaviour
         
     [SerializeField, TextArea(6,12)] private string firstSupportText;    
     [SerializeField, TextArea(6,12)] private string secondSupportText;    
-    [SerializeField, TextArea(6,12)] private string thirdSupportText;
+    [SerializeField, TextArea(6,12)] private string thirdSupportText; 
 
     public GameObject inputField;
 

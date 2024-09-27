@@ -23,6 +23,7 @@ public class GameStateManager : MonoBehaviour
     private bool[] knownSuspects;
     private bool[] knownTutorials;
     private bool[] knownDialogues;
+    private bool isBadEnding;
     
     void Awake()
     {
@@ -50,9 +51,10 @@ public class GameStateManager : MonoBehaviour
         lastPuzzleComplete = GameLogicManager.Instance.lastPuzzleComplete;
         knownSuspects = GameLogicManager.Instance.knownSuspects;
         knownTutorials = GameLogicManager.Instance.knownTutorials;        
-        knownDialogues = GameLogicManager.Instance.knownDialogues;
+        knownDialogues = GameLogicManager.Instance.knownDialogues;        
+        isBadEnding = GameLogicManager.Instance.isBadEnding;
         SaveManager.SaveGameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase, lastPuzzleComplete, 
-            knownSuspects, knownTutorials, knownDialogues);
+            knownSuspects, knownTutorials, knownDialogues, isBadEnding);
 
         SavePuzzleData();
 
@@ -70,7 +72,8 @@ public class GameStateManager : MonoBehaviour
         GameLogicManager.Instance.lastPuzzleComplete = gameData.gameLastPuzzleComplete;
         GameLogicManager.Instance.knownSuspects = gameData.gameKnownSuspects;
         GameLogicManager.Instance.knownTutorials = gameData.gameKnownTutorials;
-        GameLogicManager.Instance.knownDialogues = gameData.gameKnownDialogues;
+        GameLogicManager.Instance.knownDialogues = gameData.gameKnownDialogues;        
+        GameLogicManager.Instance.isBadEnding = gameData.gameIsBadEnding;
         SceneManager.LoadScene(gameData.gameScene);
 
         LoadPuzzleData();
@@ -108,39 +111,43 @@ public class GameStateManager : MonoBehaviour
     private void SavePuzzleData()
     {
         PuzzleData puzzleData = SaveManager.LoadPuzzleData();
+        bool[] emptyBool = new bool[3];
 
         if(actualPuzzleName == "Puzzle1")
         {
-            SaveManager.SavePuzzleData(lastPuzzleSupports, lastPuzzlePoints, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0);
+            SaveManager.SavePuzzleData(lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0, 
+                emptyBool, 0, emptyBool, 0, emptyBool, 0);
         }
         else if(actualPuzzleName == "Puzzle2")
         {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, lastPuzzleSupports, lastPuzzlePoints, 
-                null, 0, null, 0, null, 0, null, 0, null, 0, null, 0);
+            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, lastPuzzleSupports, 
+                lastPuzzlePoints, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0);
         }
         else if(actualPuzzleName == "Puzzle3")
         {
             SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, lastPuzzleSupports, lastPuzzlePoints, null, 0, null, 0, null, 0, null, 0, null, 0);
+                puzzleData.gamePuzzle2Points, lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, emptyBool, 0, emptyBool, 0, 
+                emptyBool, 0, emptyBool, 0);
         }
         else if(actualPuzzleName == "Puzzle4")
         {
             SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
                 puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                lastPuzzleSupports, lastPuzzlePoints, null, 0, null, 0, null, 0, null, 0);
+                lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0);
         }
         else if(actualPuzzleName == "Puzzle5")
         {
             SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
                 puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, lastPuzzleSupports, lastPuzzlePoints, null, 0, null, 0, null, 0);
+                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, 
+                emptyBool, 0, emptyBool, 0);
         }
         else if(actualPuzzleName == "Puzzle6")
         {
             SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
                 puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
                 puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleData.gamePuzzle5Supports, 
-                puzzleData.gamePuzzle5Points, lastPuzzleSupports, lastPuzzlePoints, null, 0, null, 0);
+                puzzleData.gamePuzzle5Points, lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, emptyBool, 0);
         }
         else if(actualPuzzleName == "Puzzle7")
         {
@@ -148,7 +155,7 @@ public class GameStateManager : MonoBehaviour
                 puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
                 puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleData.gamePuzzle5Supports, 
                 puzzleData.gamePuzzle5Points, puzzleData.gamePuzzle6Supports, puzzleData.gamePuzzle6Points, 
-                lastPuzzleSupports, lastPuzzlePoints, null, 0);
+                lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0);
         }
         else if(actualPuzzleName == "Puzzle8")
         {

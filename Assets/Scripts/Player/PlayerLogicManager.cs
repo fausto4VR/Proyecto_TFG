@@ -59,7 +59,8 @@ public class PlayerLogicManager : MonoBehaviour
             Debug.Log("Known Dialogues: " + dialoguesContent);
             string supportsContent = string.Join(", ", GameStateManager.Instance.lastPuzzleSupports);
             Debug.Log("Last Puzzle Supports: " + supportsContent);
-            Debug.Log("Last Puzzle Points: " + GameStateManager.Instance.lastPuzzlePoints);
+            Debug.Log("Last Puzzle Points: " + GameStateManager.Instance.lastPuzzlePoints);            
+            Debug.Log("Final Malo: " + GameLogicManager.Instance.isBadEnding);
         }
 
         if(Input.GetKeyDown(KeyCode.M))
