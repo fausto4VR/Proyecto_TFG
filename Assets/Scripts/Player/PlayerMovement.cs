@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isPlayerTalking = false;
     public bool isPlayerInspecting = false;
     public bool isPlayerDoingTutorial = false;
+    public bool isPlayerInPause = false;
 
     void Start()
     {
@@ -18,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if(!isPlayerTalking && !isPlayerInspecting && !isPlayerDoingTutorial)
+        if(!isPlayerTalking && !isPlayerInspecting && !isPlayerDoingTutorial && !isPlayerInPause)
         {  
             float moveX = Input.GetAxisRaw("Horizontal");
             float moveY = Input.GetAxisRaw("Vertical");
@@ -38,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!isPlayerTalking && !isPlayerInspecting && !isPlayerDoingTutorial)
+        if(!isPlayerTalking && !isPlayerInspecting && !isPlayerDoingTutorial && !isPlayerInPause)
         {
             playerRb.MovePosition(playerRb.position + moveInput * speed * Time.fixedDeltaTime);
         }

@@ -145,6 +145,7 @@ public class DialogueManager : MonoBehaviour
         lineIndex = 0;
         characterNameText.text = characterNameLines[lineIndex];
         SelectProfileImage();
+        SelectCharacterName();
         StartCoroutine(ShowLine());
     }
 
@@ -219,7 +220,8 @@ public class DialogueManager : MonoBehaviour
     {
         StopAllCoroutines();
         characterNameText.text = characterNameLines[lineIndex];
-        SelectProfileImage();
+        SelectProfileImage();        
+        SelectCharacterName();
         dialogueText.text = dialogueLines[lineIndex];
     }
 
