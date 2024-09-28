@@ -569,8 +569,8 @@ MonoBehaviour:
   - Player
   inspectLayout: {fileID: 446763194}
   dialoguePanel: {fileID: 991598121}
-  playerImage: {fileID: 21300000, guid: bbe78296baa58c643858674b93881a6d, type: 3}
-  playerName: Player
+  playerImage: {fileID: 21300000, guid: 71511438626b72d478c0939c5504f68f, type: 3}
+  playerName: Juan
   isObjectInspected: 0
   isEmptyInspected: 0
   isInspectInRange: 0
@@ -6247,7 +6247,7 @@ MonoBehaviour:
   characterNameText: {fileID: 975407987}
   player: {fileID: 142074241}
   profileImage: {fileID: 894504163}
-  characterImage: {fileID: 21300000, guid: 4ff1ea0f74b7c6e4dba510e1cf2295bc, type: 3}
+  characterImage: {fileID: 21300000, guid: 9914f165b247971418856b26de9ecb71, type: 3}
   typingTime: 0.05
   isClueUnlockTrigger: 0
   isClueUnlock: 0
