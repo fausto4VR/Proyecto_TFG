@@ -66,6 +66,33 @@ public class PauseMenuLogic : MonoBehaviour
     void Start() 
     {
         lastStoryPhase = GameLogicManager.Instance.storyPhase;
+
+        suspectImages.Add(suspectImage1);
+        suspectImages.Add(suspectImage2);
+        suspectImages.Add(suspectImage3);
+        suspectImages.Add(suspectImage4);
+        suspectImages.Add(suspectImage5);
+        suspectImages.Add(suspectImage6);
+        suspectImages.Add(suspectImage7);
+        suspectImages.Add(suspectImage8);
+
+        suspectSprites.Add(suspectSprite1);
+        suspectSprites.Add(suspectSprite2);
+        suspectSprites.Add(suspectSprite3);
+        suspectSprites.Add(suspectSprite4);
+        suspectSprites.Add(suspectSprite5);
+        suspectSprites.Add(suspectSprite6);
+        suspectSprites.Add(suspectSprite7);
+        suspectSprites.Add(suspectSprite8);
+
+        suspectTexts.Add(suspectText1);
+        suspectTexts.Add(suspectText2);
+        suspectTexts.Add(suspectText3);
+        suspectTexts.Add(suspectText4);
+        suspectTexts.Add(suspectText5);
+        suspectTexts.Add(suspectText6);
+        suspectTexts.Add(suspectText7);
+        suspectTexts.Add(suspectText8);
     }
 
     void Update()
@@ -73,33 +100,6 @@ public class PauseMenuLogic : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.I))
         {
             DisplayMenuPanel();
-
-            suspectImages.Add(suspectImage1);
-            suspectImages.Add(suspectImage2);
-            suspectImages.Add(suspectImage3);
-            suspectImages.Add(suspectImage4);
-            suspectImages.Add(suspectImage5);
-            suspectImages.Add(suspectImage6);
-            suspectImages.Add(suspectImage7);
-            suspectImages.Add(suspectImage8);
-
-            suspectSprites.Add(suspectSprite1);
-            suspectSprites.Add(suspectSprite2);
-            suspectSprites.Add(suspectSprite3);
-            suspectSprites.Add(suspectSprite4);
-            suspectSprites.Add(suspectSprite5);
-            suspectSprites.Add(suspectSprite6);
-            suspectSprites.Add(suspectSprite7);
-            suspectSprites.Add(suspectSprite8);
-
-            suspectTexts.Add(suspectText1);
-            suspectTexts.Add(suspectText2);
-            suspectTexts.Add(suspectText3);
-            suspectTexts.Add(suspectText4);
-            suspectTexts.Add(suspectText5);
-            suspectTexts.Add(suspectText6);
-            suspectTexts.Add(suspectText7);
-            suspectTexts.Add(suspectText8);
         }
 
         if(lastStoryPhase + 1 == GameLogicManager.Instance.storyPhase)
@@ -153,6 +153,12 @@ public class PauseMenuLogic : MonoBehaviour
         {
             GoBackFromSuspectsPanel();
         }
+
+        if(isAfterSavePanelShown && Input.GetMouseButtonDown(0))
+        {
+            afterSavePanel.SetActive(false);
+            isAfterSavePanelShown = false;
+        }
     }
 
     public void DisplayMenuPanel()
@@ -172,6 +178,9 @@ public class PauseMenuLogic : MonoBehaviour
             
             cluesPanel.SetActive(false);
             isCluesPanelShown = false;
+
+            suspectsPanel.SetActive(false);
+            isSuspectsPanelShown = false;
         }
         else if(pauseMenuPanel.activeInHierarchy == false && !isPanelShown)
         {
@@ -370,6 +379,8 @@ public class PauseMenuLogic : MonoBehaviour
     {
         for(int i=0; i<GameLogicManager.Instance.guiltyNames.Count; i++)
         {
+            Debug.Log(i);
+            Debug.Log(GameLogicManager.Instance.guiltyNames[i]);
             if(GameLogicManager.Instance.knownSuspects[i])
             {
                 suspectImages[i].sprite = suspectSprites[i];

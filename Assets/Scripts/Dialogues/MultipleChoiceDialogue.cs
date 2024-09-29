@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MultipleChoiceDialogue: MonoBehaviour
 {
@@ -11,9 +13,17 @@ public class MultipleChoiceDialogue: MonoBehaviour
     [SerializeField] private string[] thirdCharacterNameLines;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject thirdOptionKey;
-    [SerializeField] private GameObject thirdOptionButton;
+    [SerializeField] private GameObject firstOptionButton;
+    [SerializeField] private GameObject secondOptionButton;
+    [SerializeField] private GameObject  thirdOptionButton;
     [SerializeField] private int clueToUnlockDialogue;
-    [SerializeField] private int suspectIndex;
+    [SerializeField] private int suspectIndex;    
+    [SerializeField] private TMP_Text firstOptionPanel;
+    [SerializeField] private TMP_Text secondOptionPanel;
+    [SerializeField] private TMP_Text thirdOptionPanel;
+    [SerializeField] private string firstOptionText;
+    [SerializeField] private string secondOptionText;
+    [SerializeField] private string thirdOptionText;
 
     public GameObject dialoguePanel;
     public GameObject choicePanel;
@@ -34,6 +44,15 @@ public class MultipleChoiceDialogue: MonoBehaviour
 
         if (GetComponent<DialogueManager>().isPlayerInRange)
         {
+            firstOptionButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            firstOptionButton.GetComponent<Button>().onClick.AddListener(() => ChooseFirstOption());
+            
+            secondOptionButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            secondOptionButton.GetComponent<Button>().onClick.AddListener(() => ChooseSecondOption());
+            
+            thirdOptionButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            thirdOptionButton.GetComponent<Button>().onClick.AddListener(() => ChooseThirdOption());
+
             if (Input.GetKeyDown(KeyCode.E) && !player.GetComponent<PlayerMovement>().isPlayerDoingTutorial)
             {
                 GameLogicManager.Instance.knownSuspects[suspectIndex] = true;
@@ -53,23 +72,17 @@ public class MultipleChoiceDialogue: MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
             {
-                GetComponent<DialogueManager>().dialogueLines = firstDialogueLines;
-                GetComponent<DialogueManager>().characterNameLines = firstCharacterNameLines;
-                GoToConversation();
+                ChooseFirstOption();
             }
 
             if(Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
             {
-                GetComponent<DialogueManager>().dialogueLines = secondDialogueLines;
-                GetComponent<DialogueManager>().characterNameLines = secondCharacterNameLines;
-                GoToConversation();
+                ChooseSecondOption();
             }
 
             if(Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3) && isDialogueUnlock)
             {
-                GetComponent<DialogueManager>().dialogueLines = thirdDialogueLines;
-                GetComponent<DialogueManager>().characterNameLines = thirdCharacterNameLines;
-                GoToConversation();
+                ChooseThirdOption();
             }
         }
     }
@@ -94,6 +107,27 @@ public class MultipleChoiceDialogue: MonoBehaviour
         }
     }
 
+    public void ChooseFirstOption()
+    {
+        GetComponent<DialogueManager>().dialogueLines = firstDialogueLines;
+        GetComponent<DialogueManager>().characterNameLines = firstCharacterNameLines;
+        GoToConversation();
+    }
+
+    public void ChooseSecondOption()
+    {
+        GetComponent<DialogueManager>().dialogueLines = secondDialogueLines;
+        GetComponent<DialogueManager>().characterNameLines = secondCharacterNameLines;
+        GoToConversation();
+    }
+
+    public void ChooseThirdOption()
+    {
+        GetComponent<DialogueManager>().dialogueLines = thirdDialogueLines;
+        GetComponent<DialogueManager>().characterNameLines = thirdCharacterNameLines;
+        GoToConversation();
+    }
+
     private void GoToConversation()
     {
         choicePanel.SetActive(false);
@@ -106,6 +140,11 @@ public class MultipleChoiceDialogue: MonoBehaviour
         player.GetComponent<PlayerMovement>().isPlayerTalking = true;
         choicePanel.SetActive(true);
         dialoguePanel.SetActive(true);
+
+        firstOptionPanel.text = firstOptionText;
+        secondOptionPanel.text = secondOptionText;
+        thirdOptionPanel.text = thirdOptionText;
+
         didDialogueStart = true;
         didConversationStart = false;
     }

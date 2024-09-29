@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class GameLogicManager : MonoBehaviour
 {
+    [SerializeField] private string sceneToDestroy = "MenuScene";
+
     public static GameLogicManager Instance;
     public List<string> guiltyNames = new List<string> { "guilty1", "guilty2", "guilty3", "guilty4", "guilty5", "guilty6", "guilty7", "guilty8" };
     public string guilty;
@@ -39,10 +41,28 @@ public class GameLogicManager : MonoBehaviour
         FoundGamePhase(gameData);
         FoundStatistics(gameData);
         FoundEnding(gameData);
-        if(SceneManager.GetActiveScene().name == "SampleScene")
+
+        if(GameStateManager.Instance.isLoadGame && SceneManager.GetActiveScene().name == "SampleScene")
         {
-            GameStateManager.Instance.SaveData(); 
-        }    
+            GameStateManager.Instance.LoadData();
+            GameStateManager.Instance.isLoadGame = false; 
+        }
+
+        if(GameStateManager.Instance.isNewGame && SceneManager.GetActiveScene().name == "SampleScene")
+        {
+            storyPhase = 1;
+            GameStateManager.Instance.SaveData();
+            GameStateManager.Instance.isNewGame = false; 
+        }      
+    }
+
+    void Update()
+    {
+        if(GameStateManager.Instance.isLoadGame && SceneManager.GetActiveScene().name == "SampleScene")
+        {
+            GameStateManager.Instance.LoadData();
+            GameStateManager.Instance.isLoadGame = false; 
+        } 
     }
 
     private void FoundGuilty(GameData gameData)
@@ -211,6 +231,24 @@ public class GameLogicManager : MonoBehaviour
         else
         {
             isBadEnding = false;
+        }
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == sceneToDestroy)
+        {
+            Destroy(gameObject);
         }
     }
 }

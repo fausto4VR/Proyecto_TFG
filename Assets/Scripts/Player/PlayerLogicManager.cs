@@ -27,21 +27,6 @@ public class PlayerLogicManager : MonoBehaviour
         {
             InspectCheck();
         }
- 
-        if(Input.GetKeyDown(KeyCode.G))
-        {
-            GameStateManager.Instance.SaveData();
-        }
-
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            GameStateManager.Instance.LoadData();
-        }
-
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            GameStateManager.Instance.ResetData();
-        }
 
         if(Input.GetKeyDown(KeyCode.V))
         {
@@ -61,11 +46,6 @@ public class PlayerLogicManager : MonoBehaviour
             Debug.Log("Last Puzzle Supports: " + supportsContent);
             Debug.Log("Last Puzzle Points: " + GameStateManager.Instance.lastPuzzlePoints);            
             Debug.Log("Final Malo: " + GameLogicManager.Instance.isBadEnding);
-        }
-
-        if(Input.GetKeyDown(KeyCode.M))
-        {
-            //
         }
     }
 

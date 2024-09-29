@@ -11,6 +11,8 @@ public class GameStateManager : MonoBehaviour
     public bool[] lastPuzzleSupports;
     public int lastPuzzlePoints;
     public string actualPuzzleName;
+    public bool isLoadGame;
+    public bool isNewGame;
 
     private GameObject player;
     private string sceneName;
