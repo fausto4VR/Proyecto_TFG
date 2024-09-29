@@ -379,8 +379,6 @@ public class PauseMenuLogic : MonoBehaviour
     {
         for(int i=0; i<GameLogicManager.Instance.guiltyNames.Count; i++)
         {
-            Debug.Log(i);
-            Debug.Log(GameLogicManager.Instance.guiltyNames[i]);
             if(GameLogicManager.Instance.knownSuspects[i])
             {
                 suspectImages[i].sprite = suspectSprites[i];
