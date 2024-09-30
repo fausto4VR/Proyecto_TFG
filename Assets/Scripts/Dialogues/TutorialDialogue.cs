@@ -61,7 +61,7 @@ public class TutorialDialogue : MonoBehaviour
                     isVisualSupportShown = true;
                 }
 
-                if(Input.GetKeyDown(KeyCode.Space))
+                if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
                 {
                     FinishTutorial();
                 }
@@ -76,7 +76,7 @@ public class TutorialDialogue : MonoBehaviour
                     isVisualSupportShown = true;
                 }
 
-                if(Input.GetKeyDown(KeyCode.Space))
+                if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
                 {
                     turorialDialogueLineIndex++;
                     isVisualSupportShown = false; 

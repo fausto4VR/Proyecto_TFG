@@ -34,7 +34,7 @@ public class PuzzleLogicManager : MonoBehaviour
             Debug.Log("Puzzle Points: " + puzzlePoints);
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && !isStatementComplete) 
+        if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && !isStatementComplete) 
         {
             StopAllCoroutines();
             puzzleStatement.text = puzzleStatementText;

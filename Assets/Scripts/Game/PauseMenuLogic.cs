@@ -104,8 +104,11 @@ public class PauseMenuLogic : MonoBehaviour
 
         if(lastStoryPhase + 1 == GameLogicManager.Instance.storyPhase)
         {
-            objectiveBodyText.text = objectiveTextPhases[lastStoryPhase];
-            lastStoryPhase++;
+            if(lastStoryPhase < objectiveTextPhases.Length)
+            {
+                objectiveBodyText.text = objectiveTextPhases[lastStoryPhase];
+                lastStoryPhase++;
+            }
         }
 
         if(isPanelShown && Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
@@ -283,10 +286,10 @@ public class PauseMenuLogic : MonoBehaviour
                 firstClueImage.sprite = firstClueSprite1;
                 firstClueText.text = "Tiene los ojos marrones";
             }
-            else if(GameLogicManager.Instance.firstClue == "Tiene los ojos verde")
+            else if(GameLogicManager.Instance.firstClue == "Tiene los ojos verdes")
             {
                 firstClueImage.sprite = firstClueSprite2;
-                firstClueText.text = "Tiene los ojos verde";
+                firstClueText.text = "Tiene los ojos verdes";
             }
             else
             {

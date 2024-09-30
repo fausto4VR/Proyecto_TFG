@@ -49,8 +49,8 @@ public class DialogueManager : MonoBehaviour
                 StartDialogue();
             }
 
-            if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.Space) && multipleChoiceDialogue.didDialogueStart == true
-                && didConversationStart) 
+            if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) 
+                && multipleChoiceDialogue.didDialogueStart == true && didConversationStart) 
             {
                 if(dialogueText.text == dialogueLines[lineIndex])
                 {
@@ -70,7 +70,7 @@ public class DialogueManager : MonoBehaviour
                 StartDialogue();
             }
 
-            if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.Space) && didConversationStart) 
+            if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
             {
                 if(dialogueText.text == dialogueLines[lineIndex])
                 {
@@ -91,7 +91,7 @@ public class DialogueManager : MonoBehaviour
                 StartDialogue();
             }
 
-            if(isPlayerInRange == true && Input.GetKeyDown(KeyCode.Space) && didConversationStart) 
+            if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
             {
                 if(dialogueText.text == dialogueLines[lineIndex])
                 {
@@ -113,7 +113,7 @@ public class DialogueManager : MonoBehaviour
                 StartDialogue();
             }
 
-            if(Input.GetKeyDown(KeyCode.Space) && didConversationStart) 
+            if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
             {
                 if(dialogueText.text == dialogueLines[lineIndex])
                 {

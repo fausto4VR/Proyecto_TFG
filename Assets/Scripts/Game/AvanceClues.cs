@@ -53,7 +53,7 @@ public class AvanceClues : MonoBehaviour
 
         if(isClueShown)
         {
-            if(Input.GetKeyDown(KeyCode.Space)) 
+            if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) 
             {
                 cluePanel.SetActive(false);
                 isClueShown = false;
@@ -81,7 +81,7 @@ public class AvanceClues : MonoBehaviour
             GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[4] ||
             GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[5])
         {
-            GameLogicManager.Instance.firstClue = "Tiene los ojos verde";
+            GameLogicManager.Instance.firstClue = "Tiene los ojos verdes";
             clueTextString += GameLogicManager.Instance.firstClue;
             clueImage.sprite = firstClueSprite2;
         }
