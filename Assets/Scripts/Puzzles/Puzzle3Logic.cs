@@ -3,9 +3,8 @@ using TMPro;
 using System.Text;
 using System.Text.RegularExpressions; 
 
-public class Puzzle1Logic : MonoBehaviour
-{
-        
+public class Puzzle3Logic : MonoBehaviour
+{   
     [SerializeField, TextArea(6,12)] private string firstSupportText;    
     [SerializeField, TextArea(6,12)] private string secondSupportText;    
     [SerializeField, TextArea(6,12)] private string thirdSupportText; 
@@ -39,14 +38,15 @@ public class Puzzle1Logic : MonoBehaviour
         string solutionString = inputField.GetComponent<TMP_InputField>().text;
         solutionString = solutionString.Replace(" ", "");
         solutionString = solutionString.ToUpper();
+        solutionString = RemoveAccents(solutionString);
         solutionString = RemovePunctuation(solutionString); 
         solutionString = RemoveAccents(solutionString);
 
-        if(solutionString == "")
+        if (solutionString == "")
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;
         }
-        else if(solutionString == "TIEMPO")
+        else if (solutionString == "ADKJCGBFNHIONEMPQRLS")
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 1;
         }
@@ -58,24 +58,16 @@ public class Puzzle1Logic : MonoBehaviour
 
     private string RemoveAccents(string input)
     {
-        string normalizedString = input.Normalize(NormalizationForm.FormD);
-        StringBuilder stringBuilder = new StringBuilder();
-
-        foreach (char c in normalizedString)
-        {
-            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-
-            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
-            {
-                stringBuilder.Append(c);
-            }
-        }
-
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        input = input.Replace('Á', 'A')
+                    .Replace('É', 'E')
+                    .Replace('Í', 'I')
+                    .Replace('Ó', 'O')
+                    .Replace('Ú', 'U');
+        return input;
     }
 
     public string RemovePunctuation(string input)
     {
-        return Regex.Replace(input, @"[^\w\s]", "");
+        return Regex.Replace(input, @"[^a-zA-Z0-9\sÑñ]", "");
     }
 }

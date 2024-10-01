@@ -32,7 +32,8 @@ public class PuzzleUIManager : MonoBehaviour
     public int isCorrectResult;
     public bool isSuccessPanelShown;    
     public bool isFailurePanelShown;
-    public bool isReturnToPuzzleAfterFail;
+    public bool isReturnToPuzzleAfterFail;    
+    public bool isNecesaryResetInputs;
     public bool isPuzzleSkipped;
 
     private int supportIndex;
@@ -79,6 +80,7 @@ public class PuzzleUIManager : MonoBehaviour
             failurePanel.SetActive(false);
             isFailurePanelShown = false;
             isReturnToPuzzleAfterFail = false;
+            isNecesaryResetInputs = true;
         }
     }
 

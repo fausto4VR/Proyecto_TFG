@@ -42,12 +42,12 @@ public class PuzzleLogicManager : MonoBehaviour
             spaceKeyStatement.SetActive(false);
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && GetComponent<PuzzleUIManager>().isSuccessPanelShown)
+        if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && GetComponent<PuzzleUIManager>().isSuccessPanelShown)
         {
             CompleteAndFinishPuzzle();
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && GetComponent<PuzzleUIManager>().isFailurePanelShown)
+        if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && GetComponent<PuzzleUIManager>().isFailurePanelShown)
         {
             GetComponent<PuzzleUIManager>().isReturnToPuzzleAfterFail = true;
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;

@@ -255,7 +255,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10531012}
   m_CullTransparentMesh: 1
---- !u!21 &31711388
+--- !u!21 &26774483
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 640241974}
+  m_Material: {fileID: 875807387}
   m_Color: {r: 0.18490559, g: 0.18490559, b: 0.18490559, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -602,14 +602,14 @@ RectTransform:
   m_GameObject: {fileID: 247432223}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2644, y: 1.2644, z: 1.2644}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2072104049}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 480, y: 39}
+  m_AnchoredPosition: {x: 480, y: 35}
   m_SizeDelta: {x: 642, y: 562}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &247432225
@@ -632,7 +632,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 32c68d2c151668a419bad09ec1867a3b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 361e212262b97154faefbe0d077c7b0d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1452,47 +1452,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 507663564}
   m_CullTransparentMesh: 1
---- !u!21 &510799481
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/IndependentRoundedCorners
-  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _halfSize: {r: 444, g: 274.7154, b: 0, a: 0}
-    - _r: {r: 12, g: 12, b: 12, a: 12}
-    - _rect2props: {r: 0.000061035156, g: 0, b: 499.72327, a: 499.72327}
-  m_BuildTextureStacks: []
 --- !u!1 &512749632
 GameObject:
   m_ObjectHideFlags: 0
@@ -2031,7 +1990,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 584809559}
   m_CullTransparentMesh: 1
---- !u!21 &640241974
+--- !u!21 &650579749
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -2068,9 +2027,9 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _halfSize: {r: 444, g: 274.7154, b: 0, a: 0}
-    - _r: {r: 12, g: 12, b: 12, a: 12}
-    - _rect2props: {r: 0.000061035156, g: 0, b: 499.72327, a: 499.72327}
+    - _halfSize: {r: 418.4406, g: 444.805, b: 0, a: 0}
+    - _r: {r: 12, g: 12, b: 12, a: 40}
+    - _rect2props: {r: 7.000061, g: 6.999939, b: 601.9216, a: 592.0221}
   m_BuildTextureStacks: []
 --- !u!1 &700293437
 GameObject:
@@ -2736,7 +2695,7 @@ RectTransform:
   m_GameObject: {fileID: 833333549}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.92, y: 0.92, z: 0.92}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 97174507}
@@ -2744,7 +2703,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -125}
-  m_SizeDelta: {x: 644, y: 724}
+  m_SizeDelta: {x: 1921, y: 1643}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &833333551
 MonoBehaviour:
@@ -2766,7 +2725,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3a2be1d0ecb66fc45a1240d3231f9bc2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b15a2eecfa489a1449811a92c9cb95f5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2841,7 +2800,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Aqu\xED se muestra el abacedario usado por la v\xEDctima:"
+  m_text: "Escribir la soluci\xF3n indicando los puntos por los que se tiene que
+    pasar. Por ejemplo, ABCDE...\n\nNo se te olvide que la ruta siempre empieza por
+    A y acaba en S."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaecfd04f6578f6459420ee1fcd00635, type: 2}
   m_sharedMaterial: {fileID: -2434125666209454521, guid: aaecfd04f6578f6459420ee1fcd00635, type: 2}
@@ -2904,7 +2865,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 121.478424}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3050,6 +3011,47 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 869425154}
   m_CullTransparentMesh: 1
+--- !u!21 &875807387
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/IndependentRoundedCorners
+  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _halfSize: {r: 444, g: 274.7154, b: 0, a: 0}
+    - _r: {r: 12, g: 12, b: 12, a: 12}
+    - _rect2props: {r: 0.000061035156, g: 0, b: 499.72327, a: 499.72327}
+  m_BuildTextureStacks: []
 --- !u!1 &898497946
 GameObject:
   m_ObjectHideFlags: 0
@@ -3949,6 +3951,47 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1039209592}
   m_CullTransparentMesh: 1
+--- !u!21 &1070877008
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/IndependentRoundedCorners
+  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _halfSize: {r: 444, g: 274.7154, b: 0, a: 0}
+    - _r: {r: 12, g: 12, b: 12, a: 12}
+    - _rect2props: {r: 0.000061035156, g: 0, b: 499.72327, a: 499.72327}
+  m_BuildTextureStacks: []
 --- !u!1 &1080530998
 GameObject:
   m_ObjectHideFlags: 0
@@ -4135,81 +4178,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
---- !u!1 &1131174803
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1131174804}
-  - component: {fileID: 1131174806}
-  - component: {fileID: 1131174805}
-  m_Layer: 5
-  m_Name: Help Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1131174804
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131174803}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.76841134, y: 0.76841134, z: 0.76841134}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 1210230188}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.9594727, y: -42}
-  m_SizeDelta: {x: 642, y: 882}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1131174805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131174803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4703ccc0051c78148a3e600b21520612, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 1
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1131174806
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131174803}
-  m_CullTransparentMesh: 1
 --- !u!1 &1143695510
 GameObject:
   m_ObjectHideFlags: 0
@@ -4282,7 +4250,6 @@ RectTransform:
   - {fileID: 1898052256}
   - {fileID: 853001527}
   - {fileID: 1410957941}
-  - {fileID: 1131174804}
   m_Father: {fileID: 2072104049}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4317,7 +4284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 31711388}
+  m_Material: {fileID: 26774483}
   m_Color: {r: 0.17254902, g: 0.12941177, b: 0.15686275, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -4546,7 +4513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1587795345}
+  m_Material: {fileID: 1580282418}
   m_Color: {r: 0.20000002, g: 0.20392159, b: 0.19607845, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -4981,15 +4948,15 @@ RectTransform:
   m_GameObject: {fileID: 1369339985}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1316, y: 1.1316, z: 1.1316}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2018768934}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -116}
-  m_SizeDelta: {x: 642, y: 562}
+  m_AnchoredPosition: {x: 0, y: -125}
+  m_SizeDelta: {x: 1921, y: 1643}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1369339987
 MonoBehaviour:
@@ -5011,7 +4978,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f771c333b4709c242a78660f01e59a0d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 361e212262b97154faefbe0d077c7b0d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5556,6 +5523,47 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568473012}
   m_CullTransparentMesh: 1
+--- !u!21 &1580282418
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/IndependentRoundedCorners
+  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _halfSize: {r: 419.7406, g: 201.42651, b: 0, a: 0}
+    - _r: {r: 12, g: 12, b: 40, a: 12}
+    - _rect2props: {r: -6.9999084, g: 6.9999695, b: 420.84674, a: 430.74622}
+  m_BuildTextureStacks: []
 --- !u!1 &1585304827
 GameObject:
   m_ObjectHideFlags: 0
@@ -5653,47 +5661,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1585304827}
   m_CullTransparentMesh: 1
---- !u!21 &1587795345
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/IndependentRoundedCorners
-  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _halfSize: {r: 419.7406, g: 201.42651, b: 0, a: 0}
-    - _r: {r: 12, g: 12, b: 40, a: 12}
-    - _rect2props: {r: -6.9999084, g: 6.9999695, b: 420.84674, a: 430.74622}
-  m_BuildTextureStacks: []
 --- !u!1 &1592162610
 GameObject:
   m_ObjectHideFlags: 0
@@ -5905,7 +5872,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654208708}
   m_CullTransparentMesh: 1
---- !u!21 &1726351167
+--- !u!21 &1665455757
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -6712,7 +6679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1726351167}
+  m_Material: {fileID: 1665455757}
   m_Color: {r: 0.9924528, g: 0.8894624, b: 0.8925064, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -6803,7 +6770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2023750783}
+  m_Material: {fileID: 650579749}
   m_Color: {r: 0.8095479, g: 0.9138626, b: 0.97735846, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -6894,7 +6861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 510799481}
+  m_Material: {fileID: 1070877008}
   m_Color: {r: 0.98769486, g: 1, b: 0.8584906, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -7029,7 +6996,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Palabra buscada
+  m_text: Ruta (ABCDE...)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaecfd04f6578f6459420ee1fcd00635, type: 2}
   m_sharedMaterial: {fileID: -2434125666209454521, guid: aaecfd04f6578f6459420ee1fcd00635, type: 2}
@@ -7601,7 +7568,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2019439062}
   - component: {fileID: 2019439061}
-  - component: {fileID: 2019439063}
+  - component: {fileID: 2019439065}
   - component: {fileID: 2019439064}
   m_Layer: 0
   m_Name: Puzzle Logic Manager
@@ -7625,21 +7592,22 @@ MonoBehaviour:
   puzzleScene: SampleScene
   puzzleName: Puzzle1
   puzzleStatement: {fileID: 1763064884}
-  puzzleStatementText: "Parece que en la nota hecha por la v\xEDctima no se puede
-    ver ni el principio ni el final de lo que hab\xEDa escrito. Lo \xFAnico que se
-    distingue es una palabra. Por lo visto, ha probado varios t\xE9rminos hasta que
-    ha conseguido encontrar lo que quer\xEDa escribir.\r\n\r\nHe descubierto que
-    hay un patr\xF3n claro entre todos los intentos que ha hecho, pero a\xFAn as\xED
-    no logro ver la palabra que estaba buscando. \xBFCu\xE1l podr\xE1 ser?\r\n\r\nEl
-    patr\xF3n que he pensado me dice que una letra del abecedario puede aparecer
-    o no en la palabra final. En funci\xF3n de esto, cada letra se presenta de manera
-    diferente: \r\n\r\n- Si la letra sale tachada no est\xE1 presente en la palabra
-    final.\r\n- Si la letra sale rodeada por un c\xEDrculo est\xE1 presente en la
-    palabra final pero no en su posici\xF3n correcta.\r\n- Si la letra aparece sin
-    nada est\xE1 presente en la palabra final y en su posici\xF3n.\r\n\r\nAdem\xE1s,
-    en algunas letras no se han dibujado bien al hacer la transcripci\xF3n y puede
-    que falte una o dos l\xEDneas. A\xFAn as\xED, deber\xEDa ser capaz de encontrar
-    la palabra que quer\xEDa escribir la v\xEDctima.\r"
+  puzzleStatementText: "Viendo el diario de viaje de la v\xEDctima hay una p\xE1gina
+    que me llama especialmente la atenci\xF3n. En ella aparece un mapa de Europa
+    con varias anotaciones hechas. A lo mejor me sirve de ayuda leer lo que tiene
+    escrito para saber d\xF3nde tengo que pulsar:\r\n\r\n\u201CCansado del ritmo
+    de vida que llevaba hasta entonces decid\xED hacer un viaje que a la postre acabar\xEDa
+    siendo el mejor que he hecho en mi vida. \r\n\r\nPara empezar, me puse el objetivo
+    de no ir nunca en avi\xF3n, solo me mover\xEDa haciendo uso de coches o barcos.
+    Por ello, mi \xFAnica opci\xF3n era viajar entre ciudades que estuvieran directamente
+    conectadas por uno de estos medios. Adem\xE1s, tambi\xE9n me propuse pasar por
+    todos los sitios que siempre quise visitar sin repetir ninguno.\r\n\r\nFue un
+    viaje muy largo, y por momentos complicado. Pero sin duda alguna fue una experiencia
+    que me cambi\xF3 la vida.\u201D\r\n\r\nLeyendo esto, mi intuici\xF3n me dice
+    que para seguir adelante tengo que pulsar los pa\xEDses en el mismo orden por
+    los que pas\xF3 la v\xEDctima en su viaje. Para ello, tengo que llegar desde
+    el comienzo del viaje (el punto A) hasta el final (el punto S) pasando por cada
+    lugar solo una vez.\r"
   typingTime: 0.05
   spaceKeyStatement: {fileID: 1005823306}
   puzzleSupports: 
@@ -7659,32 +7627,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2019439063
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2019439060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96088f8fdabadc94a82d740f78aabdd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firstSupportText: "Si te fijas bien en todos los intentos que se han realizado
-    las palabras existen de verdad (aunque puede ser dificil de ver al principio
-    ya que se ha perdido alguna l\xEDnea). Esto deber\xEDa ayudarte a sacar las letras
-    que est\xE1n incompletas. Sobretodo si te fijas en la segunda palabra. Si a\xFAn
-    as\xED no puedes, mira en el abecedario cu\xE1les podr\xEDan entrar en ese hueco
-    yendo una por una."
-  secondSupportText: "La v\xEDctima solo ha tenido un fallo y es que se le ha olvidado
-    poner una letra que sab\xEDa que estaba en la primera palabra en el siguiente
-    intento. Lo que no ha hecho nunca es poner una letra en la misma posici\xF3n,
-    en el siguiente intento, si sabe que ah\xED no va."
-  thirdSupportText: "Sabiendo que hay una letra que aparece en todos los intentos,
-    y otra que solo lo hace en los dos \xFAltimos, deber\xEDas ser capaz de colocar
-    esas dos. Junto con las dos que ya est\xE1n su sitio, es coser y cantar."
-  inputField: {fileID: 1318540101}
 --- !u!114 &2019439064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7725,47 +7667,27 @@ MonoBehaviour:
   isFailurePanelShown: 0
   isReturnToPuzzleAfterFail: 0
   isPuzzleSkipped: 0
---- !u!21 &2023750783
-Material:
-  serializedVersion: 8
+--- !u!114 &2019439065
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/IndependentRoundedCorners
-  m_Shader: {fileID: 4800000, guid: d3beb88e61f88ca4393acdefb005fa70, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _halfSize: {r: 418.4406, g: 444.805, b: 0, a: 0}
-    - _r: {r: 12, g: 12, b: 12, a: 40}
-    - _rect2props: {r: 7.000061, g: 6.999939, b: 601.9216, a: 592.0221}
-  m_BuildTextureStacks: []
+  m_GameObject: {fileID: 2019439060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeef5d4caf5e7cb459342b015fc214bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstSupportText: "Parece un poco obvio, pero no tienes que pasar por todas las
+    conexiones que hay entre las diferentes regiones. Solo debes asegurarte de visitar
+    todas las localizaciones que hay sin repetir ninguna. Simplemente probando, deber\xEDa
+    ser f\xE1cil llegar a la soluci\xF3n."
+  secondSupportText: "Si conocieras a la v\xEDctima sabr\xEDas que lo primero que
+    hizo nada m\xE1s salir del punto A es ir lo m\xE1s al este posible."
+  thirdSupportText: "En el \xFAltimo tramo del viaje, antes de llegar al punto S,
+    la v\xEDctima tuvo que hacer el recorrido en barco y despu\xE9s en coche."
+  inputField: {fileID: 1318540101}
 --- !u!1 &2044747075
 GameObject:
   m_ObjectHideFlags: 0
@@ -7935,7 +7857,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 194}
-  m_SizeDelta: {x: -800, y: -812}
+  m_SizeDelta: {x: -600, y: -812}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2049816142
 MonoBehaviour:
@@ -7957,7 +7879,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "La soluci\xF3n es Tiempo"
+  m_text: "La soluci\xF3n es ADKJCGBF\xD1HIONEMPQRLS"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaecfd04f6578f6459420ee1fcd00635, type: 2}
   m_sharedMaterial: {fileID: -2434125666209454521, guid: aaecfd04f6578f6459420ee1fcd00635, type: 2}

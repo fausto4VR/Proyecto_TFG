@@ -3,9 +3,8 @@ using TMPro;
 using System.Text;
 using System.Text.RegularExpressions; 
 
-public class Puzzle1Logic : MonoBehaviour
-{
-        
+public class Puzzle2Logic : MonoBehaviour
+{   
     [SerializeField, TextArea(6,12)] private string firstSupportText;    
     [SerializeField, TextArea(6,12)] private string secondSupportText;    
     [SerializeField, TextArea(6,12)] private string thirdSupportText; 
@@ -46,7 +45,7 @@ public class Puzzle1Logic : MonoBehaviour
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;
         }
-        else if(solutionString == "TIEMPO")
+        else if(solutionString == "12:25:10" || solutionString == "XII:V:II")
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 1;
         }
@@ -76,6 +75,6 @@ public class Puzzle1Logic : MonoBehaviour
 
     public string RemovePunctuation(string input)
     {
-        return Regex.Replace(input, @"[^\w\s]", "");
+        return Regex.Replace(input, @"[^\w\s:]", "");
     }
 }
