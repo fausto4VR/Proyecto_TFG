@@ -45,7 +45,8 @@ public class PlayerLogicManager : MonoBehaviour
             string supportsContent = string.Join(", ", GameStateManager.Instance.lastPuzzleSupports);
             Debug.Log("Last Puzzle Supports: " + supportsContent);
             Debug.Log("Last Puzzle Points: " + GameStateManager.Instance.lastPuzzlePoints);            
-            Debug.Log("Final Malo: " + GameLogicManager.Instance.isBadEnding);
+            Debug.Log("Final Malo: " + GameLogicManager.Instance.isBadEnding);       
+            Debug.Log("Oportunidades para el Final: " + GameLogicManager.Instance.endOpportunities);
         }
     }
 

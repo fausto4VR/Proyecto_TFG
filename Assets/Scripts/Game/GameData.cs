@@ -12,9 +12,11 @@ public class GameData
     public bool[] gameKnownTutorials = new bool[8];
     public bool[] gameKnownDialogues = new bool[8];
     public bool gameIsBadEnding = false;
+    public int gameEndOpportunities = 2;
 
     public GameData(string sceneName, string guilty, string firstClue, string secondClue, string thirdClue, int storyPhase, 
-        string lastPuzzleComplete, bool[] knownSuspects, bool[] knownTutorials, bool[] knownDialogues, bool isBadEnding)
+        string lastPuzzleComplete, bool[] knownSuspects, bool[] knownTutorials, bool[] knownDialogues, bool isBadEnding, 
+        int endOpportunities)
     {
         gameScene = sceneName;
         gameGuilty = guilty;
@@ -27,6 +29,7 @@ public class GameData
         gameKnownTutorials = knownTutorials;
         gameKnownDialogues = knownDialogues;        
         gameIsBadEnding = isBadEnding;
+        gameEndOpportunities = endOpportunities;
     }
 
     public GameData()
@@ -39,6 +42,7 @@ public class GameData
         gameStoryPhase = 0;
         gameLastPuzzleComplete = "";        
         gameIsBadEnding = false;
+        gameEndOpportunities = 2;
         for (int i = 0; i < gameKnownSuspects.Length; i++)
         {
             gameKnownSuspects[i] = false;

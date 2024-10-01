@@ -17,17 +17,17 @@ public class MapManager : MonoBehaviour
             DisplayMapPanel();
         }
 
-        if(isMapOpen && Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        if(isMapOpen && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)))
         {
             GoToHomeScene();
         }
 
-        if(isMapOpen && Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        if(isMapOpen && (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)))
         {
             GoToMansionScene();
         }
 
-        if(isMapOpen && Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+        if(isMapOpen && (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)))
         {
             GoToParkScene();
         }

@@ -25,7 +25,8 @@ public class GameStateManager : MonoBehaviour
     private bool[] knownSuspects;
     private bool[] knownTutorials;
     private bool[] knownDialogues;
-    private bool isBadEnding;
+    private bool isBadEnding;    
+    private int endOpportunities;
     
     void Awake()
     {
@@ -55,8 +56,9 @@ public class GameStateManager : MonoBehaviour
         knownTutorials = GameLogicManager.Instance.knownTutorials;        
         knownDialogues = GameLogicManager.Instance.knownDialogues;        
         isBadEnding = GameLogicManager.Instance.isBadEnding;
+        endOpportunities = GameLogicManager.Instance.endOpportunities;
         SaveManager.SaveGameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase, lastPuzzleComplete, 
-            knownSuspects, knownTutorials, knownDialogues, isBadEnding);
+            knownSuspects, knownTutorials, knownDialogues, isBadEnding, endOpportunities);
 
         SavePuzzleData();
 
@@ -76,6 +78,7 @@ public class GameStateManager : MonoBehaviour
         GameLogicManager.Instance.knownTutorials = gameData.gameKnownTutorials;
         GameLogicManager.Instance.knownDialogues = gameData.gameKnownDialogues;        
         GameLogicManager.Instance.isBadEnding = gameData.gameIsBadEnding;
+        GameLogicManager.Instance.endOpportunities = gameData.gameEndOpportunities;
         SceneManager.LoadScene(gameData.gameScene);
 
         LoadPuzzleData();

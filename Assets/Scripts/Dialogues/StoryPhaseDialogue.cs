@@ -18,6 +18,10 @@ public class StoryPhaseDialogue : MonoBehaviour
     [SerializeField] private string[] fifthCharacterNameLines;
     [SerializeField, TextArea(4,5)] private string[] sixthDialogueLines;
     [SerializeField] private string[] sixthCharacterNameLines;
+    [SerializeField, TextArea(4,5)] private string[] seventhDialogueLines;
+    [SerializeField] private string[] seventhCharacterNameLines;
+    [SerializeField, TextArea(4,5)] private string[] eighthDialogueLines;
+    [SerializeField] private string[] eighthCharacterNameLines;
     [SerializeField] private int[] storyPhasesToUnlockDialogue;
     [SerializeField] private GameObject player;
     [SerializeField] private bool isTriggerDialogue;    
@@ -42,6 +46,8 @@ public class StoryPhaseDialogue : MonoBehaviour
         dialogueLinesList.Add(fourthDialogueLines);
         dialogueLinesList.Add(fifthDialogueLines);
         dialogueLinesList.Add(sixthDialogueLines);
+        dialogueLinesList.Add(seventhDialogueLines);
+        dialogueLinesList.Add(eighthDialogueLines);
 
         characterNamesList.Add(firstCharacterNameLines);
         characterNamesList.Add(secondCharacterNameLines);
@@ -49,6 +55,8 @@ public class StoryPhaseDialogue : MonoBehaviour
         characterNamesList.Add(fourthCharacterNameLines);
         characterNamesList.Add(fifthCharacterNameLines);
         characterNamesList.Add(sixthCharacterNameLines);
+        characterNamesList.Add(seventhCharacterNameLines);
+        characterNamesList.Add(eighthCharacterNameLines);
 
         // Para esperar que esté inicializada la lista de knownDialogues
         StartCoroutine(ExecuteAfterDelay());
@@ -58,7 +66,7 @@ public class StoryPhaseDialogue : MonoBehaviour
     {
         if (GetComponent<DialogueManager>().isPlayerInRange && !player.GetComponent<PlayerMovement>().isPlayerDoingTutorial)
         {
-            if (Input.GetKeyDown(KeyCode.E) || (isTriggerDialogue && !didDialogueTrigger))
+            if ((Input.GetKeyDown(KeyCode.E) && !isTriggerDialogue) || (isTriggerDialogue && !didDialogueTrigger))
             {
                 dialoguePanel.SetActive(true);
                 didConversationStart = true;

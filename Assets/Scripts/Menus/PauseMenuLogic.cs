@@ -111,22 +111,22 @@ public class PauseMenuLogic : MonoBehaviour
             }
         }
 
-        if(isPanelShown && Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        if(isPanelShown && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)))
         {
             DisplayCluesBoard();
         }
 
-        if(isPanelShown && Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        if(isPanelShown && (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)))
         {
             DisplaySuspectsBoard();
         }
 
-        if(isPanelShown && Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+        if(isPanelShown && (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)))
         {
             SaveGame();
         }
 
-        if(isPanelShown && Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+        if(isPanelShown && (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)))
         {
             GoToMainMenuPanel();
         }

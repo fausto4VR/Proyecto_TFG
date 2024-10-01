@@ -56,7 +56,7 @@ public class PuzzleLogicManager : MonoBehaviour
         if(GetComponent<PuzzleUIManager>().isPuzzleSkipped)
         {
             puzzlePoints = 1;
-            GameLogicManager.Instance.isBadEnding = true;
+            GameLogicManager.Instance.endOpportunities = 1;
             CompleteAndFinishPuzzle();
         }
     }

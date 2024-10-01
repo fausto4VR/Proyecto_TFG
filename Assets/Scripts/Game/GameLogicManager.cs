@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class GameLogicManager : MonoBehaviour
 {
     [SerializeField] private string sceneToDestroy = "MenuScene";
+    [SerializeField] GameObject victimNPC;
+    [SerializeField] GameObject fatherNPC;
 
     public static GameLogicManager Instance;
     public List<string> guiltyNames = new List<string> { "guilty1", "guilty2", "guilty3", "guilty4", "guilty5", "guilty6", "guilty7", "guilty8" };
@@ -18,6 +20,7 @@ public class GameLogicManager : MonoBehaviour
     public bool[] knownTutorials;
     public bool[] knownDialogues;
     public bool isBadEnding;
+    public int endOpportunities;
     
     private GameData gameData;
 
@@ -63,6 +66,12 @@ public class GameLogicManager : MonoBehaviour
             GameStateManager.Instance.LoadData();
             GameStateManager.Instance.isLoadGame = false; 
         } 
+
+        //QUITAR
+        if(Input.GetKeyDown(KeyCode.K))
+        {
+            SceneManager.LoadScene("SampleScene");
+        }
     }
 
     private void FoundGuilty(GameData gameData)
@@ -227,10 +236,19 @@ public class GameLogicManager : MonoBehaviour
         if(gameData != null)
         {
             isBadEnding = gameData.gameIsBadEnding;
+            if(gameData.gameEndOpportunities == 0 || gameData.gameEndOpportunities == 1 || gameData.gameEndOpportunities == 2)
+            {
+                endOpportunities = gameData.gameEndOpportunities;
+            }
+            else
+            {
+                endOpportunities = 2;
+            }            
         }
         else
         {
             isBadEnding = false;
+            endOpportunities = 2;
         }
     }
 
@@ -249,6 +267,21 @@ public class GameLogicManager : MonoBehaviour
         if (scene.name == sceneToDestroy)
         {
             Destroy(gameObject);
+        }
+
+        if (scene.name == "SampleScene")
+        {
+            GameData gameData = SaveManager.LoadGameData();
+            if(gameData.gameStoryPhase >= 200 && gameData.gameStoryPhase < 400)
+            {
+                GameObject victim = GameObject.Find("Victim");
+                victim.transform.GetChild(0).gameObject.SetActive(true);
+            }
+            else if(gameData.gameStoryPhase >= 400)
+            {
+                GameObject father = GameObject.Find("Father");
+                father.transform.GetChild(0).gameObject.SetActive(true);
+            }
         }
     }
 }
