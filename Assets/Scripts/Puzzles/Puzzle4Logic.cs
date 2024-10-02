@@ -1,7 +1,8 @@
 using UnityEngine;
 using TMPro;
 using System.Text;
-using System.Text.RegularExpressions; 
+using System.Text.RegularExpressions;
+using Unity.VisualScripting;
 
 public class Puzzle4Logic : MonoBehaviour
 {   
@@ -49,7 +50,7 @@ public class Puzzle4Logic : MonoBehaviour
             solutionString3 = RemovePunctuation(solutionString3); 
             solutionString3 = RemoveAccents(solutionString3);
 
-            if(solutionString1 == "A2:B2:C1:C2:C3")
+            if(CheckFirstFigure(solutionString1))
             {
                 inputFieldFigure1.GetComponent<TMP_InputField>().text = "A2:B2:C1:C2:C3";
             }
@@ -58,7 +59,7 @@ public class Puzzle4Logic : MonoBehaviour
                 inputFieldFigure1.GetComponent<TMP_InputField>().text = "";
             }
 
-            if(solutionString2 == "A1:A2:A3:B2:C1:C2:C3")
+            if(CheckSecondFigure(solutionString2))
             {
                 inputFieldFigure2.GetComponent<TMP_InputField>().text = "A1:A2:A3:B2:C1:C2:C3";
             }
@@ -67,7 +68,7 @@ public class Puzzle4Logic : MonoBehaviour
                 inputFieldFigure2.GetComponent<TMP_InputField>().text = "";
             }
 
-            if(solutionString3 == "A1:A3")
+            if(CheckThirdFigure(solutionString3))
             {
                 inputFieldFigure3.GetComponent<TMP_InputField>().text = "A1:A3";
             }
@@ -105,7 +106,7 @@ public class Puzzle4Logic : MonoBehaviour
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;
         }
-        else if(solutionString1 == "A2:B2:C1:C2:C3" && solutionString2 == "A1:A2:A3:B2:C1:C2:C3" && solutionString3 == "A1:A3")
+        else if(CheckFirstFigure(solutionString1) && CheckSecondFigure(solutionString2) && CheckThirdFigure(solutionString3))
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 1;
         }
@@ -136,5 +137,79 @@ public class Puzzle4Logic : MonoBehaviour
     public string RemovePunctuation(string input)
     {
         return Regex.Replace(input, @"[^\w\s:]", "");
+    }
+
+    private bool CheckFirstFigure(string figureString)
+    {
+        //A2:B2:C1:C2:C3
+        bool isCorrect = true;
+
+        if(figureString != "")
+        {
+            string[] words = figureString.Split(':');
+            foreach(string word in words)
+            {
+                if(word != "" && word != "A2" && word != "B2" && word != "C1" && word != "C2" && word != "C3")
+                {
+                    isCorrect = false;
+                }
+            }
+        }
+        else
+        {
+            isCorrect = false;
+        }
+
+        return isCorrect;
+    }
+
+    private bool CheckSecondFigure(string figureString)
+    {
+        //A1:A2:A3:B2:C1:C2:C3
+        bool isCorrect = true;
+
+        if(figureString != "")
+        {
+            string[] words = figureString.Split(':');
+            foreach(string word in words)
+            {
+                if(word != "" && word != "A1" && word != "A2" && word != "A3" && word != "B2" && word != "C1" && word != "C2" 
+                    && word != "C3")
+                {
+                    isCorrect = false;
+                }
+            }
+
+        }
+        else
+        {
+            isCorrect = false;
+        }        
+
+        return isCorrect;
+    }
+
+    private bool CheckThirdFigure(string figureString)
+    {
+        //A1:A3
+        bool isCorrect = true;
+
+        if(figureString != "")
+        {
+            string[] words = figureString.Split(':');
+            foreach(string word in words)
+            {
+                if(word != "" && word != "A1" && word != "A3")
+                {
+                    isCorrect = false;
+                }
+            }
+        }
+        else
+        {
+            isCorrect = false;
+        }
+
+        return isCorrect;
     }
 }
