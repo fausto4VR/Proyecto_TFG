@@ -8,6 +8,8 @@ public class PlayerLogicManager : MonoBehaviour
     [SerializeField] private float holdInspectKeyTime = 2.0f;
     [SerializeField, TextArea(4,5)] private string[] defaultInspectDialogueLines;
     [SerializeField] private string[] defaultInspectCharacterNameLines;
+    [SerializeField] private GameObject audioSourcesManager;
+    [SerializeField] private AudioSource worldMusic;
     
     public GameObject inspectLayout;
     public GameObject dialoguePanel;
@@ -20,10 +22,18 @@ public class PlayerLogicManager : MonoBehaviour
     public bool isTutorialInProgress;
 
     private float holdInspectKeyDuration = 0f;
+    private AudioSource inspectAudioSource;
+
+    void Start()
+    {
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        inspectAudioSource = audioSources[3];
+    }
 
     void Update()
     {
-        if(!isTutorialInProgress && !GetComponent<PlayerMovement>().isPlayerTalking)
+        if(!isTutorialInProgress && !GetComponent<PlayerMovement>().isPlayerTalking 
+            && !GetComponent<PlayerMovement>().isPlayerDoingTutorial && !GetComponent<PlayerMovement>().isPlayerInPause)
         {
             InspectCheck();
         }
@@ -52,6 +62,12 @@ public class PlayerLogicManager : MonoBehaviour
 
     private void InspectCheck()
     {
+        if(Input.GetKeyDown(KeyCode.Q) && !GetComponent<PlayerMovement>().isPlayerInspecting)
+        {
+            worldMusic.Stop();
+            inspectAudioSource.Play();
+        }
+
         if (Input.GetKey(KeyCode.Q) && !isObjectInspected && !isEmptyInspected)
         {
             GetComponent<PlayerMovement>().isPlayerInspecting = true;
@@ -63,6 +79,10 @@ public class PlayerLogicManager : MonoBehaviour
 
             if(holdInspectKeyDuration >= holdInspectKeyTime)
             {
+                if (!worldMusic.isPlaying)
+                {
+                    worldMusic.Play();
+                }
                 inspectProgressBar.GetComponent<Image>().fillAmount = 1;
 
                 if(isInspectInRange)
@@ -96,6 +116,11 @@ public class PlayerLogicManager : MonoBehaviour
 
     private void ResetProgress()
     {
+        inspectAudioSource.Stop();
+        if (!worldMusic.isPlaying)
+        {
+            worldMusic.Play();
+        }
         inspectLayout.SetActive(false);
         holdInspectKeyDuration = 0f;
         inspectProgressBar.GetComponent<Image>().fillAmount = 0f;

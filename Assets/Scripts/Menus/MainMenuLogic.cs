@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,12 +8,16 @@ public class MainMenuLogic : MonoBehaviour
     [SerializeField] private GameObject continueButtonDisabled;
     [SerializeField] private GameObject resetGamePanel;
     [SerializeField] private GameObject settingsGamePanel;
+    [SerializeField] private GameObject audioSourcesManager;
 
     private bool isResetGamePanelShown;
+    private AudioSource buttonsAudioSource;
 
     void Start()
     {
         UnlockContinueButton();
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        buttonsAudioSource = audioSources[0];
     }
 
     void Update()
@@ -32,14 +37,15 @@ public class MainMenuLogic : MonoBehaviour
             if(gameData != null)
             {
                 if(gameData.gameStoryPhase != 0)
-                {
+                {                    
+                    buttonsAudioSource.Play();
                     isResetGamePanelShown = true;
                     resetGamePanel.SetActive(true);
                 }
                 else if(gameData.gameStoryPhase == 0)
                 {
-                    GameStateManager.Instance.isNewGame = true;
-                    SceneManager.LoadScene("SampleScene");            
+                    buttonsAudioSource.Play();
+                    StartCoroutine(WaitForSoundAndLoadNewScene());        
                 }
             }
             else
@@ -54,13 +60,8 @@ public class MainMenuLogic : MonoBehaviour
     {
         if(!isResetGamePanelShown)
         {
-            GameData gameData = SaveManager.LoadGameData();
-
-            if(gameData != null)
-            {
-                GameStateManager.Instance.isLoadGame = true;
-                SceneManager.LoadScene(gameData.gameScene);
-            }
+            buttonsAudioSource.Play();
+            StartCoroutine(WaitForSoundAndLoadContinueScene());
         } 
     }
 
@@ -68,20 +69,20 @@ public class MainMenuLogic : MonoBehaviour
     {
         if(!isResetGamePanelShown)
         {
-            Application.Quit();
+            buttonsAudioSource.Play();
+            StartCoroutine(WaitForSoundAndLoadQuitGame());
         }        
     }
 
     public void ResetGame()
-    {
-        GameStateManager.Instance.ResetData();
-        isResetGamePanelShown = false;
-        GameStateManager.Instance.isNewGame = true;
-        SceneManager.LoadScene("SampleScene");
+    {   
+        buttonsAudioSource.Play();
+        StartCoroutine(WaitForSoundAndLoadResetScene());
     }
 
     public void BackFromResetPanel()
     {
+        buttonsAudioSource.Play();
         resetGamePanel.SetActive(false);
         isResetGamePanelShown = false;
     }
@@ -112,6 +113,8 @@ public class MainMenuLogic : MonoBehaviour
 
     public void DisplaySettingsPanel()
     {
+        buttonsAudioSource.Play();
+
         if(settingsGamePanel.activeInHierarchy == true)
         {
             settingsGamePanel.SetActive(false);
@@ -120,5 +123,40 @@ public class MainMenuLogic : MonoBehaviour
         {
             settingsGamePanel.SetActive(true);
         }
+    }
+
+    private IEnumerator WaitForSoundAndLoadContinueScene()
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        GameData gameData = SaveManager.LoadGameData();
+
+        if(gameData != null)
+        {
+            GameStateManager.Instance.isLoadGame = true;
+            SceneManager.LoadScene(gameData.gameScene);
+        }
+    }
+
+    private IEnumerator WaitForSoundAndLoadNewScene()
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        GameStateManager.Instance.isNewGame = true;
+        SceneManager.LoadScene("SampleScene");    
+    }
+
+    private IEnumerator WaitForSoundAndLoadResetScene()
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        
+        GameStateManager.Instance.ResetData();
+        isResetGamePanelShown = false;
+        GameStateManager.Instance.isNewGame = true;
+        SceneManager.LoadScene("SampleScene");
+    }
+
+    private IEnumerator WaitForSoundAndLoadQuitGame()
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        Application.Quit();
     }
 }

@@ -14,6 +14,7 @@ public class SettingsLogic : MonoBehaviour
     [SerializeField] private int defaultQuality = 5;
     [SerializeField] private float defaultVolume = 0.6f;
     [SerializeField] private bool defaultScreenMode = true;
+    [SerializeField] private GameObject audioSourcesManager;
 
     private float gameAudioVolume;
     private int gameQuality;
@@ -21,11 +22,14 @@ public class SettingsLogic : MonoBehaviour
     private Resolution[] resolutions;
     private Resolution gameResolution;
     private Resolution defaultResolution;
+    private AudioSource resetButtonsAudioSource;
 
     void Start()
     {
         resolutions = Screen.resolutions;
         defaultResolution = resolutions[^1];
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        resetButtonsAudioSource = audioSources[1];
         LoadSettings();
         uploadUIValues();
     }
@@ -178,6 +182,7 @@ public class SettingsLogic : MonoBehaviour
 
     public void ResetDefaultValues()
     {
+        resetButtonsAudioSource.Play();
         PlayerPrefs.DeleteAll();
         LoadSettings();
         uploadUIValues();

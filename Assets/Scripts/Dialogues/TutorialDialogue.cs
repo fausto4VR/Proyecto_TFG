@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -13,15 +11,22 @@ public class TutorialDialogue : MonoBehaviour
     [SerializeField] private TMP_Text tutorialText;
     [SerializeField] private int tutorialIndexOrder;
     [SerializeField] private Option panelSide;
+    [SerializeField] private GameObject audioSourcesManager;
 
     private enum Option {Left, Right}
     private bool isPlayerInRange;
     private bool isTutorialDone;
     private int turorialDialogueLineIndex;
     private bool isVisualSupportShown;
+    private bool isTutorialInProgress;
+    private AudioSource tutorialAudioSource;
+
 
     void Start()
-    {
+    {        
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        tutorialAudioSource = audioSources[5];
+
         turorialDialogueLineIndex = 0;
 
         if(panelSide == Option.Left)
@@ -47,6 +52,12 @@ public class TutorialDialogue : MonoBehaviour
     {
         if(isPlayerInRange && !isTutorialDone && !GameLogicManager.Instance.knownTutorials[tutorialIndexOrder])
         {
+            if(!isTutorialInProgress)
+            {
+                isTutorialInProgress = true;
+                tutorialAudioSource.Play();
+            }
+
             player.GetComponent<PlayerMovement>().isPlayerDoingTutorial = true;
             player.GetComponent<PlayerLogicManager>().isTutorialInProgress = true;
             tutorialPanel.SetActive(true);
@@ -100,6 +111,7 @@ public class TutorialDialogue : MonoBehaviour
     private void FinishTutorial()
     {
         isTutorialDone = true;
+        isTutorialInProgress = false;
         player.GetComponent<PlayerMovement>().isPlayerDoingTutorial = false;
         player.GetComponent<PlayerLogicManager>().isTutorialInProgress = false;
         ShowVisualSupport(false);

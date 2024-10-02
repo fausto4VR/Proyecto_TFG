@@ -18,6 +18,8 @@ public class DialogueManager : MonoBehaviour
     public GameObject conversationPanel;
     public string[] dialogueLines;
     public string[] characterNameLines;
+    [SerializeField]private int charsToPlaySound;  
+    [SerializeField] private GameObject audioSourcesManager; 
 
     public bool isPlayerInRange;
     public bool didConversationStart;
@@ -26,8 +28,13 @@ public class DialogueManager : MonoBehaviour
     private StoryPhaseDialogue storyPhaseDialogue;
     private InspectDialogue inspectDialogue;
     private PlayerLogicManager playerLogicManager;
+    private AudioSource typingDialogueAudioSource;
+
     void Start()
     {
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        typingDialogueAudioSource = audioSources[0];
+
         multipleChoiceDialogue = GetComponent<MultipleChoiceDialogue>();
         storyPhaseDialogue = GetComponent<StoryPhaseDialogue>();
         inspectDialogue = GetComponent<InspectDialogue>();
@@ -252,10 +259,18 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator ShowLine() 
     {
         dialogueText.text = string.Empty;
+        int charIndex = 0;
 
         foreach(char ch in dialogueLines[lineIndex])
         {
             dialogueText.text += ch;
+            
+            if(charIndex % charsToPlaySound == 0)
+            {
+                typingDialogueAudioSource.Play();
+            }
+
+            charIndex++;
             yield return new WaitForSeconds(typingTime);
         }
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -52,6 +53,7 @@ public class PauseMenuLogic : MonoBehaviour
     [SerializeField] private Image suspectImage8;
     [SerializeField] private Sprite suspectSprite8;
     [SerializeField] private TMP_Text suspectText8;
+    [SerializeField] private GameObject audioSourcesManager;
 
     private bool isPanelShown;
     private int lastStoryPhase;
@@ -62,9 +64,15 @@ public class PauseMenuLogic : MonoBehaviour
     private List<Image> suspectImages = new List<Image>();
     private List<Sprite> suspectSprites = new List<Sprite>();
     private List<TMP_Text> suspectTexts = new List<TMP_Text>();
+    private AudioSource pauseAudioSource;
+    private AudioSource buttonsAudioSource;
 
     void Start() 
-    {
+    {        
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        pauseAudioSource = audioSources[6];
+        buttonsAudioSource = audioSources[1];
+
         lastStoryPhase = GameLogicManager.Instance.storyPhase;
 
         suspectImages.Add(suspectImage1);
@@ -131,8 +139,9 @@ public class PauseMenuLogic : MonoBehaviour
             GoToMainMenuPanel();
         }
 
-        if(isAfterSavePanelShown && Input.GetKeyDown(KeyCode.Space))
+        if(isAfterSavePanelShown && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
+            buttonsAudioSource.Play();
             afterSavePanel.SetActive(false);
             isAfterSavePanelShown = false;
         }
@@ -156,16 +165,12 @@ public class PauseMenuLogic : MonoBehaviour
         {
             GoBackFromSuspectsPanel();
         }
-
-        if(isAfterSavePanelShown && Input.GetMouseButtonDown(0))
-        {
-            afterSavePanel.SetActive(false);
-            isAfterSavePanelShown = false;
-        }
     }
 
     public void DisplayMenuPanel()
-    {    
+    {
+        pauseAudioSource.Play();
+
         if(pauseMenuPanel.activeInHierarchy == true && isPanelShown)
         {
             pauseMenuPanel.SetActive(false);
@@ -202,6 +207,7 @@ public class PauseMenuLogic : MonoBehaviour
     {
         if(isPanelShown && !isAfterSavePanelShown && !isExitPanelShown && !isCluesPanelShown && !isSuspectsPanelShown)
         {
+            buttonsAudioSource.Play();
             isAfterSavePanelShown = true;
             GameStateManager.Instance.SaveData();
             afterSavePanel.SetActive(true);
@@ -225,6 +231,7 @@ public class PauseMenuLogic : MonoBehaviour
         }
         else if(isAfterSavePanelShown)
         {
+            buttonsAudioSource.Play();
             afterSavePanel.SetActive(false);
             isAfterSavePanelShown = false;
         }
@@ -234,6 +241,7 @@ public class PauseMenuLogic : MonoBehaviour
     {
         if(isPanelShown && !isAfterSavePanelShown && !isExitPanelShown && !isCluesPanelShown && !isSuspectsPanelShown)
         {
+            buttonsAudioSource.Play();
             isExitPanelShown = true;            
             exitPanel.SetActive(true);
         }
@@ -244,13 +252,14 @@ public class PauseMenuLogic : MonoBehaviour
     }
 
     public void GoToMainMenu()
-    {
-        DisplayMenuPanel();        
-        SceneManager.LoadScene("MenuScene");
+    {        
+        buttonsAudioSource.Play();        
+        StartCoroutine(WaitForSoundAndGoMenu()); 
     }
 
     public void GoBackFromExitPanel()
-    {
+    {        
+        buttonsAudioSource.Play();
         isExitPanelShown = false;            
         exitPanel.SetActive(false);
     }
@@ -259,6 +268,8 @@ public class PauseMenuLogic : MonoBehaviour
     {
         if(isPanelShown && !isAfterSavePanelShown && !isExitPanelShown && !isCluesPanelShown && !isSuspectsPanelShown)
         {
+            
+            buttonsAudioSource.Play();
             isCluesPanelShown = true;            
             cluesPanel.SetActive(true);
             UnlockFirstClue();
@@ -272,7 +283,8 @@ public class PauseMenuLogic : MonoBehaviour
     }
 
     public void GoBackFromCluesPanel()
-    {
+    {        
+        buttonsAudioSource.Play();
         isCluesPanelShown = false;            
         cluesPanel.SetActive(false);
     }
@@ -361,7 +373,8 @@ public class PauseMenuLogic : MonoBehaviour
     public void DisplaySuspectsBoard()
     {
         if(isPanelShown && !isAfterSavePanelShown && !isExitPanelShown && !isCluesPanelShown && !isSuspectsPanelShown)
-        {
+        {            
+            buttonsAudioSource.Play();
             isSuspectsPanelShown = true;            
             suspectsPanel.SetActive(true);
             UnlockSuspect();
@@ -373,7 +386,8 @@ public class PauseMenuLogic : MonoBehaviour
     }
 
     public void GoBackFromSuspectsPanel()
-    {
+    {        
+        buttonsAudioSource.Play();
         isSuspectsPanelShown = false;            
         suspectsPanel.SetActive(false);
     }
@@ -393,5 +407,28 @@ public class PauseMenuLogic : MonoBehaviour
                 suspectTexts[i].text = "Desconocido";
             }
         }
+    }
+    private IEnumerator WaitForSoundAndGoMenu()
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        
+        pauseMenuPanel.SetActive(false);
+        briefcaseIconButton.SetActive(true);
+        isPanelShown = false;
+        GetComponent<PlayerMovement>().isPlayerInPause = false;
+
+        afterSavePanel.SetActive(false);
+        isAfterSavePanelShown = false;
+
+        exitPanel.SetActive(false);
+        isExitPanelShown = false;
+            
+        cluesPanel.SetActive(false);
+        isCluesPanelShown = false;
+
+        suspectsPanel.SetActive(false);
+        isSuspectsPanelShown = false;
+              
+        SceneManager.LoadScene("MenuScene");
     }
 }

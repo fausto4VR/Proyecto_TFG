@@ -32,15 +32,23 @@ public class TheEndManager : MonoBehaviour
     [SerializeField] private Image correctImageBadEnding;
     [SerializeField] private Image correctImageGoodEnding;
     [SerializeField] private GameObject failSectionBadEnding;
+    [SerializeField] private GameObject audioSourcesManager;     
+    [SerializeField] private AudioSource worldMusic;
 
     private bool isPlayerInRange;
     private bool isTheEndPanelShown;
     private bool isFinalScreenShown;
     private bool isSuspectKnown;    
     private List<Sprite> suspectSprites = new List<Sprite>();
+    private AudioSource buttonsAudioSource;
+    private AudioSource theEndAudioSource;
 
     void Start()
     {
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        buttonsAudioSource = audioSources[1];
+        theEndAudioSource = audioSources[7];
+
         suspectSprites.Add(suspectSprite1);
         suspectSprites.Add(suspectSprite2);
         suspectSprites.Add(suspectSprite3);
@@ -82,6 +90,8 @@ public class TheEndManager : MonoBehaviour
 
     public void DisplayTheEndPanel()
     {
+        buttonsAudioSource.Play();
+
         if(theEndPanel.activeInHierarchy == true)
         {
             GoBackFromTheEndPanel();
@@ -112,31 +122,8 @@ public class TheEndManager : MonoBehaviour
     {
         if(isSuspectKnown)
         {
-            if(GameLogicManager.Instance.endOpportunities == 0)
-            {
-                ShowEnding();
-            }
-            else
-            {
-                int selectedIndex = guiltyDropdown.GetComponent<TMP_Dropdown>().value;
-                string selectedGuilty = guiltyDropdown.GetComponent<TMP_Dropdown>().options[selectedIndex].text;
-
-                if(GameLogicManager.Instance.guilty == selectedGuilty)
-                {
-                    GoToGoodEnding();
-                }
-                else
-                {
-                    if(GameLogicManager.Instance.endOpportunities == 2)
-                    {
-                        GoToAnotherTry(selectedGuilty);
-                    }
-                    else if(GameLogicManager.Instance.endOpportunities == 1)
-                    {
-                        GoToBadEnding(selectedGuilty);
-                    }
-                }
-            }
+            buttonsAudioSource.Play();
+            StartCoroutine(WaitForSoundAndSendGuilty());            
         }
     }
 
@@ -158,10 +145,14 @@ public class TheEndManager : MonoBehaviour
         {
             goodEndingScreen.SetActive(false);
         }
+
+        theEndAudioSource.Stop();
+        worldMusic.Play();
     }
 
     public void GoBackFromTheEndPanel()
     {
+        buttonsAudioSource.Play();
         player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
         isTheEndPanelShown = false;
         theEndPanel.SetActive(false);
@@ -169,6 +160,9 @@ public class TheEndManager : MonoBehaviour
 
     private void ShowEnding()
     {
+        worldMusic.Stop();
+        theEndAudioSource.Play();
+
         if(GameLogicManager.Instance.isBadEnding)
         {
             isTheEndPanelShown = false;
@@ -206,6 +200,9 @@ public class TheEndManager : MonoBehaviour
 
     private void GoToBadEnding(string selectedGuilty)
     {
+        worldMusic.Stop();
+        theEndAudioSource.Play();
+
         isTheEndPanelShown = false;
         theEndPanel.SetActive(false);
         badEndingScreen.SetActive(true);
@@ -232,6 +229,9 @@ public class TheEndManager : MonoBehaviour
 
     private void GoToGoodEnding()
     {
+        worldMusic.Stop();
+        theEndAudioSource.Play();
+
         isTheEndPanelShown = false;
         theEndPanel.SetActive(false);
         goodEndingScreen.SetActive(true);
@@ -253,6 +253,9 @@ public class TheEndManager : MonoBehaviour
 
     private void GoToAnotherTry(string selectedGuilty)
     {
+        worldMusic.Stop();
+        theEndAudioSource.Play();
+
         isTheEndPanelShown = false;
         theEndPanel.SetActive(false);
         anotherTryScreen.SetActive(true);
@@ -348,6 +351,37 @@ public class TheEndManager : MonoBehaviour
                 theEndMark.SetActive(false);                
             }
             isPlayerInRange = false;
+        }
+    }
+
+    private IEnumerator WaitForSoundAndSendGuilty()
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+
+        if(GameLogicManager.Instance.endOpportunities == 0)
+        {
+            ShowEnding();
+        }
+        else
+        {
+            int selectedIndex = guiltyDropdown.GetComponent<TMP_Dropdown>().value;
+            string selectedGuilty = guiltyDropdown.GetComponent<TMP_Dropdown>().options[selectedIndex].text;
+
+            if(GameLogicManager.Instance.guilty == selectedGuilty)
+            {
+                GoToGoodEnding();
+            }
+            else
+            {
+                if(GameLogicManager.Instance.endOpportunities == 2)
+                {
+                    GoToAnotherTry(selectedGuilty);
+                }
+                else if(GameLogicManager.Instance.endOpportunities == 1)
+                {
+                    GoToBadEnding(selectedGuilty);
+                }
+            }
         }
     }
 }

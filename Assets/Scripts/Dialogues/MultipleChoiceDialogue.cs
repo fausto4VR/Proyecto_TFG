@@ -24,6 +24,7 @@ public class MultipleChoiceDialogue: MonoBehaviour
     [SerializeField] private string firstOptionText;
     [SerializeField] private string secondOptionText;
     [SerializeField] private string thirdOptionText;
+    [SerializeField] private GameObject audioSourcesManager;  
 
     public GameObject dialoguePanel;
     public GameObject choicePanel;
@@ -31,6 +32,13 @@ public class MultipleChoiceDialogue: MonoBehaviour
     public bool didConversationStart;
 
     private bool isDialogueUnlock;
+    private AudioSource buttonsAudioSource;
+
+    void Start()
+    {
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        buttonsAudioSource = audioSources[1];
+    }
 
     void Update()
     {
@@ -137,7 +145,8 @@ public class MultipleChoiceDialogue: MonoBehaviour
 
     private void StartDialogue()
     {
-        player.GetComponent<PlayerMovement>().isPlayerTalking = true;
+        player.GetComponent<PlayerMovement>().isPlayerTalking = true;        
+        buttonsAudioSource.Play();
         choicePanel.SetActive(true);
         dialoguePanel.SetActive(true);
 

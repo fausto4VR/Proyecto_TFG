@@ -10,16 +10,22 @@ public class PuzzleLogicManager : MonoBehaviour
     [SerializeField] private TMP_Text puzzleStatement;    
     [SerializeField, TextArea(20, 40)] private string puzzleStatementText;
     [SerializeField]private float typingTime = 0.02f;
-    [SerializeField]private GameObject spaceKeyStatement;    
+    [SerializeField]private GameObject spaceKeyStatement;
+    [SerializeField]private int charsToPlaySound;  
+    [SerializeField] private GameObject audioSourcesManager; 
 
     public bool[] puzzleSupports;
     public int puzzlePoints;
 
     private PuzzleData puzzleData;
     private bool isStatementComplete;
+    private AudioSource typingAudioSource;
 
     void Start()
     {
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        typingAudioSource = audioSources[0];
+
         puzzleData = SaveManager.LoadPuzzleData();
         SelectPuzzleData(puzzleData);
         ShowStatement();
@@ -70,10 +76,18 @@ public class PuzzleLogicManager : MonoBehaviour
     private IEnumerator ShowLine() 
     {
         puzzleStatement.text = string.Empty;
+        int charIndex = 0;
 
         foreach(char ch in puzzleStatementText)
         {
             puzzleStatement.text += ch;
+            
+            if(charIndex % charsToPlaySound == 0)
+            {
+                typingAudioSource.Play();
+            }
+
+            charIndex++;
             yield return new WaitForSeconds(typingTime);
         }
 

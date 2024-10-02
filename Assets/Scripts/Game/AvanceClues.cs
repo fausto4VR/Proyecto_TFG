@@ -17,14 +17,17 @@ public class AvanceClues : MonoBehaviour
     [SerializeField] private Sprite secondClueSprite2;
     [SerializeField] private Sprite thirdClueSprite1;
     [SerializeField] private Sprite thirdClueSprite2;
+    [SerializeField] private GameObject audioSourcesManager;
 
 
     private bool isPlayerInRange;
     private bool isClueShown;
+    private AudioSource cluesAudioSource;
 
     void Start()
     {
-        
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        cluesAudioSource = audioSources[2];
     }
 
     void Update()
@@ -33,6 +36,7 @@ public class AvanceClues : MonoBehaviour
         {
             player.GetComponent<PlayerMovement>().isPlayerTalking = true;
             cluePanel.SetActive(true);
+            cluesAudioSource.Play();
 
             if(indexOfClue == 1)
             {
@@ -105,8 +109,8 @@ public class AvanceClues : MonoBehaviour
         }
         else if(GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[2] || 
             GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[3] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[7] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[8])
+            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[6] ||
+            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[7])
         {
             GameLogicManager.Instance.secondClue = "Mechón de pelo rubio";
             clueTextString += GameLogicManager.Instance.secondClue;

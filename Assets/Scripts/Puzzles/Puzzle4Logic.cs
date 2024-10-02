@@ -30,7 +30,6 @@ public class Puzzle4Logic : MonoBehaviour
 
         if(GetComponent<PuzzleUIManager>().isNecesaryResetInputs)
         {
-            Debug.Log("juan");
             string solutionString1 = inputFieldFigure1.GetComponent<TMP_InputField>().text;
             string solutionString2 = inputFieldFigure2.GetComponent<TMP_InputField>().text;
             string solutionString3 = inputFieldFigure3.GetComponent<TMP_InputField>().text;

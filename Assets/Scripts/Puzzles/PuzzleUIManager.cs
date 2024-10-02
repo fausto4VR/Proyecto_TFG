@@ -22,7 +22,9 @@ public class PuzzleUIManager : MonoBehaviour
     [SerializeField] private GameObject successsPanel;
     [SerializeField] private GameObject failurePanel;
     [SerializeField] private TMP_Text pointsSuccessText;
-    [SerializeField] private TMP_Text pointsFailureText;
+    [SerializeField] private TMP_Text pointsFailureText;    
+    [SerializeField] private GameObject audioSourcesManager;    
+    [SerializeField] private AudioSource puzzleMusic;
 
     public string firstSupportText;    
     public string secondSupportText;    
@@ -37,9 +39,21 @@ public class PuzzleUIManager : MonoBehaviour
     public bool isPuzzleSkipped;
 
     private int supportIndex;
+    private AudioSource buttonsAudioSource;
+    private AudioSource unlockSupportAudioSource;
+    private AudioSource successSolutionAudioSource;
+    private AudioSource failureSolutionAudioSource;
+    private AudioSource accessDeniedudioSource;
 
     void Start()
     {
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        buttonsAudioSource = audioSources[1];
+        unlockSupportAudioSource = audioSources[2];
+        successSolutionAudioSource = audioSources[3];
+        failureSolutionAudioSource = audioSources[4];
+        accessDeniedudioSource = audioSources[5];
+
         Color customColor = new Color(0.525f, 1f, 0.518f, 1f);
 
         if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
@@ -77,6 +91,8 @@ public class PuzzleUIManager : MonoBehaviour
 
         if(isReturnToPuzzleAfterFail)
         {
+            failureSolutionAudioSource.Stop();
+            puzzleMusic.Play();
             failurePanel.SetActive(false);
             isFailurePanelShown = false;
             isReturnToPuzzleAfterFail = false;
@@ -86,6 +102,8 @@ public class PuzzleUIManager : MonoBehaviour
 
     private void ShowSuccess()
     {
+        puzzleMusic.Stop();
+        successSolutionAudioSource.Play();
         successsPanel.SetActive(true);
         isSuccessPanelShown = true;
         int pointsToShow = GetComponent<PuzzleLogicManager>().CalculatePoints(true);
@@ -96,6 +114,8 @@ public class PuzzleUIManager : MonoBehaviour
 
     private void ShowFailure()
     {
+        puzzleMusic.Stop();
+        failureSolutionAudioSource.Play();
         failurePanel.SetActive(true);
         isFailurePanelShown = true;
         int pointsToShow = GetComponent<PuzzleLogicManager>().CalculatePoints(false);
@@ -107,10 +127,11 @@ public class PuzzleUIManager : MonoBehaviour
     public void UnlockSupport()
     {
         Color customColor = new Color(0.525f, 1f, 0.518f, 1f);
-        GetComponent<PuzzleLogicManager>().CalculatePoints(false);
 
         if(supportIndex == 0)
         {
+            GetComponent<PuzzleLogicManager>().CalculatePoints(false);
+            unlockSupportAudioSource.Play();
             firstSupportButton.GetComponent<Image>().color = customColor;
             firstSupportPanelButton.GetComponent<Image>().color = customColor;
             supportText.GetComponent<TMP_Text>().text = firstSupportText;
@@ -123,6 +144,8 @@ public class PuzzleUIManager : MonoBehaviour
         {
             if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
             {
+                GetComponent<PuzzleLogicManager>().CalculatePoints(false);
+                unlockSupportAudioSource.Play();
                 secondSupportButton.GetComponent<Image>().color = customColor;
                 secondSupportPanelButton.GetComponent<Image>().color = customColor;
                 supportText.GetComponent<TMP_Text>().text = secondSupportText;
@@ -132,6 +155,7 @@ public class PuzzleUIManager : MonoBehaviour
             }
             else
             {
+                accessDeniedudioSource.Play();
                 secondSupportWarningText.SetActive(true);
             }
         }
@@ -140,6 +164,8 @@ public class PuzzleUIManager : MonoBehaviour
         {
             if(GetComponent<PuzzleLogicManager>().puzzleSupports[0] && GetComponent<PuzzleLogicManager>().puzzleSupports[1])
             {
+                GetComponent<PuzzleLogicManager>().CalculatePoints(false);
+                unlockSupportAudioSource.Play();
                 thirdSupportButton.GetComponent<Image>().color = customColor;
                 thirdSupportPanelButton.GetComponent<Image>().color = customColor;
                 supportText.GetComponent<TMP_Text>().text = thirdSupportText;
@@ -150,6 +176,7 @@ public class PuzzleUIManager : MonoBehaviour
             }
             else
             {
+                accessDeniedudioSource.Play();
                 thirdSupportWarningText.SetActive(true);
             }
         }
@@ -157,6 +184,8 @@ public class PuzzleUIManager : MonoBehaviour
 
     public void DisplayHelpPanel()
     {
+        buttonsAudioSource.Play();
+
         if(helpPanel.activeInHierarchy == true && isPanelShown)
         {
             helpPanel.SetActive(false);
@@ -171,6 +200,8 @@ public class PuzzleUIManager : MonoBehaviour
 
     public void DisplaySkipPanel()
     {
+        buttonsAudioSource.Play();
+
         if(skipPanel.activeInHierarchy == true && isPanelShown)
         {
             skipPanel.SetActive(false);
@@ -185,11 +216,14 @@ public class PuzzleUIManager : MonoBehaviour
 
     public void SkipPuzzle()
     {
-        isPuzzleSkipped = true;
+        buttonsAudioSource.Play();
+        StartCoroutine(WaitForSoundAndSkip());
     }
 
     public void DisplayFirstSupportPanel()
     {
+        buttonsAudioSource.Play();
+
         if(supportSectionPanel.activeInHierarchy == true && isPanelShown)
         {
             supportSectionPanel.SetActive(false);
@@ -220,6 +254,8 @@ public class PuzzleUIManager : MonoBehaviour
 
     public void DisplaySecondSupportPanel()
     {
+        buttonsAudioSource.Play();
+
         if(supportSectionPanel.activeInHierarchy == true && isPanelShown)
         {
             supportSectionPanel.SetActive(false);
@@ -251,6 +287,8 @@ public class PuzzleUIManager : MonoBehaviour
 
     public void DisplayThirdSupportPanel()
     {
+        buttonsAudioSource.Play();
+
         if(supportSectionPanel.activeInHierarchy == true && isPanelShown)
         {
             supportSectionPanel.SetActive(false);
@@ -282,7 +320,8 @@ public class PuzzleUIManager : MonoBehaviour
 
     public void ReturnToGameScene()
     {
-        GetComponent<PuzzleLogicManager>().ReturnToGameScene();
+        buttonsAudioSource.Play();
+        StartCoroutine(WaitForSoundAndReturn());
     }
 
     public void ReadyToCheckSolution()
@@ -299,5 +338,17 @@ public class PuzzleUIManager : MonoBehaviour
         {
             skipButton.SetActive(true);
         }
+    }
+
+    private IEnumerator WaitForSoundAndReturn()
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        GetComponent<PuzzleLogicManager>().ReturnToGameScene();
+    }
+
+    private IEnumerator WaitForSoundAndSkip()
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        isPuzzleSkipped = true;
     }
 }

@@ -6,9 +6,17 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject mapMark;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject mapPanel;
+    [SerializeField] private GameObject audioSourcesManager;
 
     private bool isPlayerInRange;
     private bool isMapOpen;
+    private AudioSource mapAudioSource;
+
+    void Start()
+    {        
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        mapAudioSource = audioSources[4];
+    }
     
     void Update()
     {
@@ -35,6 +43,8 @@ public class MapManager : MonoBehaviour
 
     public void DisplayMapPanel()
     {
+        mapAudioSource.Play();
+
         if(mapPanel.activeInHierarchy == true)
         {
             player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
