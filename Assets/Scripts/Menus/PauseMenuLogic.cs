@@ -169,10 +169,10 @@ public class PauseMenuLogic : MonoBehaviour
 
     public void DisplayMenuPanel()
     {
-        pauseAudioSource.Play();
-
         if(pauseMenuPanel.activeInHierarchy == true && isPanelShown)
         {
+            pauseAudioSource.Play();
+
             pauseMenuPanel.SetActive(false);
             briefcaseIconButton.SetActive(true);
             isPanelShown = false;
@@ -195,6 +195,8 @@ public class PauseMenuLogic : MonoBehaviour
             if(!GetComponent<PlayerMovement>().isPlayerTalking && !GetComponent<PlayerMovement>().isPlayerInspecting 
                 && !GetComponent<PlayerMovement>().isPlayerDoingTutorial)
             {
+                pauseAudioSource.Play();
+                
                 pauseMenuPanel.SetActive(true);
                 briefcaseIconButton.SetActive(false);
                 isPanelShown = true;                

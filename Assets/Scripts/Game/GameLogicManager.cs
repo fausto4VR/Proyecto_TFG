@@ -9,7 +9,7 @@ public class GameLogicManager : MonoBehaviour
     [SerializeField] GameObject fatherNPC;
 
     public static GameLogicManager Instance;
-    public List<string> guiltyNames = new List<string> { "guilty1", "guilty2", "guilty3", "guilty4", "guilty5", "guilty6", "guilty7", "guilty8" };
+    public List<string> guiltyNames = new List<string>();
     public string guilty;
     public string firstClue;
     public string secondClue;
@@ -38,6 +38,8 @@ public class GameLogicManager : MonoBehaviour
 
     void Start()
     {
+        guiltyNames = new List<string> { "Matthew", "Harold", "Diana", "Sebastian", "Bobby", "Isabella", "Jessie", "Celeste" };
+        
         gameData = SaveManager.LoadGameData();
         FoundGuilty(gameData);
         FoundClues(gameData);
