@@ -7,10 +7,13 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject mapPanel;
     [SerializeField] private GameObject audioSourcesManager;
+    [SerializeField] private GameObject thirdOptionKey;
+    [SerializeField] private GameObject thirdOptionPanel;
 
     private bool isPlayerInRange;
     private bool isMapOpen;
     private AudioSource mapAudioSource;
+    private bool isThirdOptionActive;
 
     void Start()
     {        
@@ -20,6 +23,13 @@ public class MapManager : MonoBehaviour
     
     void Update()
     {
+        if(!string.IsNullOrEmpty(GameLogicManager.Instance.secondClue) && !isThirdOptionActive)
+        {
+            thirdOptionKey.SetActive(true);
+            thirdOptionPanel.SetActive(true);
+            isThirdOptionActive = true;
+        }
+
         if(isPlayerInRange && Input.GetKeyDown(KeyCode.M))
         {
             DisplayMapPanel();
@@ -71,7 +81,10 @@ public class MapManager : MonoBehaviour
 
     public void GoToParkScene()
     {
-        SceneManager.LoadScene("ParkScene");
+        if(!string.IsNullOrEmpty(GameLogicManager.Instance.secondClue))
+        {
+            SceneManager.LoadScene("ParkScene");
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

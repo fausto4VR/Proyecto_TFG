@@ -42,6 +42,7 @@ public class TheEndManager : MonoBehaviour
     private List<Sprite> suspectSprites = new List<Sprite>();
     private AudioSource buttonsAudioSource;
     private AudioSource theEndAudioSource;
+    private string lastPuzzle;
 
     void Start()
     {
@@ -57,6 +58,8 @@ public class TheEndManager : MonoBehaviour
         suspectSprites.Add(suspectSprite6);
         suspectSprites.Add(suspectSprite7);
         suspectSprites.Add(suspectSprite8);
+
+        lastPuzzle = "Puzzle7";
     }
 
     void Update()
@@ -98,17 +101,17 @@ public class TheEndManager : MonoBehaviour
         }
         else if(theEndPanel.activeInHierarchy == false)
         {
-            if(GameLogicManager.Instance.endOpportunities == 2)
+            if(GameLogicManager.Instance.endOpportunities == 2 && GameLogicManager.Instance.lastPuzzleComplete == lastPuzzle)
             {
                 opportunitiesText.text = "Te quedan 2 intentos.";
-            }
-            else if(GameLogicManager.Instance.endOpportunities == 1)
-            {
-                opportunitiesText.text = "Te queda 1 intento.";
             }
             else if(GameLogicManager.Instance.endOpportunities == 0)
             {
                 opportunitiesText.text = "No te quedan más intentos.";
+            }
+            else if(GameLogicManager.Instance.endOpportunities == 1 || !(GameLogicManager.Instance.lastPuzzleComplete == lastPuzzle))
+            {
+                opportunitiesText.text = "Te queda 1 intento.";
             }
 
             UploadDropdown();
@@ -373,11 +376,11 @@ public class TheEndManager : MonoBehaviour
             }
             else
             {
-                if(GameLogicManager.Instance.endOpportunities == 2)
+                if(GameLogicManager.Instance.endOpportunities == 2 && GameLogicManager.Instance.lastPuzzleComplete == lastPuzzle)
                 {
                     GoToAnotherTry(selectedGuilty);
                 }
-                else if(GameLogicManager.Instance.endOpportunities == 1)
+                else if(GameLogicManager.Instance.endOpportunities == 1 || !(GameLogicManager.Instance.lastPuzzleComplete == lastPuzzle))
                 {
                     GoToBadEnding(selectedGuilty);
                 }

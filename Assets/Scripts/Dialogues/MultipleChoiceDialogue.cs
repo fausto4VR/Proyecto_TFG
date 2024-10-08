@@ -15,7 +15,7 @@ public class MultipleChoiceDialogue: MonoBehaviour
     [SerializeField] private GameObject thirdOptionKey;
     [SerializeField] private GameObject firstOptionButton;
     [SerializeField] private GameObject secondOptionButton;
-    [SerializeField] private GameObject  thirdOptionButton;
+    [SerializeField] private GameObject thirdOptionButton;
     [SerializeField] private int clueToUnlockDialogue;
     [SerializeField] private int suspectIndex;    
     [SerializeField] private TMP_Text firstOptionPanel;
