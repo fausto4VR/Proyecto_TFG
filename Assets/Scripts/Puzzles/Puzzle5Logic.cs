@@ -1,16 +1,16 @@
 using UnityEngine;
-using TMPro;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Linq;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Puzzle5Logic : MonoBehaviour
 {   
     [SerializeField, TextArea(6,12)] private string firstSupportText;    
     [SerializeField, TextArea(6,12)] private string secondSupportText;    
-    [SerializeField, TextArea(6,12)] private string thirdSupportText; 
+    [SerializeField, TextArea(6,12)] private string thirdSupportText;
 
-    public GameObject inputField;
+    private Image buttonImage;
+    private int totalQueensPlaced;
+    private List<string> activeQueens = new List<string>();
 
     void Start()
     {
@@ -29,25 +29,18 @@ public class Puzzle5Logic : MonoBehaviour
 
         if(GetComponent<PuzzleUIManager>().isNecesaryResetInputs)
         {
-            inputField.GetComponent<TMP_InputField>().text = "";
+            // Las reinas se quedan igual
             GetComponent<PuzzleUIManager>().isNecesaryResetInputs = false;
         }
     }
 
     public void CheckResult()
     {
-        
-        string solutionString = inputField.GetComponent<TMP_InputField>().text;
-        solutionString = solutionString.Replace(" ", "");
-        solutionString = solutionString.ToUpper();
-        solutionString = RemovePunctuation(solutionString); 
-        solutionString = RemoveAccents(solutionString);
-
-        if(solutionString == "")
+        if(activeQueens.Count == 0)
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;
         }
-        else if(CheckSolution(solutionString))
+        else if(CheckSolution())
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 1;
         }
@@ -57,52 +50,58 @@ public class Puzzle5Logic : MonoBehaviour
         }
     }
 
-    private string RemoveAccents(string input)
+    public void DisplayQueen(Button button)
     {
-        string normalizedString = input.Normalize(NormalizationForm.FormD);
-        StringBuilder stringBuilder = new StringBuilder();
+        buttonImage = button.GetComponent<Image>();
 
-        foreach (char c in normalizedString)
+        if (buttonImage == null) return;
+
+        // Si la imagen es visible
+        if (buttonImage.color.a > 0)
         {
-            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-
-            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
-            {
-                stringBuilder.Append(c);
-            }
+            buttonImage.color = new Color(buttonImage.color.r, buttonImage.color.g, buttonImage.color.b, 0);
+            totalQueensPlaced -= 1;
+            activeQueens.Remove(button.name);
         }
-
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-    }
-
-    public string RemovePunctuation(string input)
-    {
-        return Regex.Replace(input, @"[^\w\s:]", "");
-    }
-
-    private bool CheckSolution(string figureString)
-    {
-        //A6:B8:C2:E1:H3 y D4:F7:G5
-        bool isCorrect = true;
-        bool isFullDoublePoints = figureString.All(c => c == ':');
-
-        if(figureString != "" && !isFullDoublePoints)
+        // Si la imagen no es visible
+        else
         {
-            string[] words = figureString.Split(':');
-            foreach(string word in words)
+            if(totalQueensPlaced < 5)
             {
-                if(word != "" && word != "A6" && word != "B8" && word != "C2" && word != "E1" && word != "H3" && word != "D4" 
-                    && word != "F7" && word != "G5")
+                buttonImage.color = new Color(buttonImage.color.r, buttonImage.color.g, buttonImage.color.b, 1);
+                totalQueensPlaced += 1;
+                if (!activeQueens.Contains(button.name))
                 {
-                    isCorrect = false;
+                    activeQueens.Add(button.name);
                 }
             }
         }
-        else
+    }
+
+    private bool CheckSolution()
+    {
+        //A6:B8:C2:E1:H3 y D4:F7:G5
+        List<string> requiredQueens = new List<string> {"A6", "B8", "C2", "E1", "H3"};
+
+        foreach (string required in requiredQueens)
         {
-            isCorrect = false;
+            bool found = false;
+
+            foreach (string queen in activeQueens)
+            {
+                if (queen.ToUpper().Contains(required))
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                return false;
+            }
         }
 
-        return isCorrect;
+        return true;
     }
 }

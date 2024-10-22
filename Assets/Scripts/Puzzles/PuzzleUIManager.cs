@@ -25,6 +25,7 @@ public class PuzzleUIManager : MonoBehaviour
     [SerializeField] private TMP_Text pointsFailureText;    
     [SerializeField] private GameObject audioSourcesManager;    
     [SerializeField] private AudioSource puzzleMusic;
+    [SerializeField] private GameObject outPanelDetectionButton;  
 
     public string firstSupportText;    
     public string secondSupportText;    
@@ -44,6 +45,9 @@ public class PuzzleUIManager : MonoBehaviour
     private AudioSource successSolutionAudioSource;
     private AudioSource failureSolutionAudioSource;
     private AudioSource accessDeniedudioSource;
+    private bool isFirstSupportShown;
+    private bool isSecondSupportShown;
+    private bool isThirdSupportShown;
 
     void Start()
     {
@@ -190,10 +194,12 @@ public class PuzzleUIManager : MonoBehaviour
         {
             helpPanel.SetActive(false);
             isPanelShown = false;
+            outPanelDetectionButton.SetActive(false); 
         }
         else if(helpPanel.activeInHierarchy == false && !isPanelShown)
         {
             helpPanel.SetActive(true);
+            outPanelDetectionButton.SetActive(true);
             isPanelShown = true;
         }
     }
@@ -206,9 +212,11 @@ public class PuzzleUIManager : MonoBehaviour
         {
             skipPanel.SetActive(false);
             isPanelShown = false;
+            outPanelDetectionButton.SetActive(false); 
         }
         else if(skipPanel.activeInHierarchy == false && !isPanelShown)
         {
+            outPanelDetectionButton.SetActive(true);
             skipPanel.SetActive(true);
             isPanelShown = true;
         }
@@ -231,11 +239,14 @@ public class PuzzleUIManager : MonoBehaviour
             supportUnlockButton.SetActive(false);
             supportText.SetActive(false);
             isPanelShown = false; 
+            outPanelDetectionButton.SetActive(false); 
         }
         else if(supportSectionPanel.activeInHierarchy == false && !isPanelShown)
         {
             supportSectionPanel.SetActive(true);
             firstSupportPanelButton.SetActive(true);
+            outPanelDetectionButton.SetActive(true);
+            isFirstSupportShown = true;
 
             if(!GetComponent<PuzzleLogicManager>().puzzleSupports[0])
             {
@@ -264,11 +275,14 @@ public class PuzzleUIManager : MonoBehaviour
             supportText.SetActive(false);
             secondSupportWarningText.SetActive(false);
             isPanelShown = false; 
+            outPanelDetectionButton.SetActive(false); 
         }
         else if(supportSectionPanel.activeInHierarchy == false && !isPanelShown)
         {
             supportSectionPanel.SetActive(true);
             secondSupportPanelButton.SetActive(true);
+            outPanelDetectionButton.SetActive(true);
+            isSecondSupportShown = true;
 
             if(!GetComponent<PuzzleLogicManager>().puzzleSupports[1])
             {
@@ -296,12 +310,15 @@ public class PuzzleUIManager : MonoBehaviour
             supportUnlockButton.SetActive(false);
             supportText.SetActive(false);
             thirdSupportWarningText.SetActive(false);
-            isPanelShown = false; 
+            isPanelShown = false;
+            outPanelDetectionButton.SetActive(false); 
         }
         else if(supportSectionPanel.activeInHierarchy == false && !isPanelShown)
         {
             supportSectionPanel.SetActive(true);
             thirdSupportPanelButton.SetActive(true);
+            outPanelDetectionButton.SetActive(true);
+            isThirdSupportShown = true;
 
             if(!GetComponent<PuzzleLogicManager>().puzzleSupports[2])
             {
@@ -327,6 +344,40 @@ public class PuzzleUIManager : MonoBehaviour
     public void ReadyToCheckSolution()
     {
         isCheckTrigger = true;
+    }
+
+    public void OutPanelDisplay()
+    {
+        if(supportSectionPanel.activeInHierarchy == true && isPanelShown)
+        {
+            if(isFirstSupportShown)
+            {
+                isFirstSupportShown = false;
+                DisplayFirstSupportPanel();
+            }
+            else if(isSecondSupportShown)
+            {
+                isSecondSupportShown = false;
+                DisplaySecondSupportPanel();
+            }
+            else if(isThirdSupportShown)
+            {
+                isThirdSupportShown = false;
+                DisplayThirdSupportPanel();
+            }
+        }
+
+        if(skipPanel.activeInHierarchy == true && isPanelShown)
+        {
+            DisplaySkipPanel();
+        }
+
+        if(helpPanel.activeInHierarchy == true && isPanelShown)
+        {
+            DisplayHelpPanel();
+        }
+
+        outPanelDetectionButton.SetActive(false);
     }
 
     private IEnumerator ExecuteAfterDelay()

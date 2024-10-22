@@ -1,18 +1,17 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
 using TMPro;
-using System.Text;
-using System.Text.RegularExpressions;
-using Unity.VisualScripting;
 
 public class Puzzle4Logic : MonoBehaviour
 {   
     [SerializeField, TextArea(6,12)] private string firstSupportText;    
     [SerializeField, TextArea(6,12)] private string secondSupportText;    
-    [SerializeField, TextArea(6,12)] private string thirdSupportText; 
+    [SerializeField, TextArea(6,12)] private string thirdSupportText;    
+    [SerializeField] private TMP_Text explanationFailureText;
 
-    public GameObject inputFieldFigure1;
-    public GameObject inputFieldFigure2;
-    public GameObject inputFieldFigure3;
+    private List<string> activeSquares = new List<string>();
+    private bool isFailurePanelShown;
 
     void Start()
     {
@@ -29,187 +28,201 @@ public class Puzzle4Logic : MonoBehaviour
             CheckResult();
         }
 
+        if(isFailurePanelShown)
+        {
+            // Se da un aviso al jugador de las figuras que ha acertado
+
+            if(CheckSolutionFigure1() && CheckSolutionFigure2())
+            {
+                explanationFailureText.text = "Aún así has acertado la Figura 1 y la 2";
+            }
+            else if(CheckSolutionFigure1() && CheckSolutionFigure3())
+            {
+                explanationFailureText.text = "Aún así has acertado la Figura 1 y la 3";
+            }
+            else if(CheckSolutionFigure2() && CheckSolutionFigure3())
+            {
+                explanationFailureText.text = "Aún así has acertado la Figura 2 y la 3";
+            }
+            else if(CheckSolutionFigure1())
+            {
+                explanationFailureText.text = "Aún así has acertado la Figura 1";
+            }
+            else if(CheckSolutionFigure2())
+            {
+                explanationFailureText.text = "Aún así has acertado la Figura 2";
+            }
+            else if(CheckSolutionFigure3())
+            {
+                explanationFailureText.text = "Aún así has acertado la Figura 3";
+            }
+
+            isFailurePanelShown = false;
+        }
+
         if(GetComponent<PuzzleUIManager>().isNecesaryResetInputs)
         {
-            string solutionString1 = inputFieldFigure1.GetComponent<TMP_InputField>().text;
-            string solutionString2 = inputFieldFigure2.GetComponent<TMP_InputField>().text;
-            string solutionString3 = inputFieldFigure3.GetComponent<TMP_InputField>().text;
-
-            solutionString1 = solutionString1.Replace(" ", "");
-            solutionString1 = solutionString1.ToUpper();
-            solutionString1 = RemovePunctuation(solutionString1); 
-            solutionString1 = RemoveAccents(solutionString1);
-
-            solutionString2 = solutionString2.Replace(" ", "");
-            solutionString2 = solutionString2.ToUpper();
-            solutionString2 = RemovePunctuation(solutionString2); 
-            solutionString2 = RemoveAccents(solutionString2);
-
-            solutionString3 = solutionString3.Replace(" ", "");
-            solutionString3 = solutionString3.ToUpper();
-            solutionString3 = RemovePunctuation(solutionString3); 
-            solutionString3 = RemoveAccents(solutionString3);
-
-            if(CheckFirstFigure(solutionString1))
-            {
-                inputFieldFigure1.GetComponent<TMP_InputField>().text = "A2:B2:C1:C2:C3";
-            }
-            else
-            {
-                inputFieldFigure1.GetComponent<TMP_InputField>().text = "";
-            }
-
-            if(CheckSecondFigure(solutionString2))
-            {
-                inputFieldFigure2.GetComponent<TMP_InputField>().text = "A1:A2:A3:B2:C1:C2:C3";
-            }
-            else
-            {
-                inputFieldFigure2.GetComponent<TMP_InputField>().text = "";
-            }
-
-            if(CheckThirdFigure(solutionString3))
-            {
-                inputFieldFigure3.GetComponent<TMP_InputField>().text = "A1:A3";
-            }
-            else
-            {
-                inputFieldFigure3.GetComponent<TMP_InputField>().text = "";
-            }
-
+            // Los cuadrados se quedan igual
             GetComponent<PuzzleUIManager>().isNecesaryResetInputs = false;
         }
     }
 
     public void CheckResult()
     {
-        string solutionString1 = inputFieldFigure1.GetComponent<TMP_InputField>().text;
-        string solutionString2 = inputFieldFigure2.GetComponent<TMP_InputField>().text;
-        string solutionString3 = inputFieldFigure3.GetComponent<TMP_InputField>().text;
-
-        solutionString1 = solutionString1.Replace(" ", "");
-        solutionString1 = solutionString1.ToUpper();
-        solutionString1 = RemovePunctuation(solutionString1); 
-        solutionString1 = RemoveAccents(solutionString1);
-
-        solutionString2 = solutionString2.Replace(" ", "");
-        solutionString2 = solutionString2.ToUpper();
-        solutionString2 = RemovePunctuation(solutionString2); 
-        solutionString2 = RemoveAccents(solutionString2);
-
-        solutionString3 = solutionString3.Replace(" ", "");
-        solutionString3 = solutionString3.ToUpper();
-        solutionString3 = RemovePunctuation(solutionString3); 
-        solutionString3 = RemoveAccents(solutionString3);
-
-        if(solutionString1 == "" && solutionString2 == "" && solutionString3 == "")
+        if(activeSquares.Count == 0)
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;
         }
-        else if(CheckFirstFigure(solutionString1) && CheckSecondFigure(solutionString2) && CheckThirdFigure(solutionString3))
+        else if(CheckSolution())
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 1;
         }
         else
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 2;
+            isFailurePanelShown = true;
         }
     }
 
-    private string RemoveAccents(string input)
+    public void DisplaySquare(Toggle toggle)
     {
-        string normalizedString = input.Normalize(NormalizationForm.FormD);
-        StringBuilder stringBuilder = new StringBuilder();
-
-        foreach (char c in normalizedString)
+        if (toggle.isOn)
         {
-            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-
-            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+            if (!activeSquares.Contains(toggle.name))
             {
-                stringBuilder.Append(c);
-            }
-        }
-
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-    }
-
-    public string RemovePunctuation(string input)
-    {
-        return Regex.Replace(input, @"[^\w\s:]", "");
-    }
-
-    private bool CheckFirstFigure(string figureString)
-    {
-        //A2:B2:C1:C2:C3
-        bool isCorrect = true;
-
-        if(figureString != "")
-        {
-            string[] words = figureString.Split(':');
-            foreach(string word in words)
-            {
-                if(word != "" && word != "A2" && word != "B2" && word != "C1" && word != "C2" && word != "C3")
-                {
-                    isCorrect = false;
-                }
+                activeSquares.Add(toggle.name);
             }
         }
         else
         {
-            isCorrect = false;
+            if (activeSquares.Contains(toggle.name))
+            {
+                activeSquares.Remove(toggle.name);
+            }
         }
-
-        return isCorrect;
     }
 
-    private bool CheckSecondFigure(string figureString)
+    private bool CheckSolution()
     {
-        //A1:A2:A3:B2:C1:C2:C3
-        bool isCorrect = true;
-
-        if(figureString != "")
+        if(CheckSolutionFigure1() && CheckSolutionFigure2() && CheckSolutionFigure3())
         {
-            string[] words = figureString.Split(':');
-            foreach(string word in words)
-            {
-                if(word != "" && word != "A1" && word != "A2" && word != "A3" && word != "B2" && word != "C1" && word != "C2" 
-                    && word != "C3")
-                {
-                    isCorrect = false;
-                }
-            }
-
+            return true;
         }
         else
         {
-            isCorrect = false;
-        }        
-
-        return isCorrect;
+            return false;
+        }
     }
 
-    private bool CheckThirdFigure(string figureString)
+    private bool CheckSolutionFigure1()
     {
-        //A1:A3
-        bool isCorrect = true;
+        //Figura 1 - A2:B2:C1:C2:C3
+        List<string> requiredSquares = new List<string> {"Fig 1 A2", "Fig 1 B2", "Fig 1 C1", "Fig 1 C2", "Fig 1 C3"};
+        List<string> activeSquaresFigure1 = FilterByWord(activeSquares, "Fig 1");
 
-        if(figureString != "")
+        if(activeSquaresFigure1.Count == requiredSquares.Count)
         {
-            string[] words = figureString.Split(':');
-            foreach(string word in words)
+            foreach (string square in activeSquaresFigure1)
             {
-                if(word != "" && word != "A1" && word != "A3")
+                bool found = false;
+
+                foreach (string required in requiredSquares)
                 {
-                    isCorrect = false;
+                    if (square.ToUpper().Contains(required.ToUpper()))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    return false;
                 }
             }
+
+            return true;
         }
         else
         {
-            isCorrect = false;
+            return false;
         }
+    }
 
-        return isCorrect;
+    private bool CheckSolutionFigure2()
+    {
+        //Figura 2 - A1:A2:A3:B2:C1:C2:C3
+        List<string> requiredSquares = new List<string> {"Fig 2 A1", "Fig 2 A2", "Fig 2 A3", "Fig 2 B2", "Fig 2 C1", "Fig 2 C2", 
+            "Fig 2 C3"};
+        List<string> activeSquaresFigure2 = FilterByWord(activeSquares, "Fig 2");
+
+        if(activeSquaresFigure2.Count == requiredSquares.Count)
+        {
+            foreach (string square in activeSquaresFigure2)
+            {
+                bool found = false;
+
+                foreach (string required in requiredSquares)
+                {
+                    if (square.ToUpper().Contains(required.ToUpper()))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private bool CheckSolutionFigure3()
+    {
+        //Figura 3 - A1:A3
+        List<string> requiredSquares = new List<string> {"Fig 3 A1", "Fig 3 A3"};
+        List<string> activeSquaresFigure3 = FilterByWord(activeSquares, "Fig 3");
+
+        if(activeSquaresFigure3.Count == requiredSquares.Count)
+        {
+            foreach (string square in activeSquaresFigure3)
+            {
+                bool found = false;
+
+                foreach (string required in requiredSquares)
+                {
+                    if (square.ToUpper().Contains(required.ToUpper()))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public List<string> FilterByWord(List<string> originalList, string word)
+    {
+        List<string> filteredList = originalList.FindAll(item => item.Contains(word));
+        return filteredList;
     }
 }

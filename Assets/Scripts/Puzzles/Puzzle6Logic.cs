@@ -43,7 +43,7 @@ public class Puzzle6Logic : MonoBehaviour
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;
         }
-        else if(solutionString == "6")
+        else if(solutionString == "14")
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 1;
         }

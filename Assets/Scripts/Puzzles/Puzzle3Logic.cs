@@ -1,7 +1,6 @@
 using UnityEngine;
-using TMPro;
-using System.Text;
-using System.Text.RegularExpressions; 
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Puzzle3Logic : MonoBehaviour
 {   
@@ -9,7 +8,7 @@ public class Puzzle3Logic : MonoBehaviour
     [SerializeField, TextArea(6,12)] private string secondSupportText;    
     [SerializeField, TextArea(6,12)] private string thirdSupportText; 
 
-    public GameObject inputField;
+    private List<string> activePaths = new List<string>();
 
     void Start()
     {
@@ -28,25 +27,20 @@ public class Puzzle3Logic : MonoBehaviour
 
         if(GetComponent<PuzzleUIManager>().isNecesaryResetInputs)
         {
-            inputField.GetComponent<TMP_InputField>().text = "";
+            // Los caminos se quedan igual
             GetComponent<PuzzleUIManager>().isNecesaryResetInputs = false;
         }
     }
 
     public void CheckResult()
     {
-        string solutionString = inputField.GetComponent<TMP_InputField>().text;
-        solutionString = solutionString.Replace(" ", "");
-        solutionString = solutionString.ToUpper();
-        solutionString = RemoveAccents(solutionString);
-        solutionString = RemovePunctuation(solutionString); 
-        solutionString = RemoveAccents(solutionString);
+        // ADKJCGBFNHIONEMPQRLS
 
-        if (solutionString == "")
+        if (activePaths.Count == 0)
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;
         }
-        else if (solutionString == "ADKJCGBFNHIONEMPQRLS")
+        else if (CheckSolution())
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 1;
         }
@@ -56,18 +50,56 @@ public class Puzzle3Logic : MonoBehaviour
         }
     }
 
-    private string RemoveAccents(string input)
+    public void DisplayPath(Toggle toggle)
     {
-        input = input.Replace('Á', 'A')
-                    .Replace('É', 'E')
-                    .Replace('Í', 'I')
-                    .Replace('Ó', 'O')
-                    .Replace('Ú', 'U');
-        return input;
+        if (toggle.isOn)
+        {
+            if (!activePaths.Contains(toggle.name))
+            {
+                activePaths.Add(toggle.name);
+            }
+        }
+        else
+        {
+            if (activePaths.Contains(toggle.name))
+            {
+                activePaths.Remove(toggle.name);
+            }
+        }
     }
 
-    public string RemovePunctuation(string input)
+    private bool CheckSolution()
     {
-        return Regex.Replace(input, @"[^a-zA-Z0-9\sÑñ]", "");
+        // Camino: ADKJCGBFÑHIONEMPQRLS
+        List<string> requiredPath = new List<string> {"AD", "DK", "JK", "CJ", "CG", "BG", "BF", "FÑ", "HÑ", "HI", "IO", "NO", 
+            "EN", "EM", "MP", "PQ", "QR", "LR", "LS"};
+
+        if(activePaths.Count == requiredPath.Count)
+        {
+            foreach (string path in activePaths)
+            {
+                bool found = false;
+
+                foreach (string required in requiredPath)
+                {
+                    if (path.ToUpper().Contains(required.ToUpper()))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

@@ -1,11 +1,22 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Puzzle7Logic : MonoBehaviour
 {   
     [SerializeField, TextArea(6,12)] private string firstSupportText;    
     [SerializeField, TextArea(6,12)] private string secondSupportText;    
-    [SerializeField, TextArea(6,12)] private string thirdSupportText; 
+    [SerializeField, TextArea(6,12)] private string thirdSupportText;     
+    [SerializeField] private GameObject cardImagePosition1; 
+    [SerializeField] private GameObject cardImagePosition2; 
+    [SerializeField] private GameObject cardImagePosition3; 
+    [SerializeField] private GameObject cardImagePosition4; 
+    [SerializeField] private GameObject cardImagePosition5;     
+    [SerializeField] private Sprite cardSpriteSpades;     
+    [SerializeField] private Sprite cardSpriteClubs;     
+    [SerializeField] private Sprite cardSpriteDiamonds;     
+    [SerializeField] private Sprite cardSpriteHearts;     
+    [SerializeField] private Sprite cardSpriteJoker; 
 
     public TMP_Dropdown positionDropdown1;
     public TMP_Dropdown positionDropdown2;
@@ -62,8 +73,8 @@ public class Puzzle7Logic : MonoBehaviour
         selectedIndex5 = positionDropdown5.value;
         string solutionString5 = positionDropdown5.options[selectedIndex5].text.ToUpper();
 
-        if(solutionString1 == "PICAS" && solutionString2 == "PICAS" && solutionString3 == "PICAS" && solutionString4 == "PICAS" 
-            && solutionString5 == "PICAS")
+        if(solutionString1 == "----" && solutionString2 == "----" && solutionString3 == "----" && solutionString4 == "----" 
+            && solutionString5 == "----")
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 0;
         }
@@ -75,6 +86,153 @@ public class Puzzle7Logic : MonoBehaviour
         else
         {
             GetComponent<PuzzleUIManager>().isCorrectResult = 2;
+        }
+    }
+
+    public void DisplayCard(TMP_Dropdown dropdown)
+    {
+        int selectedIndex = dropdown.value;
+        string selectedString = dropdown.options[selectedIndex].text.ToUpper();
+
+        if(dropdown.name.ToUpper().Contains("POS 1"))
+        {
+            cardImagePosition1.SetActive(true);
+            if(selectedString == "PICAS")
+            {
+                cardImagePosition1.GetComponent<Image>().sprite = cardSpriteSpades;
+            }
+            else if(selectedString == "TRÉBOLES")
+            {
+                cardImagePosition1.GetComponent<Image>().sprite = cardSpriteClubs;
+            }
+            else if(selectedString == "DIAMANTES")
+            {
+                cardImagePosition1.GetComponent<Image>().sprite = cardSpriteDiamonds;
+            }
+            else if(selectedString == "CORAZONES")
+            {
+                cardImagePosition1.GetComponent<Image>().sprite = cardSpriteHearts;
+            }
+            else if(selectedString == "JOKER")
+            {
+                cardImagePosition1.GetComponent<Image>().sprite = cardSpriteJoker;
+            }
+            else
+            {
+                cardImagePosition1.SetActive(false);
+            }
+        }
+        else if(dropdown.name.ToUpper().Contains("POS 2"))
+        {
+            cardImagePosition2.SetActive(true);
+            if(selectedString == "PICAS")
+            {
+                cardImagePosition2.GetComponent<Image>().sprite = cardSpriteSpades;
+            }
+            else if(selectedString == "TRÉBOLES")
+            {
+                cardImagePosition2.GetComponent<Image>().sprite = cardSpriteClubs;
+            }
+            else if(selectedString == "DIAMANTES")
+            {
+                cardImagePosition2.GetComponent<Image>().sprite = cardSpriteDiamonds;
+            }
+            else if(selectedString == "CORAZONES")
+            {
+                cardImagePosition2.GetComponent<Image>().sprite = cardSpriteHearts;
+            }
+            else if(selectedString == "JOKER")
+            {
+                cardImagePosition2.GetComponent<Image>().sprite = cardSpriteJoker;
+            }
+            else
+            {
+                cardImagePosition2.SetActive(false);
+            }
+        }
+        else if(dropdown.name.ToUpper().Contains("POS 3"))
+        {
+            cardImagePosition3.SetActive(true);
+            if(selectedString == "PICAS")
+            {
+                cardImagePosition3.GetComponent<Image>().sprite = cardSpriteSpades;
+            }
+            else if(selectedString == "TRÉBOLES")
+            {
+                cardImagePosition3.GetComponent<Image>().sprite = cardSpriteClubs;
+            }
+            else if(selectedString == "DIAMANTES")
+            {
+                cardImagePosition3.GetComponent<Image>().sprite = cardSpriteDiamonds;
+            }
+            else if(selectedString == "CORAZONES")
+            {
+                cardImagePosition3.GetComponent<Image>().sprite = cardSpriteHearts;
+            }
+            else if(selectedString == "JOKER")
+            {
+                cardImagePosition3.GetComponent<Image>().sprite = cardSpriteJoker;
+            }
+            else
+            {
+                cardImagePosition3.SetActive(false);
+            }
+        }
+        else if(dropdown.name.ToUpper().Contains("POS 4"))
+        {
+            cardImagePosition4.SetActive(true);
+            if(selectedString == "PICAS")
+            {
+                cardImagePosition4.GetComponent<Image>().sprite = cardSpriteSpades;
+            }
+            else if(selectedString == "TRÉBOLES")
+            {
+                cardImagePosition4.GetComponent<Image>().sprite = cardSpriteClubs;
+            }
+            else if(selectedString == "DIAMANTES")
+            {
+                cardImagePosition4.GetComponent<Image>().sprite = cardSpriteDiamonds;
+            }
+            else if(selectedString == "CORAZONES")
+            {
+                cardImagePosition4.GetComponent<Image>().sprite = cardSpriteHearts;
+            }
+            else if(selectedString == "JOKER")
+            {
+                cardImagePosition4.GetComponent<Image>().sprite = cardSpriteJoker;
+            }
+            else
+            {
+                cardImagePosition4.SetActive(false);
+            }
+        }
+        else if(dropdown.name.ToUpper().Contains("POS 5"))
+        {
+            cardImagePosition5.SetActive(true);
+            if(selectedString == "PICAS")
+            {
+                cardImagePosition5.GetComponent<Image>().sprite = cardSpriteSpades;
+            }
+            else if(selectedString == "TRÉBOLES")
+            {
+                cardImagePosition5.GetComponent<Image>().sprite = cardSpriteClubs;
+            }
+            else if(selectedString == "DIAMANTES")
+            {
+                cardImagePosition5.GetComponent<Image>().sprite = cardSpriteDiamonds;
+            }
+            else if(selectedString == "CORAZONES")
+            {
+                cardImagePosition5.GetComponent<Image>().sprite = cardSpriteHearts;
+            }
+            else if(selectedString == "JOKER")
+            {
+                cardImagePosition5.GetComponent<Image>().sprite = cardSpriteJoker;
+            }
+            else
+            {
+                cardImagePosition5.SetActive(false);
+            }
         }
     }
 }
