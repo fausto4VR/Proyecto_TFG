@@ -5,22 +5,31 @@ using UnityEngine.SceneManagement;
 
 public class PuzzleLogicManager : MonoBehaviour
 {
+    [Header("Statement Section")]
+    [SerializeField] private TMP_Text puzzleStatement;  
+    [SerializeField]private GameObject spaceKeyStatement;
+
+    [Header("Sound Section")]
+    [SerializeField] private GameObject audioSourcesManager;   
+
+    [Header("Variable Section")]
     [SerializeField] private string puzzleScene;
     [SerializeField] private string puzzleName;
-    [SerializeField] private TMP_Text puzzleStatement;    
-    [SerializeField, TextArea(20, 40)] private string puzzleStatementText;
-    [SerializeField]private float typingTime = 0.02f;
-    [SerializeField]private GameObject spaceKeyStatement;
-    [SerializeField]private int charsToPlaySound;  
-    [SerializeField] private GameObject audioSourcesManager; 
+    [SerializeField]private float typingTime = 0.03f;
+    [SerializeField]private int charsToPlaySound = 5; 
 
+    // QUITAR
+    [Header("Otros")]
     public bool[] puzzleSupports;
     public int puzzlePoints;
 
+    // REVISAR
+    private string puzzleStatementText;
+    private Coroutine typingCoroutine;
     private PuzzleData puzzleData;
-    private bool isStatementComplete;
     private AudioSource typingAudioSource;
 
+    // REVISAR ---------------------------------------------------------------------------------------------------------------------
     void Start()
     {
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
@@ -28,9 +37,9 @@ public class PuzzleLogicManager : MonoBehaviour
 
         puzzleData = SaveManager.LoadPuzzleData();
         SelectPuzzleData(puzzleData);
-        ShowStatement();
     }
 
+    // QUITAR
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.V))
@@ -39,64 +48,97 @@ public class PuzzleLogicManager : MonoBehaviour
             Debug.Log("Puzzle Supports: " + supportsContent);
             Debug.Log("Puzzle Points: " + puzzlePoints);
         }
+    }
 
-        if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && !isStatementComplete) 
-        {
-            StopAllCoroutines();
-            puzzleStatement.text = puzzleStatementText;
-            isStatementComplete = true;
-            spaceKeyStatement.SetActive(false);
-        }
+    // Método para inicializar la corrutina donde se cierra el panel de solución
+    public void DetectToClosePanel(bool isSuccessResult)
+    {        
+        StartCoroutine(WaitForInputToClosePanel(isSuccessResult));
+    }
 
-        if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && GetComponent<PuzzleUIManager>().isSuccessPanelShown)
+    // Corrutina para cerrar el panel de solución, ya sea de fallo o acierto
+    private IEnumerator WaitForInputToClosePanel(bool isSuccessResult)
+    {
+        // Esperar un frame para que no salte directamente 
+        yield return null; 
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0));
+
+        if (isSuccessResult)
         {
             CompleteAndFinishPuzzle();
         }
-
-        if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && GetComponent<PuzzleUIManager>().isFailurePanelShown)
+        else if (!isSuccessResult)
         {
-            GetComponent<PuzzleUIManager>().isReturnToPuzzleAfterFail = true;
-            GetComponent<PuzzleUIManager>().isCorrectResult = 0;
-        }
-
-        if(GetComponent<PuzzleUIManager>().isPuzzleSkipped)
-        {
-            puzzlePoints = 1;
-            GameLogicManager.Instance.endOpportunities = 1;
-            CompleteAndFinishPuzzle();
+            GetComponent<PuzzleUIManager>().ReturnToPuzzleAfterFail();
         }
     }
 
-    private void ShowStatement()
+    // Método para mostrar el enunciado del puzle
+    public void ShowStatement(string statementTextInput)
     {   
-        isStatementComplete = false;     
-        StartCoroutine(ShowLine());
+        puzzleStatementText = statementTextInput;   
+        typingCoroutine = StartCoroutine(ShowLine(statementTextInput));
     }
 
-    private IEnumerator ShowLine() 
+    // Corrutina para mostrar el texto progresivamente
+    private IEnumerator ShowLine(string statementTextInput) 
     {
         puzzleStatement.text = string.Empty;
         int charIndex = 0;
+        bool skipActivated = false;
 
-        foreach(char ch in puzzleStatementText)
+        foreach (char ch in statementTextInput)
         {
             puzzleStatement.text += ch;
             
-            if(charIndex % charsToPlaySound == 0)
+            if (charIndex % charsToPlaySound == 0)
             {
                 typingAudioSource.Play();
             }
 
             charIndex++;
             yield return new WaitForSeconds(typingTime);
+
+            // Los dos siguientes if es para activar el salto del texto cuando se deje de pulsar la tecla correspondiente
+            if(Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0))
+            {
+                skipActivated = true;
+            }
+
+            if(!(Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0)) && skipActivated)
+            {
+                Debug.Log("Enunciado del puzle mostrado directamente");
+                SkipText();
+                break;
+            }
         }
 
-        if(puzzleStatement.text == puzzleStatementText)
+        GetComponent<PuzzleUIManager>().OutStatementDisplay();
+        spaceKeyStatement.SetActive(false);
+    }
+
+    // Método para saltar el tipado del texto y mostrarlo completo
+    private void SkipText()
+    {
+        if (typingCoroutine != null)
         {
+            StopCoroutine(typingCoroutine);
+            puzzleStatement.text = puzzleStatementText;
             spaceKeyStatement.SetActive(false);
+            GetComponent<PuzzleUIManager>().OutStatementDisplay();
         }
     }
 
+    // ------------------------------------------------------------------------------------------------------------------------
+    // Método para omitir el puzle
+    public void SkipPuzzleLogic()
+    {
+        puzzlePoints = 1;
+        GameLogicManager.Instance.endOpportunities = 1;
+        CompleteAndFinishPuzzle();
+    }
+
+    // REVISAR ---------------------------------------------------------------------------------------------------------------------
     public int CalculatePoints(bool isCorrect)
     {
         if(isCorrect)
@@ -124,6 +166,7 @@ public class PuzzleLogicManager : MonoBehaviour
         return puzzlePoints;
     }
 
+    // REVISAR ---------------------------------------------------------------------------------------------------------------------
     public void ReturnToGameScene()
     {
         SaveTemporarilyPuzzleData();
@@ -132,6 +175,7 @@ public class PuzzleLogicManager : MonoBehaviour
         SceneManager.LoadScene(puzzleScene);
     }
 
+    // REVISAR ---------------------------------------------------------------------------------------------------------------------
     private void CompleteAndFinishPuzzle()
     {
         GameStateManager.Instance.lastPuzzleSupports = puzzleSupports;
@@ -142,12 +186,14 @@ public class PuzzleLogicManager : MonoBehaviour
         SceneManager.LoadScene(puzzleScene);
     }
 
+    // REVISAR ---------------------------------------------------------------------------------------------------------------------
     private void SaveTemporarilyPuzzleData()
     {
         GameStateManager.Instance.lastPuzzleSupports = puzzleSupports;
         GameStateManager.Instance.lastPuzzlePoints = puzzlePoints;
     }
 
+    // REVISAR ---------------------------------------------------------------------------------------------------------------------
     private void SelectPuzzleData(PuzzleData puzzleData)
     {
         if(GameStateManager.Instance.lastPuzzleSupports != null && GameStateManager.Instance.lastPuzzleSupports.Length > 0)
@@ -382,6 +428,7 @@ public class PuzzleLogicManager : MonoBehaviour
         }
     }
 
+    // REVISAR ---------------------------------------------------------------------------------------------------------------------
     private void createPuzzleSupports()
     {
         puzzleSupports = new bool[3];
@@ -391,6 +438,7 @@ public class PuzzleLogicManager : MonoBehaviour
         }
     }
 
+    // REVISAR ---------------------------------------------------------------------------------------------------------------------
     private void SavePuzzleData()
     {
         if(puzzleName == "Puzzle1")

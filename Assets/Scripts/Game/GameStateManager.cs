@@ -1,9 +1,14 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.IO;
 
 public class GameStateManager : MonoBehaviour
 {
-    public static GameStateManager Instance;
+    public static GameStateManager Instance { get; private set; }
+
+    // REVISAR
     public bool isPuzzleRecentlyCompleted;
     public float[] actualPlayerPosition;
     public float[] actualCameraPosition;
@@ -14,6 +19,7 @@ public class GameStateManager : MonoBehaviour
     public bool isLoadGame;
     public bool isNewGame;
 
+    // REVISAR
     private GameObject player;
     private string sceneName;
     private string guilty;
@@ -27,7 +33,11 @@ public class GameStateManager : MonoBehaviour
     private bool[] knownDialogues;
     private bool isBadEnding;    
     private int endOpportunities;
-    
+
+    // Este es el contenedor de los textos cargados
+    public GameTextDictionary gameText { get; private set; }
+
+    // En el Awake definimos su comportamiento como singleton    
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -38,8 +48,11 @@ public class GameStateManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        loadGameTexts();
     }
 
+    // REVISAR
     public void SaveData()
     {
         player = GameObject.Find("Player");
@@ -65,6 +78,7 @@ public class GameStateManager : MonoBehaviour
         Debug.Log("Datos guardados");
     }
 
+    // REVISAR
     public void LoadData()
     {
         GameData gameData = SaveManager.LoadGameData();
@@ -87,6 +101,7 @@ public class GameStateManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    // REVISAR
     // Método que se llama cuando una escena es completamente cargada
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -105,6 +120,7 @@ public class GameStateManager : MonoBehaviour
         Debug.Log("Datos cargados");
     }
 
+    // REVISAR
     public void ResetData()
     {
         SaveManager.ResetPlayerData();
@@ -113,6 +129,7 @@ public class GameStateManager : MonoBehaviour
         Debug.Log("Datos reseteados");
     }
 
+    // REVISAR
     private void SavePuzzleData()
     {
         PuzzleData puzzleData = SaveManager.LoadPuzzleData();
@@ -172,6 +189,7 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
+    // REVISAR
     private void LoadPuzzleData()
     {
         PuzzleData puzzleData = SaveManager.LoadPuzzleData();
@@ -222,5 +240,44 @@ public class GameStateManager : MonoBehaviour
             lastPuzzleSupports = new bool[3];
             lastPuzzlePoints = 0;
         }
+    }
+
+    // Método para cargar los textos del juego desde el fichero json
+    public void loadGameTexts() 
+    {
+        string path = Path.Combine(Application.streamingAssetsPath, "gameText.json");
+
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            gameText = JsonUtility.FromJson<GameTextDictionary>(json);
+
+            if (gameText == null)
+            {
+                Debug.LogError("Hubo un error al parsear el archivo JSON.");
+            }
+        }
+        else
+        {
+            Debug.LogError("No se ha encontrado el archivo gameText.json en StreamingAssets.");
+        }
+    }
+
+    // Estructura de datos que representa el diccionario de textos del juego y sirve para parsear el JSON 
+    [System.Serializable]
+    public class GameTextDictionary
+    {
+        public TextPuzzle puzzle_1;
+        public TextPuzzle puzzle_2;
+    }
+
+    // Estructura de datos que representa los textos asociados a un "puzzle"
+    [System.Serializable]
+    public class TextPuzzle
+    {
+        public string puzzle_statement_text;
+        public string first_support_text;
+        public string second_support_text;
+        public string third_support_text;
     }
 }

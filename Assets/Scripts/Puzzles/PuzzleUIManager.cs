@@ -5,52 +5,71 @@ using UnityEngine.UI;
 
 public class PuzzleUIManager : MonoBehaviour
 {
+    [Header("Help and Skip Section")]
     [SerializeField] private GameObject helpPanel;
     [SerializeField] private GameObject skipPanel;
     [SerializeField] private GameObject skipButton;
+
+    [Header("Supports Section")]
     [SerializeField] private GameObject supportSectionPanel;
     [SerializeField] private GameObject firstSupportButton;
-    [SerializeField] private GameObject firstSupportPanelButton;
     [SerializeField] private GameObject secondSupportButton;
-    [SerializeField] private GameObject secondSupportPanelButton;
     [SerializeField] private GameObject thirdSupportButton;
+    [SerializeField] private GameObject firstSupportPanelButton;
+    [SerializeField] private GameObject secondSupportPanelButton;
     [SerializeField] private GameObject thirdSupportPanelButton;
     [SerializeField] private GameObject supportUnlockButton;
     [SerializeField] private GameObject secondSupportWarningText;
     [SerializeField] private GameObject thirdSupportWarningText;   
-    [SerializeField] private GameObject supportText;   
+    [SerializeField] private GameObject supportText; 
+
+    [Header("Solution Section")]
     [SerializeField] private GameObject successsPanel;
     [SerializeField] private GameObject failurePanel;
     [SerializeField] private TMP_Text pointsSuccessText;
-    [SerializeField] private TMP_Text pointsFailureText;    
+    [SerializeField] private TMP_Text pointsFailureText;
+    
+    [Header("Detection Section")]
+    [SerializeField] private GameObject outStatementDetectionButton;
+    [SerializeField] private GameObject outPanelDetectionButton; 
+
+    [Header("Sound Section")]   
     [SerializeField] private GameObject audioSourcesManager;    
     [SerializeField] private AudioSource puzzleMusic;
-    [SerializeField] private GameObject outPanelDetectionButton;  
+    
+    [Header("Variable Section")]
+    private float transparentSupportButtonColor = 0.63f;
+    
+    private Color unlockSupportButtonColor;
+    private Image firstSupportImage;
+    private Image secondSupportImage;
+    private Image thirdSupportImage;
+    private string firstSupportText;    
+    private string secondSupportText;    
+    private string thirdSupportText;
+    private string lastSupportButtonActivated;
+    private bool isPanelShown;
 
-    public string firstSupportText;    
-    public string secondSupportText;    
-    public string thirdSupportText;
-    public bool isPanelShown;
-    public bool isCheckTrigger;
-    public int isCorrectResult;
-    public bool isSuccessPanelShown;    
-    public bool isFailurePanelShown;
-    public bool isReturnToPuzzleAfterFail;    
-    public bool isNecesaryResetInputs;
-    public bool isPuzzleSkipped;
-
-    private int supportIndex;
+    // REVISAR AUDIO
     private AudioSource buttonsAudioSource;
     private AudioSource unlockSupportAudioSource;
     private AudioSource successSolutionAudioSource;
     private AudioSource failureSolutionAudioSource;
     private AudioSource accessDeniedudioSource;
-    private bool isFirstSupportShown;
-    private bool isSecondSupportShown;
-    private bool isThirdSupportShown;
+
+    // QUITAR    
+    public ResultType isCorrectResult;
+    public bool isCheckTrigger;
+    public bool isNecesaryResetInputs;
 
     void Start()
     {
+        unlockSupportButtonColor = new Color(0.525f, 1f, 0.518f, 1f);
+
+        firstSupportImage = firstSupportPanelButton.GetComponent<Image>();
+        secondSupportImage = secondSupportPanelButton.GetComponent<Image>();
+        thirdSupportImage = thirdSupportPanelButton.GetComponent<Image>();
+
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         buttonsAudioSource = audioSources[1];
         unlockSupportAudioSource = audioSources[2];
@@ -58,102 +77,270 @@ public class PuzzleUIManager : MonoBehaviour
         failureSolutionAudioSource = audioSources[4];
         accessDeniedudioSource = audioSources[5];
 
-        Color customColor = new Color(0.525f, 1f, 0.518f, 1f);
-
         if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
         {
-            firstSupportButton.GetComponent<Image>().color = customColor;
-            firstSupportPanelButton.GetComponent<Image>().color = customColor;
+            firstSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
+            firstSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
         }
 
         if(GetComponent<PuzzleLogicManager>().puzzleSupports[1])
         {
-            secondSupportButton.GetComponent<Image>().color = customColor;
-            secondSupportPanelButton.GetComponent<Image>().color = customColor;
+            secondSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
+            secondSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
         }
 
         if(GetComponent<PuzzleLogicManager>().puzzleSupports[2])
         {
-            thirdSupportButton.GetComponent<Image>().color = customColor;
-            thirdSupportPanelButton.GetComponent<Image>().color = customColor;
+            thirdSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
+            thirdSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
         }
 
-        // Para esperar que esté inicializada la lista de puzzleSupports
+        // Para esperar que esté inicializada la lista de puzzleSupports al entrar en la escena
         StartCoroutine(ExecuteAfterDelay());
     }
 
-    void Update()
+    // Corrutina para esperar que la lista de pistas esté inicializada y activar el botón de omitir el puzle si fuese necesario
+    private IEnumerator ExecuteAfterDelay()
     {
-        if(isCorrectResult == 1)
+        while (GetComponent<PuzzleLogicManager>().puzzleSupports == null || 
+           GetComponent<PuzzleLogicManager>().puzzleSupports.Length == 0)
         {
-            ShowSuccess();
-        }
-        else if(isCorrectResult == 2)
-        {
-            ShowFailure();
+            yield return null; // Espera un frame
         }
 
-        if(isReturnToPuzzleAfterFail)
+        if(GetComponent<PuzzleLogicManager>().puzzleSupports[0] && GetComponent<PuzzleLogicManager>().puzzleSupports[1] 
+            && GetComponent<PuzzleLogicManager>().puzzleSupports[2])
         {
-            failureSolutionAudioSource.Stop();
-            puzzleMusic.Play();
-            failurePanel.SetActive(false);
-            isFailurePanelShown = false;
-            isReturnToPuzzleAfterFail = false;
-            isNecesaryResetInputs = true;
+            skipButton.SetActive(true);
         }
     }
 
-    private void ShowSuccess()
+    // Método para cambiar el texto de la primera pista
+    public void SetFirstSupportText(string firstSupportTextInput)
+    {
+        firstSupportText = firstSupportTextInput;
+    }
+
+    // Método para cambiar el texto de la segunda pista
+    public void SetSecondSupportText(string secondSupportTextInput)
+    {
+        secondSupportText = secondSupportTextInput;
+    }
+
+    // Método para cambiar el texto de la tercera pista
+    public void SetThirdSupportText(string thirdSupportTextInput)
+    {
+        thirdSupportText = thirdSupportTextInput;
+    }
+
+    // Método para mostrar el panel de éxito despúes de acertar la solución de un puzle
+    public void ShowSuccessPanel()
     {
         puzzleMusic.Stop();
         successSolutionAudioSource.Play();
         successsPanel.SetActive(true);
-        isSuccessPanelShown = true;
-        int pointsToShow = GetComponent<PuzzleLogicManager>().CalculatePoints(true);
-        pointsSuccessText.text = pointsToShow + "/50";
-
-        isCorrectResult = 0;
+        int points = GetComponent<PuzzleLogicManager>().CalculatePoints(true);
+        pointsSuccessText.text = points + "/50";
+        GetComponent<PuzzleLogicManager>().DetectToClosePanel(true);
     }
 
-    private void ShowFailure()
+    // Método para mostrar el panel de fallo despúes de fallar la solución de un puzle
+    public void ShowFailurePanel()
     {
         puzzleMusic.Stop();
         failureSolutionAudioSource.Play();
         failurePanel.SetActive(true);
-        isFailurePanelShown = true;
-        int pointsToShow = GetComponent<PuzzleLogicManager>().CalculatePoints(false);
-        pointsFailureText.text = pointsToShow + "/50";
-
-        isCorrectResult = 0;
+        int points = GetComponent<PuzzleLogicManager>().CalculatePoints(false);
+        pointsFailureText.text = points + "/50";
+        GetComponent<PuzzleLogicManager>().DetectToClosePanel(false);
     }
 
+    // Método para desactivar el panel de fallo y volver a mostrar el puzle 
+    public void ReturnToPuzzleAfterFail()
+    {
+        failureSolutionAudioSource.Stop();
+        puzzleMusic.Play();
+        failurePanel.SetActive(false);
+
+        IPuzzleLogic puzzleLogic = GetComponent<IPuzzleLogic>();
+
+        if (puzzleLogic != null)
+        {
+            puzzleLogic.ResetSolutionInputs();
+        }
+        else
+        {
+            Debug.LogError("El componente de lógica del puzzle no está presente en este GameObject.");
+        }
+    }
+
+    // Método para mostar el panel de ayuda
+    public void DisplayHelpPanel()
+    {
+        buttonsAudioSource.Play();
+
+        if(helpPanel.activeInHierarchy && isPanelShown)
+        {
+            helpPanel.SetActive(false);
+            isPanelShown = false;
+            outPanelDetectionButton.SetActive(false); 
+        }
+        else if(!helpPanel.activeInHierarchy && !isPanelShown)
+        {
+            helpPanel.SetActive(true);
+            outPanelDetectionButton.SetActive(true);
+            isPanelShown = true;
+        }
+    }
+
+    // Método para mostar el panel de saltar puzle
+    public void DisplaySkipPanel()
+    {
+        buttonsAudioSource.Play();
+
+        if(skipPanel.activeInHierarchy && isPanelShown)
+        {
+            skipPanel.SetActive(false);
+            isPanelShown = false;
+            outPanelDetectionButton.SetActive(false); 
+        }
+        else if(!skipPanel.activeInHierarchy && !isPanelShown)
+        {
+            outPanelDetectionButton.SetActive(true);
+            skipPanel.SetActive(true);
+            isPanelShown = true;
+        }
+    }
+
+    // Método para mostar el panel de pistas
+    public void DisplaySupportPanel(Button button)
+    {
+        buttonsAudioSource.Play();
+        string supportButtonTag = button.gameObject.tag;
+
+        if(supportSectionPanel.activeInHierarchy && isPanelShown)
+        {
+            // Sección para cerrar el panel de pistas
+            if(lastSupportButtonActivated == supportButtonTag)
+            {
+                CloseSupportPanel();
+            }
+            // Sección para cambiar entre pistas
+            else
+            {
+                lastSupportButtonActivated = supportButtonTag;
+                secondSupportWarningText.SetActive(false);
+                thirdSupportWarningText.SetActive(false);
+                ShowSupport(supportButtonTag);
+            }
+        }
+        // Sección para abrir el panel de pistas con la que corresponda
+        else if (!supportSectionPanel.activeInHierarchy && !isPanelShown)
+        {
+            supportSectionPanel.SetActive(true);
+            outPanelDetectionButton.SetActive(true);            
+            isPanelShown = true;
+            lastSupportButtonActivated = supportButtonTag;
+
+            ShowSupport(supportButtonTag);
+        }
+    }
+
+    // Método para cerrar él panel de pistas
+    private void CloseSupportPanel()
+    {
+        supportSectionPanel.SetActive(false);
+        supportUnlockButton.SetActive(false);
+        supportText.SetActive(false);
+        secondSupportWarningText.SetActive(false);
+        thirdSupportWarningText.SetActive(false);
+        outPanelDetectionButton.SetActive(false);
+        isPanelShown = false;
+    }
+
+    // Método para mostrar la pista correspondiente
+    private void ShowSupport(string supportButtonTag)
+    {
+        if(supportButtonTag == "Support1")
+        {
+            firstSupportImage.color = new Color(firstSupportImage.color.r, firstSupportImage.color.g, firstSupportImage.color.b, 1f);
+            secondSupportImage.color = new Color(secondSupportImage.color.r, secondSupportImage.color.g, secondSupportImage.color.b, transparentSupportButtonColor);
+            thirdSupportImage.color = new Color(thirdSupportImage.color.r, thirdSupportImage.color.g, thirdSupportImage.color.b, transparentSupportButtonColor);
+
+            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[0])
+            {
+                supportText.SetActive(false);
+                supportUnlockButton.SetActive(true);               
+            }
+            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
+            {
+                supportUnlockButton.SetActive(false);  
+                supportText.SetActive(true);
+                supportText.GetComponent<TMP_Text>().text = firstSupportText;
+            }            
+        }
+
+        else if(supportButtonTag == "Support2")
+        {
+            firstSupportImage.color = new Color(firstSupportImage.color.r, firstSupportImage.color.g, firstSupportImage.color.b, transparentSupportButtonColor);
+            secondSupportImage.color = new Color(secondSupportImage.color.r, secondSupportImage.color.g, secondSupportImage.color.b, 1f);
+            thirdSupportImage.color = new Color(thirdSupportImage.color.r, thirdSupportImage.color.g, thirdSupportImage.color.b, transparentSupportButtonColor);
+
+            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[1])
+            {
+                supportText.SetActive(false);
+                supportUnlockButton.SetActive(true);               
+            }
+            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[1])
+            {
+                supportUnlockButton.SetActive(false);
+                supportText.SetActive(true);
+                supportText.GetComponent<TMP_Text>().text = secondSupportText;
+            }
+        }
+
+        else if(supportButtonTag == "Support3")
+        {
+            firstSupportImage.color = new Color(firstSupportImage.color.r, firstSupportImage.color.g, firstSupportImage.color.b, transparentSupportButtonColor);
+            secondSupportImage.color = new Color(secondSupportImage.color.r, secondSupportImage.color.g, secondSupportImage.color.b, transparentSupportButtonColor);
+            thirdSupportImage.color = new Color(thirdSupportImage.color.r, thirdSupportImage.color.g, thirdSupportImage.color.b, 1f);
+
+            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[2])
+            {
+                supportText.SetActive(false);
+                supportUnlockButton.SetActive(true);               
+            }
+            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[2])
+            {
+                supportUnlockButton.SetActive(false);
+                supportText.SetActive(true);
+                supportText.GetComponent<TMP_Text>().text = thirdSupportText;
+            }
+        }
+    }
+
+    // Método para desbloquear las pistas
     public void UnlockSupport()
     {
-        Color customColor = new Color(0.525f, 1f, 0.518f, 1f);
-
-        if(supportIndex == 0)
+        if(lastSupportButtonActivated == "Support1")
         {
-            GetComponent<PuzzleLogicManager>().CalculatePoints(false);
             unlockSupportAudioSource.Play();
-            firstSupportButton.GetComponent<Image>().color = customColor;
-            firstSupportPanelButton.GetComponent<Image>().color = customColor;
+            firstSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
+            firstSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
             supportText.GetComponent<TMP_Text>().text = firstSupportText;
-            GetComponent<PuzzleLogicManager>().puzzleSupports[supportIndex] = true;
+            GetComponent<PuzzleLogicManager>().puzzleSupports[0] = true;
             supportUnlockButton.SetActive(false);
             supportText.SetActive(true);
         }
-
-        if(supportIndex == 1)
+        else if(lastSupportButtonActivated == "Support2")
         {
             if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
             {
-                GetComponent<PuzzleLogicManager>().CalculatePoints(false);
                 unlockSupportAudioSource.Play();
-                secondSupportButton.GetComponent<Image>().color = customColor;
-                secondSupportPanelButton.GetComponent<Image>().color = customColor;
+                secondSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
+                secondSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
                 supportText.GetComponent<TMP_Text>().text = secondSupportText;
-                GetComponent<PuzzleLogicManager>().puzzleSupports[supportIndex] = true;
+                GetComponent<PuzzleLogicManager>().puzzleSupports[1] = true;
                 supportUnlockButton.SetActive(false);
                 supportText.SetActive(true);
             }
@@ -163,17 +350,15 @@ public class PuzzleUIManager : MonoBehaviour
                 secondSupportWarningText.SetActive(true);
             }
         }
-
-        if(supportIndex == 2)
+        else if(lastSupportButtonActivated == "Support3")
         {
             if(GetComponent<PuzzleLogicManager>().puzzleSupports[0] && GetComponent<PuzzleLogicManager>().puzzleSupports[1])
             {
-                GetComponent<PuzzleLogicManager>().CalculatePoints(false);
                 unlockSupportAudioSource.Play();
-                thirdSupportButton.GetComponent<Image>().color = customColor;
-                thirdSupportPanelButton.GetComponent<Image>().color = customColor;
+                thirdSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
+                thirdSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
                 supportText.GetComponent<TMP_Text>().text = thirdSupportText;
-                GetComponent<PuzzleLogicManager>().puzzleSupports[supportIndex] = true;
+                GetComponent<PuzzleLogicManager>().puzzleSupports[2] = true;
                 supportUnlockButton.SetActive(false);
                 supportText.SetActive(true);
                 skipButton.SetActive(true);
@@ -186,185 +371,18 @@ public class PuzzleUIManager : MonoBehaviour
         }
     }
 
-    public void DisplayHelpPanel()
+    // Método para cerrar un panel pulsando fuera de él
+    public void OutStatementDisplay()
     {
-        buttonsAudioSource.Play();
-
-        if(helpPanel.activeInHierarchy == true && isPanelShown)
-        {
-            helpPanel.SetActive(false);
-            isPanelShown = false;
-            outPanelDetectionButton.SetActive(false); 
-        }
-        else if(helpPanel.activeInHierarchy == false && !isPanelShown)
-        {
-            helpPanel.SetActive(true);
-            outPanelDetectionButton.SetActive(true);
-            isPanelShown = true;
-        }
+        outStatementDetectionButton.SetActive(false);
     }
 
-    public void DisplaySkipPanel()
-    {
-        buttonsAudioSource.Play();
-
-        if(skipPanel.activeInHierarchy == true && isPanelShown)
-        {
-            skipPanel.SetActive(false);
-            isPanelShown = false;
-            outPanelDetectionButton.SetActive(false); 
-        }
-        else if(skipPanel.activeInHierarchy == false && !isPanelShown)
-        {
-            outPanelDetectionButton.SetActive(true);
-            skipPanel.SetActive(true);
-            isPanelShown = true;
-        }
-    }
-
-    public void SkipPuzzle()
-    {
-        buttonsAudioSource.Play();
-        StartCoroutine(WaitForSoundAndSkip());
-    }
-
-    public void DisplayFirstSupportPanel()
-    {
-        buttonsAudioSource.Play();
-
-        if(supportSectionPanel.activeInHierarchy == true && isPanelShown)
-        {
-            supportSectionPanel.SetActive(false);
-            firstSupportPanelButton.SetActive(false);
-            supportUnlockButton.SetActive(false);
-            supportText.SetActive(false);
-            isPanelShown = false; 
-            outPanelDetectionButton.SetActive(false); 
-        }
-        else if(supportSectionPanel.activeInHierarchy == false && !isPanelShown)
-        {
-            supportSectionPanel.SetActive(true);
-            firstSupportPanelButton.SetActive(true);
-            outPanelDetectionButton.SetActive(true);
-            isFirstSupportShown = true;
-
-            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[0])
-            {
-                supportIndex = 0;
-                supportUnlockButton.SetActive(true);               
-            }
-            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
-            {
-                supportText.SetActive(true);
-                supportText.GetComponent<TMP_Text>().text = firstSupportText;
-            }
-
-            isPanelShown = true;
-        }
-    }
-
-    public void DisplaySecondSupportPanel()
-    {
-        buttonsAudioSource.Play();
-
-        if(supportSectionPanel.activeInHierarchy == true && isPanelShown)
-        {
-            supportSectionPanel.SetActive(false);
-            secondSupportPanelButton.SetActive(false);
-            supportUnlockButton.SetActive(false);
-            supportText.SetActive(false);
-            secondSupportWarningText.SetActive(false);
-            isPanelShown = false; 
-            outPanelDetectionButton.SetActive(false); 
-        }
-        else if(supportSectionPanel.activeInHierarchy == false && !isPanelShown)
-        {
-            supportSectionPanel.SetActive(true);
-            secondSupportPanelButton.SetActive(true);
-            outPanelDetectionButton.SetActive(true);
-            isSecondSupportShown = true;
-
-            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[1])
-            {
-                supportIndex = 1;
-                supportUnlockButton.SetActive(true);               
-            }
-            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[1])
-            {
-                supportText.SetActive(true);
-                supportText.GetComponent<TMP_Text>().text = secondSupportText;
-            }
-
-            isPanelShown = true;
-        }
-    }
-
-    public void DisplayThirdSupportPanel()
-    {
-        buttonsAudioSource.Play();
-
-        if(supportSectionPanel.activeInHierarchy == true && isPanelShown)
-        {
-            supportSectionPanel.SetActive(false);
-            thirdSupportPanelButton.SetActive(false);
-            supportUnlockButton.SetActive(false);
-            supportText.SetActive(false);
-            thirdSupportWarningText.SetActive(false);
-            isPanelShown = false;
-            outPanelDetectionButton.SetActive(false); 
-        }
-        else if(supportSectionPanel.activeInHierarchy == false && !isPanelShown)
-        {
-            supportSectionPanel.SetActive(true);
-            thirdSupportPanelButton.SetActive(true);
-            outPanelDetectionButton.SetActive(true);
-            isThirdSupportShown = true;
-
-            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[2])
-            {
-                supportIndex = 2;
-                supportUnlockButton.SetActive(true);               
-            }
-            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[2])
-            {
-                supportText.SetActive(true);
-                supportText.GetComponent<TMP_Text>().text = thirdSupportText;
-            }
-
-            isPanelShown = true;
-        }
-    }
-
-    public void ReturnToGameScene()
-    {
-        buttonsAudioSource.Play();
-        StartCoroutine(WaitForSoundAndReturn());
-    }
-
-    public void ReadyToCheckSolution()
-    {
-        isCheckTrigger = true;
-    }
-
+    // Método para cerrar un panel pulsando fuera de él
     public void OutPanelDisplay()
     {
         if(supportSectionPanel.activeInHierarchy == true && isPanelShown)
         {
-            if(isFirstSupportShown)
-            {
-                isFirstSupportShown = false;
-                DisplayFirstSupportPanel();
-            }
-            else if(isSecondSupportShown)
-            {
-                isSecondSupportShown = false;
-                DisplaySecondSupportPanel();
-            }
-            else if(isThirdSupportShown)
-            {
-                isThirdSupportShown = false;
-                DisplayThirdSupportPanel();
-            }
+            CloseSupportPanel();
         }
 
         if(skipPanel.activeInHierarchy == true && isPanelShown)
@@ -380,26 +398,47 @@ public class PuzzleUIManager : MonoBehaviour
         outPanelDetectionButton.SetActive(false);
     }
 
-    private IEnumerator ExecuteAfterDelay()
+    // Método para activar la lógica que omite el puzle
+    public void SkipPuzzle()
     {
-        yield return null;
+        buttonsAudioSource.Play();
+        StartCoroutine(WaitForButtonSound("skip"));
+    }
 
-        if(GetComponent<PuzzleLogicManager>().puzzleSupports[0] && GetComponent<PuzzleLogicManager>().puzzleSupports[1] 
-            && GetComponent<PuzzleLogicManager>().puzzleSupports[2])
+    // Método para activar la lógica que vuelve a la escena
+    public void ReturnToGameScene()
+    {
+        buttonsAudioSource.Play();
+        StartCoroutine(WaitForButtonSound("return"));
+    }
+    
+    // Corrutina para esperar que suene el efecto de sonido de un botón completamente
+    private IEnumerator WaitForButtonSound(string option)
+    {
+        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+
+        if (option == "skip")
         {
-            skipButton.SetActive(true);
+            GetComponent<PuzzleLogicManager>().SkipPuzzleLogic();
+        }
+        else if (option == "return") 
+        {
+            GetComponent<PuzzleLogicManager>().ReturnToGameScene();
         }
     }
 
-    private IEnumerator WaitForSoundAndReturn()
+    // Método para comprobar el resultado al pulsar el botón de Listo
+    public void ReadyToCheckSolution()
     {
-        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
-        GetComponent<PuzzleLogicManager>().ReturnToGameScene();
-    }
+        IPuzzleLogic puzzleLogic = GetComponent<IPuzzleLogic>();
 
-    private IEnumerator WaitForSoundAndSkip()
-    {
-        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
-        isPuzzleSkipped = true;
+        if (puzzleLogic != null)
+        {
+            puzzleLogic.CheckResult();
+        }
+        else
+        {
+            Debug.LogError("El componente de lógica del puzzle no está presente en este GameObject.");
+        }
     }
 }

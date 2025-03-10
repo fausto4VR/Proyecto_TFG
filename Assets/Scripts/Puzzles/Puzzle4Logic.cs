@@ -15,9 +15,9 @@ public class Puzzle4Logic : MonoBehaviour
 
     void Start()
     {
-        GetComponent<PuzzleUIManager>().firstSupportText = firstSupportText;
-        GetComponent<PuzzleUIManager>().secondSupportText = secondSupportText;
-        GetComponent<PuzzleUIManager>().thirdSupportText = thirdSupportText;
+        GetComponent<PuzzleUIManager>().SetFirstSupportText(GameStateManager.Instance.gameText.puzzle_1.first_support_text);
+        GetComponent<PuzzleUIManager>().SetSecondSupportText(GameStateManager.Instance.gameText.puzzle_1.second_support_text);
+        GetComponent<PuzzleUIManager>().SetThirdSupportText(GameStateManager.Instance.gameText.puzzle_1.third_support_text);
     }
 
     void Update()
@@ -71,15 +71,15 @@ public class Puzzle4Logic : MonoBehaviour
     {
         if(activeSquares.Count == 0)
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = 0;
+            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Empty;
         }
         else if(CheckSolution())
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = 1;
+            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Success;
         }
         else
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = 2;
+            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Failure;
             isFailurePanelShown = true;
         }
     }

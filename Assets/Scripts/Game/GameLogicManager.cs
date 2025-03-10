@@ -4,11 +4,13 @@ using UnityEngine.SceneManagement;
 
 public class GameLogicManager : MonoBehaviour
 {
-    [SerializeField] private string sceneToDestroy = "MenuScene";
-    [SerializeField] GameObject victimNPC;
-    [SerializeField] GameObject fatherNPC;
+    public static GameLogicManager Instance { get; private set; }
 
-    public static GameLogicManager Instance;
+    [SerializeField] private string sceneToDestroy = "MenuScene"; // REVISAR
+    [SerializeField] GameObject victimNPC; // REVISAR
+    [SerializeField] GameObject fatherNPC; // REVISAR
+
+    
     public List<string> guiltyNames = new List<string>();
     public string guilty;
     public string firstClue;
@@ -67,12 +69,6 @@ public class GameLogicManager : MonoBehaviour
         {
             GameStateManager.Instance.LoadData();
             GameStateManager.Instance.isLoadGame = false; 
-        } 
-
-        //QUITAR
-        if(Input.GetKeyDown(KeyCode.K))
-        {
-            SceneManager.LoadScene("SampleScene");
         }
     }
 

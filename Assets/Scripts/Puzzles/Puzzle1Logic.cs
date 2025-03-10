@@ -1,81 +1,52 @@
 using UnityEngine;
 using TMPro;
-using System.Text;
-using System.Text.RegularExpressions; 
 
-public class Puzzle1Logic : MonoBehaviour
+public class Puzzle1Logic : MonoBehaviour, IPuzzleLogic
 {
-        
-    [SerializeField, TextArea(6,12)] private string firstSupportText;    
-    [SerializeField, TextArea(6,12)] private string secondSupportText;    
-    [SerializeField, TextArea(6,12)] private string thirdSupportText; 
 
-    public GameObject inputField;
+    [Header("Solution Section")]
+    [SerializeField] private TMP_InputField inputField;
 
     void Start()
     {
-        GetComponent<PuzzleUIManager>().firstSupportText = firstSupportText;
-        GetComponent<PuzzleUIManager>().secondSupportText = secondSupportText;
-        GetComponent<PuzzleUIManager>().thirdSupportText = thirdSupportText;
+        GetComponent<PuzzleUIManager>().SetFirstSupportText(GameStateManager.Instance.gameText.puzzle_1.first_support_text);
+        GetComponent<PuzzleUIManager>().SetSecondSupportText(GameStateManager.Instance.gameText.puzzle_1.second_support_text);
+        GetComponent<PuzzleUIManager>().SetThirdSupportText(GameStateManager.Instance.gameText.puzzle_1.third_support_text);
+
+        GetComponent<PuzzleLogicManager>().ShowStatement(GameStateManager.Instance.gameText.puzzle_1.puzzle_statement_text);
+
+        // Agrega el método FilterInput como listener para detectar cambios en el InputField
+        inputField.onValueChanged.AddListener(FilterInput);
     }
 
-    void Update()
+    // Método para limpiar los inputs de la solución en caso de fallo - Implementación de la interfaz
+    public void ResetSolutionInputs()
     {
-        if(GetComponent<PuzzleUIManager>().isCheckTrigger)
-        {
-            GetComponent<PuzzleUIManager>().isCheckTrigger = false;
-            CheckResult();
-        }
-
-        if(GetComponent<PuzzleUIManager>().isNecesaryResetInputs)
-        {
-            inputField.GetComponent<TMP_InputField>().text = "";
-            GetComponent<PuzzleUIManager>().isNecesaryResetInputs = false;
-        }
+        inputField.GetComponent<TMP_InputField>().text = "";
     }
 
+    // Método para comprobar si el resultado proporcionado es acertado o no - Implementación de la interfaz
     public void CheckResult()
     {
         string solutionString = inputField.GetComponent<TMP_InputField>().text;
         solutionString = solutionString.Replace(" ", "");
+        solutionString = PuzzleUtils.RemoveNonAlphanumeric(solutionString); 
+        solutionString = PuzzleUtils.RemoveAccents(solutionString);        
         solutionString = solutionString.ToUpper();
-        solutionString = RemovePunctuation(solutionString); 
-        solutionString = RemoveAccents(solutionString);
 
-        if(solutionString == "")
+        if(solutionString == "TIEMPO")
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = 0;
+            GetComponent<PuzzleUIManager>().ShowSuccessPanel();
         }
-        else if(solutionString == "TIEMPO")
+        else if (!(solutionString == "TIEMPO" || solutionString == ""))
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = 1;
-        }
-        else
-        {
-            GetComponent<PuzzleUIManager>().isCorrectResult = 2;
+            GetComponent<PuzzleUIManager>().ShowFailurePanel();
         }
     }
 
-    private string RemoveAccents(string input)
+    // Método para filtrar caracteres no alfanuméricos en el InputField
+    private void FilterInput(string textToCheck)
     {
-        string normalizedString = input.Normalize(NormalizationForm.FormD);
-        StringBuilder stringBuilder = new StringBuilder();
-
-        foreach (char c in normalizedString)
-        {
-            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-
-            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
-            {
-                stringBuilder.Append(c);
-            }
-        }
-
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-    }
-
-    public string RemovePunctuation(string input)
-    {
-        return Regex.Replace(input, @"[^\w\s]", "");
+        inputField.text = PuzzleUtils.RemoveNonAlphanumeric(textToCheck); 
     }
 }
