@@ -73,7 +73,7 @@ public class PauseMenuLogic : MonoBehaviour
         pauseAudioSource = audioSources[6];
         buttonsAudioSource = audioSources[1];
 
-        lastStoryPhase = GameLogicManager.Instance.storyPhase;
+        lastStoryPhase = GameLogicManager.Instance.StoryPhaseAux; // QUITAR
 
         suspectImages.Add(suspectImage1);
         suspectImages.Add(suspectImage2);
@@ -110,7 +110,8 @@ public class PauseMenuLogic : MonoBehaviour
             DisplayMenuPanel();
         }
 
-        if(lastStoryPhase + 1 == GameLogicManager.Instance.storyPhase)
+        // QUITAR AUX
+        if(lastStoryPhase + 1 == GameLogicManager.Instance.StoryPhaseAux)
         {
             if(lastStoryPhase < objectiveTextPhases.Length)
             {
@@ -217,7 +218,8 @@ public class PauseMenuLogic : MonoBehaviour
 
             if(gameData != null)
             {
-                if(GameLogicManager.Instance.storyPhase == gameData.gameStoryPhase)
+                // QUITAR AUX
+                if(GameLogicManager.Instance.StoryPhaseAux == gameData.gameStoryPhaseAux)
                 {
                     afterSaveText.text = "La partida se ha guardado correctamente.";
                 }
@@ -293,14 +295,14 @@ public class PauseMenuLogic : MonoBehaviour
 
     private void UnlockFirstClue()
     {
-        if(!string.IsNullOrEmpty(GameLogicManager.Instance.firstClue))
+        if(!string.IsNullOrEmpty(GameLogicManager.Instance.Clues[0]))
         {
-            if(GameLogicManager.Instance.firstClue == "Tiene los ojos marrones")
+            if(GameLogicManager.Instance.Clues[0] == "Tiene los ojos marrones")
             {
                 firstClueImage.sprite = firstClueSprite1;
                 firstClueText.text = "Tiene los ojos marrones";
             }
-            else if(GameLogicManager.Instance.firstClue == "Tiene los ojos verdes")
+            else if(GameLogicManager.Instance.Clues[0] == "Tiene los ojos verdes")
             {
                 firstClueImage.sprite = firstClueSprite2;
                 firstClueText.text = "Tiene los ojos verdes";
@@ -320,14 +322,14 @@ public class PauseMenuLogic : MonoBehaviour
 
     private void UnlockSecondClue()
     {
-        if(!string.IsNullOrEmpty(GameLogicManager.Instance.secondClue))
+        if(!string.IsNullOrEmpty(GameLogicManager.Instance.Clues[1]))
         {
-            if(GameLogicManager.Instance.secondClue == "Mechón de pelo negro")
+            if(GameLogicManager.Instance.Clues[1] == "Mechón de pelo negro")
             {
                 secondClueImage.sprite = secondClueSprite1;
                 secondClueText.text = "Mechón de pelo negro";
             }
-            else if(GameLogicManager.Instance.secondClue == "Mechón de pelo rubio")
+            else if(GameLogicManager.Instance.Clues[1] == "Mechón de pelo rubio")
             {
                 secondClueImage.sprite = secondClueSprite2;
                 secondClueText.text = "Mechón de pelo rubio";
@@ -347,14 +349,14 @@ public class PauseMenuLogic : MonoBehaviour
 
     private void UnlockThirdClue()
     {
-        if(!string.IsNullOrEmpty(GameLogicManager.Instance.thirdClue))
+        if(!string.IsNullOrEmpty(GameLogicManager.Instance.Clues[2]))
         {
-            if(GameLogicManager.Instance.thirdClue == "Tiene una cicatriz")
+            if(GameLogicManager.Instance.Clues[2] == "Tiene una cicatriz")
             {
                 thirdClueImage.sprite = thirdClueSprite1;
                 thirdClueText.text = "Tiene una cicatriz";
             }
-            else if(GameLogicManager.Instance.thirdClue == "Tiene un pendiente")
+            else if(GameLogicManager.Instance.Clues[2] == "Tiene un pendiente")
             {
                 thirdClueImage.sprite = thirdClueSprite2;
                 thirdClueText.text = "Tiene un pendiente";
@@ -396,12 +398,12 @@ public class PauseMenuLogic : MonoBehaviour
 
     public void UnlockSuspect()
     {
-        for(int i=0; i<GameLogicManager.Instance.guiltyNames.Count; i++)
+        for(int i=0; i<GameLogicManager.Instance.GuiltyNames.Count; i++)
         {
-            if(GameLogicManager.Instance.knownSuspects[i])
+            if(GameLogicManager.Instance.KnownSuspects[i])
             {
                 suspectImages[i].sprite = suspectSprites[i];
-                suspectTexts[i].text = GameLogicManager.Instance.guiltyNames[i];
+                suspectTexts[i].text = GameLogicManager.Instance.GuiltyNames[i];
             }
             else
             {

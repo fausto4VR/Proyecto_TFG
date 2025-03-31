@@ -101,15 +101,15 @@ public class TheEndManager : MonoBehaviour
         }
         else if(theEndPanel.activeInHierarchy == false)
         {
-            if(GameLogicManager.Instance.endOpportunities == 2 && GameLogicManager.Instance.lastPuzzleComplete == lastPuzzle)
+            if(GameLogicManager.Instance.EndOpportunities == 2 && GameLogicManager.Instance.LastPuzzleComplete == lastPuzzle)
             {
                 opportunitiesText.text = "Te quedan 2 intentos.";
             }
-            else if(GameLogicManager.Instance.endOpportunities == 0)
+            else if(GameLogicManager.Instance.EndOpportunities == 0)
             {
                 opportunitiesText.text = "No te quedan más intentos.";
             }
-            else if(GameLogicManager.Instance.endOpportunities == 1 || !(GameLogicManager.Instance.lastPuzzleComplete == lastPuzzle))
+            else if(GameLogicManager.Instance.EndOpportunities == 1 || !(GameLogicManager.Instance.LastPuzzleComplete == lastPuzzle))
             {
                 opportunitiesText.text = "Te queda 1 intento.";
             }
@@ -166,18 +166,18 @@ public class TheEndManager : MonoBehaviour
         worldMusic.Stop();
         theEndAudioSource.Play();
 
-        if(GameLogicManager.Instance.isBadEnding)
+        if(GameLogicManager.Instance.IsBadEnding)
         {
             isTheEndPanelShown = false;
             theEndPanel.SetActive(false);
             badEndingScreen.SetActive(true);
             isFinalScreenShown = true;
-            guiltyFailText.text = "El culpable era " + GameLogicManager.Instance.guilty + " y no lo has elegido.";
+            guiltyFailText.text = "El culpable era " + GameLogicManager.Instance.Guilty + " y no lo has elegido.";
             failSectionBadEnding.SetActive(false);
 
-            for(int i = 0; i < GameLogicManager.Instance.guiltyNames.Count; i++)
+            for(int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count; i++)
             {
-                if(GameLogicManager.Instance.guiltyNames[i] == GameLogicManager.Instance.guilty)
+                if(GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty)
                 {
                     correctImageBadEnding.sprite = suspectSprites[i];
                 }
@@ -189,11 +189,11 @@ public class TheEndManager : MonoBehaviour
             theEndPanel.SetActive(false);
             goodEndingScreen.SetActive(true);
             isFinalScreenShown = true;
-            guiltySuccessText.text = "El culpable era " + GameLogicManager.Instance.guilty + " y lo has elegido.";
+            guiltySuccessText.text = "El culpable era " + GameLogicManager.Instance.Guilty + " y lo has elegido.";
 
-            for(int i = 0; i < GameLogicManager.Instance.guiltyNames.Count; i++)
+            for(int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count; i++)
         {
-            if(GameLogicManager.Instance.guiltyNames[i] == GameLogicManager.Instance.guilty)
+            if(GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty)
             {
                 correctImageGoodEnding.sprite = suspectSprites[i];
             }
@@ -209,23 +209,23 @@ public class TheEndManager : MonoBehaviour
         isTheEndPanelShown = false;
         theEndPanel.SetActive(false);
         badEndingScreen.SetActive(true);
-        guiltyFailText.text = "El culpable era " + GameLogicManager.Instance.guilty + " y has elegido a " + selectedGuilty + ".";
+        guiltyFailText.text = "El culpable era " + GameLogicManager.Instance.Guilty + " y has elegido a " + selectedGuilty + ".";
         
-        for(int i = 0; i < GameLogicManager.Instance.guiltyNames.Count; i++)
+        for(int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count; i++)
         {
-            if(GameLogicManager.Instance.guiltyNames[i] == selectedGuilty)
+            if(GameLogicManager.Instance.GuiltyNames[i] == selectedGuilty)
             {
                 failImageBadEnding.sprite = suspectSprites[i];
             }
 
-            if(GameLogicManager.Instance.guiltyNames[i] == GameLogicManager.Instance.guilty)
+            if(GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty)
             {
                 correctImageBadEnding.sprite = suspectSprites[i];
             }
         }
 
-        GameLogicManager.Instance.endOpportunities = 0;
-        GameLogicManager.Instance.isBadEnding = true;
+        GameLogicManager.Instance.EndOpportunities = 0;
+        GameLogicManager.Instance.IsBadEnding = true;
         ShowFinalNPC();
         isFinalScreenShown = true;
     }
@@ -238,18 +238,18 @@ public class TheEndManager : MonoBehaviour
         isTheEndPanelShown = false;
         theEndPanel.SetActive(false);
         goodEndingScreen.SetActive(true);
-        guiltySuccessText.text = "El culpable era " + GameLogicManager.Instance.guilty + " y lo has elegido.";
+        guiltySuccessText.text = "El culpable era " + GameLogicManager.Instance.Guilty + " y lo has elegido.";
         
-        for(int i = 0; i < GameLogicManager.Instance.guiltyNames.Count; i++)
+        for(int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count; i++)
         {
-            if(GameLogicManager.Instance.guiltyNames[i] == GameLogicManager.Instance.guilty)
+            if(GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty)
             {
                 correctImageGoodEnding.sprite = suspectSprites[i];
             }
         }
 
-        GameLogicManager.Instance.endOpportunities = 0;
-        GameLogicManager.Instance.isBadEnding = false;
+        GameLogicManager.Instance.EndOpportunities = 0;
+        GameLogicManager.Instance.IsBadEnding = false;
         ShowFinalNPC();
         isFinalScreenShown = true;
     }
@@ -262,13 +262,13 @@ public class TheEndManager : MonoBehaviour
         isTheEndPanelShown = false;
         theEndPanel.SetActive(false);
         anotherTryScreen.SetActive(true);
-        GameLogicManager.Instance.endOpportunities = 1;
+        GameLogicManager.Instance.EndOpportunities = 1;
         isFinalScreenShown = true;
         guiltyAnotherTryText.text = "El culpable no era " + selectedGuilty + " y lo has elegido.";
 
-        for(int i = 0; i < GameLogicManager.Instance.guiltyNames.Count; i++)
+        for(int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count; i++)
         {
-            if(GameLogicManager.Instance.guiltyNames[i] == selectedGuilty)
+            if(GameLogicManager.Instance.GuiltyNames[i] == selectedGuilty)
             {
                 failImageAnotherTryEnding.sprite = suspectSprites[i];
             }
@@ -281,11 +281,11 @@ public class TheEndManager : MonoBehaviour
         guiltyDropdownOptions.ClearOptions();        
         List<string> options = new List<string>();
 
-        for(int i = 0; i < GameLogicManager.Instance.guiltyNames.Count; i++)
+        for(int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count; i++)
         {
-            if(GameLogicManager.Instance.knownSuspects[i])
+            if(GameLogicManager.Instance.KnownSuspects[i])
             {
-                options.Add(GameLogicManager.Instance.guiltyNames[i]);
+                options.Add(GameLogicManager.Instance.GuiltyNames[i]);
             }
         }
 
@@ -304,16 +304,16 @@ public class TheEndManager : MonoBehaviour
 
     private void ShowFinalNPC()
     {
-        if(GameLogicManager.Instance.isBadEnding)
+        if(GameLogicManager.Instance.IsBadEnding)
         {
             fatherNPC.SetActive(true);
 
             int storyPhaseToUnlockFinalDialogue = 400;
-            for(int i = 0; i < GameLogicManager.Instance.guiltyNames.Count; i++)
+            for(int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count; i++)
             {
-                if(GameLogicManager.Instance.guiltyNames[i] == GameLogicManager.Instance.guilty)
+                if(GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty)
                 {
-                    GameLogicManager.Instance.storyPhase = storyPhaseToUnlockFinalDialogue;
+                    GameLogicManager.Instance.StoryPhaseAux = storyPhaseToUnlockFinalDialogue; // QUITAR
                 }
 
                 storyPhaseToUnlockFinalDialogue += 5;
@@ -324,11 +324,11 @@ public class TheEndManager : MonoBehaviour
             victimNPC.SetActive(true);
 
             int storyPhaseToUnlockFinalDialogue = 200;
-            for(int i = 0; i < GameLogicManager.Instance.guiltyNames.Count; i++)
+            for(int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count; i++)
             {
-                if(GameLogicManager.Instance.guiltyNames[i] == GameLogicManager.Instance.guilty)
+                if(GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty)
                 {
-                    GameLogicManager.Instance.storyPhase = storyPhaseToUnlockFinalDialogue;
+                    GameLogicManager.Instance.StoryPhaseAux = storyPhaseToUnlockFinalDialogue; // QUITAR
                 }
                 
                 storyPhaseToUnlockFinalDialogue += 5;
@@ -361,7 +361,7 @@ public class TheEndManager : MonoBehaviour
     {
         yield return new WaitForSeconds(buttonsAudioSource.clip.length);
 
-        if(GameLogicManager.Instance.endOpportunities == 0)
+        if(GameLogicManager.Instance.EndOpportunities == 0)
         {
             ShowEnding();
         }
@@ -370,17 +370,17 @@ public class TheEndManager : MonoBehaviour
             int selectedIndex = guiltyDropdown.GetComponent<TMP_Dropdown>().value;
             string selectedGuilty = guiltyDropdown.GetComponent<TMP_Dropdown>().options[selectedIndex].text;
 
-            if(GameLogicManager.Instance.guilty == selectedGuilty)
+            if(GameLogicManager.Instance.Guilty == selectedGuilty)
             {
                 GoToGoodEnding();
             }
             else
             {
-                if(GameLogicManager.Instance.endOpportunities == 2 && GameLogicManager.Instance.lastPuzzleComplete == lastPuzzle)
+                if(GameLogicManager.Instance.EndOpportunities == 2 && GameLogicManager.Instance.LastPuzzleComplete == lastPuzzle)
                 {
                     GoToAnotherTry(selectedGuilty);
                 }
-                else if(GameLogicManager.Instance.endOpportunities == 1 || !(GameLogicManager.Instance.lastPuzzleComplete == lastPuzzle))
+                else if(GameLogicManager.Instance.EndOpportunities == 1 || !(GameLogicManager.Instance.LastPuzzleComplete == lastPuzzle))
                 {
                     GoToBadEnding(selectedGuilty);
                 }

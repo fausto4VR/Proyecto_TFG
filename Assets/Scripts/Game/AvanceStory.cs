@@ -25,13 +25,14 @@ public class AvanceStory : MonoBehaviour
 
     void Update()
     {
-        if(nextStoryPhase == (GameLogicManager.Instance.storyPhase + 1) && inspectDialogue.isStoryAdvanced)
+        // QUITAR AUX
+        if(nextStoryPhase == (GameLogicManager.Instance.StoryPhaseAux + 1) && inspectDialogue.isStoryAdvanced)
         {
             inspectDialogue.isStoryAdvanced = false;
 
             if(!isPuzzleTriggerObject)
             {
-                GameLogicManager.Instance.storyPhase = nextStoryPhase;
+                GameLogicManager.Instance.StoryPhaseAux = nextStoryPhase; // QUITAR
             }
             else if(isPuzzleTriggerObject)
             {
@@ -40,8 +41,9 @@ public class AvanceStory : MonoBehaviour
             }
         }
 
-        if(nextStoryPhase == (GameLogicManager.Instance.storyPhase + 1) && isPuzzleTriggerObject 
-            && puzzleAssociated == GameLogicManager.Instance.lastPuzzleComplete 
+        // QUITAR AUX
+        if(nextStoryPhase == (GameLogicManager.Instance.StoryPhaseAux + 1) && isPuzzleTriggerObject 
+            && puzzleAssociated == GameLogicManager.Instance.LastPuzzleComplete 
             && GameStateManager.Instance.isPuzzleRecentlyCompleted)
         {
             player.transform.position = new Vector3(GameStateManager.Instance.actualPlayerPosition[0],
@@ -51,10 +53,10 @@ public class AvanceStory : MonoBehaviour
                 GameStateManager.Instance.actualCameraPosition[1], GameStateManager.Instance.actualPlayerPosition[2]);
 
             GameStateManager.Instance.isPuzzleRecentlyCompleted = false;
-            GameLogicManager.Instance.storyPhase = nextStoryPhase;
+            GameLogicManager.Instance.StoryPhaseAux = nextStoryPhase; // QUITAR
             GetComponent<InspectDialogue>().isPuzzleReturn = true;
 
-            if(SceneManager.GetActiveScene().name == "SampleScene")
+            if(SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
             {
                 GameStateManager.Instance.SaveData(); 
             }

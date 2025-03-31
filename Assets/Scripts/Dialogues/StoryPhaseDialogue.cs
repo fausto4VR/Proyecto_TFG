@@ -74,10 +74,10 @@ public class StoryPhaseDialogue : MonoBehaviour
                 if(!didDialogueTrigger)
                 {
                     didDialogueTrigger = true;
-                    GameLogicManager.Instance.knownDialogues[knownDialogueIndex] = true;
+                    GameLogicManager.Instance.KnownDialogues[knownDialogueIndex] = true;
                 }
 
-                storyPhaseIndex = GameLogicManager.Instance.storyPhase;
+                storyPhaseIndex = GameLogicManager.Instance.StoryPhaseAux; // QUITAR
                 player.GetComponent<PlayerMovement>().isPlayerTalking = true;
 
                 int dialogueIndex = -1;
@@ -109,7 +109,7 @@ public class StoryPhaseDialogue : MonoBehaviour
 
         if (isTriggerDialogue)
         {
-            didDialogueTrigger = GameLogicManager.Instance.knownDialogues[knownDialogueIndex];
+            didDialogueTrigger = GameLogicManager.Instance.KnownDialogues[knownDialogueIndex];
         }
     }
 }

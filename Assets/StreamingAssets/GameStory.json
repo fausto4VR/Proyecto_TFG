@@ -1,0 +1,35 @@
+{
+    "phases": 
+    [
+        {
+            "name": "Prologue",
+            "subphases": []
+        },
+        {
+            "name": "Puzzle1",
+            "subphases": 
+            [
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Support 1 - 1",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Note - 1",
+                    "actions": 1
+                },
+                {
+                    "type": "Trigger",
+                    "name": "Temporary **DELETE**",
+                    "actions": 2
+                },
+                {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 1",
+                    "actions": 1
+                }
+            ]
+        }
+    ]
+}

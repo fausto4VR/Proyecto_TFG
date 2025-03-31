@@ -12,6 +12,9 @@ public class InspectDialogue : MonoBehaviour
     [SerializeField] private string[] characterNameLinesToPastPhase;
     [SerializeField] private int storyPhaseToUnlockDialogue;
 
+    [SubphaseSelector]
+    [SerializeField] private string selectedSubphase;
+
     public bool didConversationStart;
     public GameObject dialoguePanel;
     public bool isPuzzleTriggerObject;
@@ -27,7 +30,8 @@ public class InspectDialogue : MonoBehaviour
         {
             if(player.GetComponent<PlayerLogicManager>().isObjectInspected == true)
             {
-                if(storyPhaseToUnlockDialogue == GameLogicManager.Instance.storyPhase)
+                // QUITAR AUX
+                if(storyPhaseToUnlockDialogue == GameLogicManager.Instance.StoryPhaseAux)
                 {
                     didConversationStart = true;
                     didObjectAdvanceStory = true;
@@ -39,13 +43,15 @@ public class InspectDialogue : MonoBehaviour
                         isClueDialogueFinish = true;
                     }
                 }
-                else if(storyPhaseToUnlockDialogue == (GameLogicManager.Instance.storyPhase - 1))
+                // QUITAR AUX
+                else if(storyPhaseToUnlockDialogue == (GameLogicManager.Instance.StoryPhaseAux - 1))
                 {
                     didConversationStart = true;
                     GetComponent<DialogueManager>().dialogueLines = dialogueLinesToRecentPhase;
                     GetComponent<DialogueManager>().characterNameLines = characterNameLinesToRecentPhase;
                 }
-                else if(storyPhaseToUnlockDialogue < (GameLogicManager.Instance.storyPhase + 1))
+                // QUITAR AUX
+                else if(storyPhaseToUnlockDialogue < (GameLogicManager.Instance.StoryPhaseAux + 1))
                 {
                     didConversationStart = true;
                     GetComponent<DialogueManager>().dialogueLines = dialogueLinesToPastPhase;

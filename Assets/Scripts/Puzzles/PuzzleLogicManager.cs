@@ -1,7 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
+using System;
 
 public class PuzzleLogicManager : MonoBehaviour
 {
@@ -13,33 +16,30 @@ public class PuzzleLogicManager : MonoBehaviour
     [SerializeField] private GameObject audioSourcesManager;   
 
     [Header("Variable Section")]
-    [SerializeField] private string puzzleScene;
+    [SerializeField] private string sceneToReturn;
     [SerializeField] private string puzzleName;
     [SerializeField]private float typingTime = 0.03f;
-    [SerializeField]private int charsToPlaySound = 5; 
-
-    // QUITAR
-    [Header("Otros")]
-    public bool[] puzzleSupports;
-    public int puzzlePoints;
-
-    // REVISAR
+    [SerializeField]private int charsToPlaySound = 5;
+    [SerializeField] private  int maxPunctuation = 50; 
+    [SerializeField] private  int failurePunctuationDeduction = 5;
+    
     private string puzzleStatementText;
     private Coroutine typingCoroutine;
-    private PuzzleData puzzleData;
-    private AudioSource typingAudioSource;
+    private bool[] puzzleSupports; 
+    private int puzzlePoints;
 
-    // REVISAR ---------------------------------------------------------------------------------------------------------------------
+    // REVISAR AUDIO
+    private AudioSource typingAudioSource;
+    
+
     void Start()
     {
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         typingAudioSource = audioSources[0];
 
-        puzzleData = SaveManager.LoadPuzzleData();
-        SelectPuzzleData(puzzleData);
+        SelectPuzzleData();
     }
 
-    // QUITAR
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.V))
@@ -48,6 +48,18 @@ public class PuzzleLogicManager : MonoBehaviour
             Debug.Log("Puzzle Supports: " + supportsContent);
             Debug.Log("Puzzle Points: " + puzzlePoints);
         }
+    }
+
+    // Método para consultar la lista de ayudas
+    public bool[] PuzzleSupports
+    {
+        get { return (bool[])puzzleSupports.Clone(); }
+    }
+
+    // Método para cambiar un valor de la lista de ayudas
+    public void SetPuzzleSupportsByIndex(int position, bool value)
+    {
+        puzzleSupports[position] = value;
     }
 
     // Método para inicializar la corrutina donde se cierra el panel de solución
@@ -129,33 +141,26 @@ public class PuzzleLogicManager : MonoBehaviour
         }
     }
 
-    // ------------------------------------------------------------------------------------------------------------------------
     // Método para omitir el puzle
     public void SkipPuzzleLogic()
     {
         puzzlePoints = 1;
-        GameLogicManager.Instance.endOpportunities = 1;
+        GameLogicManager.Instance.EndOpportunities = 1;
         CompleteAndFinishPuzzle();
     }
 
-    // REVISAR ---------------------------------------------------------------------------------------------------------------------
-    public int CalculatePoints(bool isCorrect)
+    // Método para actualizar los puntos obtenidos en un puzle
+    public int UpdatePoints(bool isCorrect)
     {
-        if(isCorrect)
+        // Si los puntos valen 0 es que aún no han sido actualizados con el valor máximo
+        if(puzzlePoints == 0)
         {
-            if(puzzlePoints == 0)
-            {
-                puzzlePoints = 50;
-            }
+            puzzlePoints = maxPunctuation;
         }
-        else
-        {
-            if(puzzlePoints == 0)
-            {
-                puzzlePoints = 50;
-            }
 
-            puzzlePoints -= 5;
+        if(!isCorrect)
+        {
+            puzzlePoints -= failurePunctuationDeduction;
 
             if(puzzlePoints <= 0)
             {
@@ -166,341 +171,67 @@ public class PuzzleLogicManager : MonoBehaviour
         return puzzlePoints;
     }
 
-    // REVISAR ---------------------------------------------------------------------------------------------------------------------
+    // Método para volver al mundo con el puzle incompleto
     public void ReturnToGameScene()
     {
-        SaveTemporarilyPuzzleData();
+        UpdatePuzzleData(false);
+
+        // QUITAR ----------------------------------------------------------
         GameStateManager.Instance.isPuzzleIncomplete = true;
-        GameStateManager.Instance.actualPuzzleName = puzzleName;
-        SceneManager.LoadScene(puzzleScene);
+        // -----------------------------------------------------------------
+
+        SceneManager.LoadScene(sceneToReturn);
     }
 
-    // REVISAR ---------------------------------------------------------------------------------------------------------------------
+    // Método para dar por finalizado el puzle y volver al mundo después de que el jugador haya acertado la solución
     private void CompleteAndFinishPuzzle()
     {
-        GameStateManager.Instance.lastPuzzleSupports = puzzleSupports;
-        GameStateManager.Instance.lastPuzzlePoints = puzzlePoints;
-        GameLogicManager.Instance.lastPuzzleComplete = puzzleName;
+        UpdatePuzzleData(true);
+        GameLogicManager.Instance.LastPuzzleComplete = puzzleName;
+
+        // QUITAR ----------------------------------------------------------
         GameStateManager.Instance.isPuzzleRecentlyCompleted = true;
-        SavePuzzleData();
-        SceneManager.LoadScene(puzzleScene);
+        // ----------------------------------------------------------------- 
+
+        SceneManager.LoadScene(sceneToReturn);
     }
 
-    // REVISAR ---------------------------------------------------------------------------------------------------------------------
-    private void SaveTemporarilyPuzzleData()
+    // Método para actualizar los datos del puzle 
+    private void UpdatePuzzleData(bool isPuzzleComplete)
     {
-        GameStateManager.Instance.lastPuzzleSupports = puzzleSupports;
-        GameStateManager.Instance.lastPuzzlePoints = puzzlePoints;
-    }
+        List<PuzzleState> puzzleStateList = GameLogicManager.Instance.PuzzleStateList;
+        PuzzleState foundPuzzle = puzzleStateList.FirstOrDefault(p => p.gamePuzzleName == puzzleName);
 
-    // REVISAR ---------------------------------------------------------------------------------------------------------------------
-    private void SelectPuzzleData(PuzzleData puzzleData)
-    {
-        if(GameStateManager.Instance.lastPuzzleSupports != null && GameStateManager.Instance.lastPuzzleSupports.Length > 0)
+        if (foundPuzzle != null)
         {
-            puzzleSupports = GameStateManager.Instance.lastPuzzleSupports;
-            puzzlePoints = GameStateManager.Instance.lastPuzzlePoints;
-        }
-        else if(puzzleName == "Puzzle1")
-        {
-            if(puzzleData != null)
-            {
-                if(puzzleData.gamePuzzle1Supports != null && puzzleData.gamePuzzle1Supports.Length > 0)
-                {
-                    puzzleSupports = puzzleData.gamePuzzle1Supports;
-                }
-                else
-                {
-                    createPuzzleSupports();
-                }
-
-                if(puzzleData.gamePuzzle1Points != 0)
-                {
-                    puzzlePoints = puzzleData.gamePuzzle1Points;
-                }
-                else
-                {
-                    puzzlePoints = 0;
-                }
-            }
-            else
-            {
-                createPuzzleSupports();
-                puzzlePoints = 0;
-            }
-
-            
-        }
-        else if (puzzleName == "Puzzle2")
-        {
-            if (puzzleData != null)
-            {
-                if (puzzleData.gamePuzzle2Supports != null && puzzleData.gamePuzzle2Supports.Length > 0)
-                {
-                    puzzleSupports = puzzleData.gamePuzzle2Supports;
-                }
-                else
-                {
-                    createPuzzleSupports();
-                }
-
-                if (puzzleData.gamePuzzle2Points != 0)
-                {
-                    puzzlePoints = puzzleData.gamePuzzle2Points;
-                }
-                else
-                {
-                    puzzlePoints = 0;
-                }
-            }
-            else
-            {
-                createPuzzleSupports();
-                puzzlePoints = 0;
-            }
-        }
-        else if (puzzleName == "Puzzle3")
-        {
-            if (puzzleData != null)
-            {
-                if (puzzleData.gamePuzzle3Supports != null && puzzleData.gamePuzzle3Supports.Length > 0)
-                {
-                    puzzleSupports = puzzleData.gamePuzzle3Supports;
-                }
-                else
-                {
-                    createPuzzleSupports();
-                }
-
-                if (puzzleData.gamePuzzle3Points != 0)
-                {
-                    puzzlePoints = puzzleData.gamePuzzle3Points;
-                }
-                else
-                {
-                    puzzlePoints = 0;
-                }
-            }
-            else
-            {
-                createPuzzleSupports();
-                puzzlePoints = 0;
-            }
-        }
-        else if (puzzleName == "Puzzle4")
-        {
-            if (puzzleData != null)
-            {
-                if (puzzleData.gamePuzzle4Supports != null && puzzleData.gamePuzzle4Supports.Length > 0)
-                {
-                    puzzleSupports = puzzleData.gamePuzzle4Supports;
-                }
-                else
-                {
-                    createPuzzleSupports();
-                }
-
-                if (puzzleData.gamePuzzle4Points != 0)
-                {
-                    puzzlePoints = puzzleData.gamePuzzle4Points;
-                }
-                else
-                {
-                    puzzlePoints = 0;
-                }
-            }
-            else
-            {
-                createPuzzleSupports();
-                puzzlePoints = 0;
-            }
-        }
-        else if (puzzleName == "Puzzle5")
-        {
-            if (puzzleData != null)
-            {
-                if (puzzleData.gamePuzzle5Supports != null && puzzleData.gamePuzzle5Supports.Length > 0)
-                {
-                    puzzleSupports = puzzleData.gamePuzzle5Supports;
-                }
-                else
-                {
-                    createPuzzleSupports();
-                }
-
-                if (puzzleData.gamePuzzle5Points != 0)
-                {
-                    puzzlePoints = puzzleData.gamePuzzle5Points;
-                }
-                else
-                {
-                    puzzlePoints = 0;
-                }
-            }
-            else
-            {
-                createPuzzleSupports();
-                puzzlePoints = 0;
-            }
-        }
-        else if (puzzleName == "Puzzle6")
-        {
-            if (puzzleData != null)
-            {
-                if (puzzleData.gamePuzzle6Supports != null && puzzleData.gamePuzzle6Supports.Length > 0)
-                {
-                    puzzleSupports = puzzleData.gamePuzzle6Supports;
-                }
-                else
-                {
-                    createPuzzleSupports();
-                }
-
-                if (puzzleData.gamePuzzle6Points != 0)
-                {
-                    puzzlePoints = puzzleData.gamePuzzle6Points;
-                }
-                else
-                {
-                    puzzlePoints = 0;
-                }
-            }
-            else
-            {
-                createPuzzleSupports();
-                puzzlePoints = 0;
-            }
-        }
-        else if (puzzleName == "Puzzle7")
-        {
-            if (puzzleData != null)
-            {
-                if (puzzleData.gamePuzzle7Supports != null && puzzleData.gamePuzzle7Supports.Length > 0)
-                {
-                    puzzleSupports = puzzleData.gamePuzzle7Supports;
-                }
-                else
-                {
-                    createPuzzleSupports();
-                }
-
-                if (puzzleData.gamePuzzle7Points != 0)
-                {
-                    puzzlePoints = puzzleData.gamePuzzle7Points;
-                }
-                else
-                {
-                    puzzlePoints = 0;
-                }
-            }
-            else
-            {
-                createPuzzleSupports();
-                puzzlePoints = 0;
-            }
-        }
-        else if (puzzleName == "Puzzle8")
-        {
-            if (puzzleData != null)
-            {
-                if (puzzleData.gamePuzzle8Supports != null && puzzleData.gamePuzzle8Supports.Length > 0)
-                {
-                    puzzleSupports = puzzleData.gamePuzzle8Supports;
-                }
-                else
-                {
-                    createPuzzleSupports();
-                }
-
-                if (puzzleData.gamePuzzle8Points != 0)
-                {
-                    puzzlePoints = puzzleData.gamePuzzle8Points;
-                }
-                else
-                {
-                    puzzlePoints = 0;
-                }
-            }
+            foundPuzzle.gamePuzzleSupports = puzzleSupports;
+            foundPuzzle.gamePuzzlePoints = puzzlePoints;
+            foundPuzzle.gameIsPuzzleComplete = isPuzzleComplete;
         }
         else
         {
-            Debug.Log("No se han cargado correctamente los datos de " + puzzleName);
+            PuzzleState newPuzzle = new PuzzleState(puzzleName, puzzleSupports, puzzlePoints, isPuzzleComplete);
+            puzzleStateList.Add(newPuzzle);
         }
+
+        GameLogicManager.Instance.PuzzleStateList = puzzleStateList;
     }
 
-    // REVISAR ---------------------------------------------------------------------------------------------------------------------
-    private void createPuzzleSupports()
+    // Método para cargar los puntos obtenidos y las ayudas disponibles
+    private void SelectPuzzleData()
     {
-        puzzleSupports = new bool[3];
-        for (int i = 0; i < puzzleSupports.Length; i++)
-        {
-            puzzleSupports[i] = false;
-        }
-    }
+        List<PuzzleState> puzzleStateList = GameLogicManager.Instance.PuzzleStateList;
+        PuzzleState foundPuzzle = puzzleStateList.FirstOrDefault(p => p.gamePuzzleName == puzzleName);
 
-    // REVISAR ---------------------------------------------------------------------------------------------------------------------
-    private void SavePuzzleData()
-    {
-        if(puzzleName == "Puzzle1")
+        if (foundPuzzle != null)
         {
-            SaveManager.SavePuzzleData(puzzleSupports, puzzlePoints, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0);
-            Debug.Log("Datos de puzles guardados");
-        }
-        else if(puzzleName == "Puzzle2")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleSupports, puzzlePoints, 
-                null, 0, null, 0, null, 0, null, 0, null, 0, null, 0);
-            Debug.Log("Datos de puzles guardados");
-        }
-        else if(puzzleName == "Puzzle3")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleSupports, puzzlePoints, null, 0, null, 0, null, 0, null, 0, null, 0);
-            Debug.Log("Datos de puzles guardados");
-        }
-        else if(puzzleName == "Puzzle4")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleSupports, puzzlePoints, null, 0, null, 0, null, 0, null, 0);
-            Debug.Log("Datos de puzles guardados");
-        }
-        else if(puzzleName == "Puzzle5")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleSupports, puzzlePoints, null, 0, null, 0, null, 0);
-            Debug.Log("Datos de puzles guardados");
-        }
-        else if(puzzleName == "Puzzle6")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleData.gamePuzzle5Supports, 
-                puzzleData.gamePuzzle5Points, puzzleSupports, puzzlePoints, null, 0, null, 0);
-            Debug.Log("Datos de puzles guardados");
-        }
-        else if(puzzleName == "Puzzle7")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleData.gamePuzzle5Supports, 
-                puzzleData.gamePuzzle5Points, puzzleData.gamePuzzle6Supports, puzzleData.gamePuzzle6Points, 
-                puzzleSupports, puzzlePoints, null, 0);
-            Debug.Log("Datos de puzles guardados");
-        }
-        else if(puzzleName == "Puzzle8")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleData.gamePuzzle5Supports, 
-                puzzleData.gamePuzzle5Points, puzzleData.gamePuzzle6Supports, puzzleData.gamePuzzle6Points, 
-                puzzleData.gamePuzzle7Supports, puzzleData.gamePuzzle7Points, puzzleSupports, puzzlePoints);
-            Debug.Log("Datos de puzles guardados");
+            puzzleSupports = (bool[])foundPuzzle.gamePuzzleSupports.Clone();
+            puzzlePoints = foundPuzzle.gamePuzzlePoints;
         }
         else
         {
-            Debug.Log("No se han guardado correctamente los datos de " + puzzleName);
+            puzzleSupports = new bool[3];
+            puzzlePoints = 0;
         }
     }
 }

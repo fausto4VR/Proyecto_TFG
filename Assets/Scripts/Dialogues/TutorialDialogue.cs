@@ -50,7 +50,7 @@ public class TutorialDialogue : MonoBehaviour
 
     void Update()
     {
-        if(isPlayerInRange && !isTutorialDone && !GameLogicManager.Instance.knownTutorials[tutorialIndexOrder])
+        if(isPlayerInRange && !isTutorialDone && !GameLogicManager.Instance.KnownTutorials[tutorialIndexOrder])
         {
             if(!isTutorialInProgress)
             {
@@ -116,7 +116,7 @@ public class TutorialDialogue : MonoBehaviour
         player.GetComponent<PlayerLogicManager>().isTutorialInProgress = false;
         ShowVisualSupport(false);
         tutorialPanel.SetActive(false);
-        GameLogicManager.Instance.knownTutorials[tutorialIndexOrder] = true;
+        GameLogicManager.Instance.KnownTutorials[tutorialIndexOrder] = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

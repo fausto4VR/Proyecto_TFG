@@ -63,7 +63,7 @@ public class MultipleChoiceDialogue: MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.E) && !player.GetComponent<PlayerMovement>().isPlayerDoingTutorial)
             {
-                GameLogicManager.Instance.knownSuspects[suspectIndex] = true;
+                GameLogicManager.Instance.KnownSuspects[suspectIndex] = true;
 
                 if (!didDialogueStart)
                 {
@@ -97,15 +97,15 @@ public class MultipleChoiceDialogue: MonoBehaviour
 
     private void CheckDialogueUnlock()
     {
-        if(clueToUnlockDialogue == 1 && !string.IsNullOrEmpty(GameLogicManager.Instance.firstClue))
+        if(clueToUnlockDialogue == 1 && !string.IsNullOrEmpty(GameLogicManager.Instance.Clues[0]))
         {
             isDialogueUnlock = true;
         }
-        else if(clueToUnlockDialogue == 2 && !string.IsNullOrEmpty(GameLogicManager.Instance.secondClue))
+        else if(clueToUnlockDialogue == 2 && !string.IsNullOrEmpty(GameLogicManager.Instance.Clues[1]))
         {
             isDialogueUnlock = true;
         }
-        else if(clueToUnlockDialogue == 3 && !string.IsNullOrEmpty(GameLogicManager.Instance.thirdClue))
+        else if(clueToUnlockDialogue == 3 && !string.IsNullOrEmpty(GameLogicManager.Instance.Clues[2]))
         {
             isDialogueUnlock = true;
         }

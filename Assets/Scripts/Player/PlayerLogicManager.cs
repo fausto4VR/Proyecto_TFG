@@ -40,24 +40,23 @@ public class PlayerLogicManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.V))
         {
-            Debug.Log("Guilty: " + GameLogicManager.Instance.guilty);
-            Debug.Log("First Clue: " + GameLogicManager.Instance.firstClue);
-            Debug.Log("Second Clue: " + GameLogicManager.Instance.secondClue);
-            Debug.Log("Third Clue: " + GameLogicManager.Instance.thirdClue);
-            Debug.Log("Story Phase: " + GameLogicManager.Instance.storyPhase);
-            Debug.Log("Last Puzzle Complete: " + GameLogicManager.Instance.lastPuzzleComplete);
-            string suspectsContent = string.Join(", ", GameLogicManager.Instance.knownSuspects);
+            Debug.Log("Guilty: " + GameLogicManager.Instance.Guilty);
+            Debug.Log("First Clue: " + GameLogicManager.Instance.Clues[0]);
+            Debug.Log("Second Clue: " + GameLogicManager.Instance.Clues[1]);
+            Debug.Log("Third Clue: " + GameLogicManager.Instance.Clues[2]);
+            Debug.Log("Story Phase Aux: " + GameLogicManager.Instance.StoryPhaseAux); // QUITAR
+            Debug.Log("Story Phase: " + GameLogicManager.Instance.CurrentStoryPhase.phaseName);
+            Debug.Log("Story Subphase: " + GameLogicManager.Instance.CurrentStoryPhase.currentSubphase.subphaseName);
+            Debug.Log("Last Puzzle Complete: " + GameLogicManager.Instance.LastPuzzleComplete);
+            string suspectsContent = string.Join(", ", GameLogicManager.Instance.KnownSuspects);
             Debug.Log("Known Suspects: " + suspectsContent);
-            string tutorialsContent = string.Join(", ", GameLogicManager.Instance.knownTutorials);
+            string tutorialsContent = string.Join(", ", GameLogicManager.Instance.KnownTutorials);
             Debug.Log("Known Tutorials: " + tutorialsContent);
-            string dialoguesContent = string.Join(", ", GameLogicManager.Instance.knownDialogues);
-            Debug.Log("Known Dialogues: " + dialoguesContent);
-            string supportsContent = string.Join(", ", GameStateManager.Instance.lastPuzzleSupports);
-            Debug.Log("Last Puzzle Supports: " + supportsContent);
-            Debug.Log("Last Puzzle Points: " + GameStateManager.Instance.lastPuzzlePoints);            
-            Debug.Log("Is Bad Ending: " + GameLogicManager.Instance.isBadEnding);       
-            Debug.Log("End Opportunities: " + GameLogicManager.Instance.endOpportunities);   
-            string guiltyNamesContent = string.Join(", ", GameLogicManager.Instance.guiltyNames);
+            string dialoguesContent = string.Join(", ", GameLogicManager.Instance.KnownDialogues);
+            Debug.Log("Known Dialogues: " + dialoguesContent);            
+            Debug.Log("Is Bad Ending: " + GameLogicManager.Instance.IsBadEnding);       
+            Debug.Log("End Opportunities: " + GameLogicManager.Instance.EndOpportunities);   
+            string guiltyNamesContent = string.Join(", ", GameLogicManager.Instance.GuiltyNames);
             Debug.Log("Guilty Names: " + guiltyNamesContent);
         }
     }

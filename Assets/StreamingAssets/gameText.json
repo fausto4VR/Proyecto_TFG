@@ -1,8 +1,51 @@
 {
+    "guiltyNames": ["Matthew", "Harold", "Diana", "Sebastian", "Bobby", "Isabella", "Jessie", "Celeste"],
     "puzzle_1": {
         "puzzle_statement_text": "Parece que en la nota hecha por la víctima no se puede ver ni el principio ni el final de lo que había escrito. Lo único que se distingue es una palabra. Por lo visto, ha probado varios términos hasta que ha conseguido encontrar lo que quería escribir.\n\nHe descubierto que hay un patrón claro entre todos los intentos que ha hecho, pero aún así no logro ver la palabra que estaba buscando. ¿Cuál podrá ser?\n\nEl patrón que he pensado me dice que una letra del abecedario puede aparecer o no en la palabra final. En función de esto, cada letra se presenta de manera diferente: \n\n- Si la letra sale tachada no está presente en la palabra final.\n- Si la letra sale rodeada por un círculo está presente en la palabra final pero no en su posición correcta.\n- Si la letra aparece sin nada está presente en la palabra final y en su posición.\n\nAdemás, en algunas letras no se han dibujado bien al hacer la transcripción y puede que falte una o dos líneas. Aún así, debería ser capaz de encontrar la palabra que quería escribir la víctima.",
         "first_support_text": "Si te fijas bien en todos los intentos que se han realizado las palabras existen de verdad (aunque puede ser dificil de ver al principio ya que se ha perdido alguna línea). Esto debería ayudarte a sacar las letras que están incompletas. Sobretodo si te fijas en la segunda palabra. Si aún así no puedes, mira en el abecedario cuáles podrían entrar en ese hueco yendo una por una.",
         "second_support_text": "La víctima solo ha tenido un fallo y es que se le ha olvidado poner una letra que sabía que estaba en la primera palabra en el siguiente intento. Lo que no ha hecho nunca es poner una letra en la misma posición, en el siguiente intento, si sabe que ahí no va.",
         "third_support_text": "Sabiendo que hay una letra que aparece en todos los intentos, y otra que solo lo hace en los dos últimos, deberías ser capaz de colocar esas dos. Junto con las dos que ya están su sitio, es coser y cantar."
+    },
+    "puzzle_2": {
+        "puzzle_statement_text": "",
+        "first_support_text": "",
+        "second_support_text": "",
+        "third_support_text": ""
+    },
+    "puzzle_3": {
+        "puzzle_statement_text": "",
+        "first_support_text": "",
+        "second_support_text": "",
+        "third_support_text": ""
+    },
+    "puzzle_4": {
+        "puzzle_statement_text": "",
+        "first_support_text": "",
+        "second_support_text": "",
+        "third_support_text": ""
+    },
+    "puzzle_5": {
+        "puzzle_statement_text": "",
+        "first_support_text": "",
+        "second_support_text": "",
+        "third_support_text": ""
+    },
+    "puzzle_6": {
+        "puzzle_statement_text": "",
+        "first_support_text": "",
+        "second_support_text": "",
+        "third_support_text": ""
+    },
+    "puzzle_7": {
+        "puzzle_statement_text": "",
+        "first_support_text": "",
+        "second_support_text": "",
+        "third_support_text": ""
+    },
+    "puzzle_8": {
+        "puzzle_statement_text": "",
+        "first_support_text": "",
+        "second_support_text": "",
+        "third_support_text": ""
     }
 }

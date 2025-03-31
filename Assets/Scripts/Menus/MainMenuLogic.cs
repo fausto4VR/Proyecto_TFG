@@ -36,13 +36,13 @@ public class MainMenuLogic : MonoBehaviour
 
             if(gameData != null)
             {
-                if(gameData.gameStoryPhase != 0)
+                if(gameData.gameStoryPhaseAux != 0)
                 {                    
                     buttonsAudioSource.Play();
                     isResetGamePanelShown = true;
                     resetGamePanel.SetActive(true);
                 }
-                else if(gameData.gameStoryPhase == 0)
+                else if(gameData.gameStoryPhaseAux == 0)
                 {
                     buttonsAudioSource.Play();
                     StartCoroutine(WaitForSoundAndLoadNewScene());        
@@ -51,7 +51,7 @@ public class MainMenuLogic : MonoBehaviour
             else
             {
                 GameStateManager.Instance.isNewGame = true;
-                SceneManager.LoadScene("SampleScene");            
+                SceneManager.LoadScene(GameStateManager.Instance.MainScene);            
             }
         }  
     }
@@ -93,12 +93,12 @@ public class MainMenuLogic : MonoBehaviour
 
         if(gameData != null)
         {
-            if(gameData.gameStoryPhase != 0)
+            if(gameData.gameStoryPhaseAux != 0)
             {
                 continueButtonDisabled.SetActive(false);
                 continueButton.SetActive(true);
             }
-            else if(gameData.gameStoryPhase == 0)
+            else if(gameData.gameStoryPhaseAux == 0)
             {
                 continueButton.SetActive(false);
                 continueButtonDisabled.SetActive(true);
@@ -141,7 +141,7 @@ public class MainMenuLogic : MonoBehaviour
     {
         yield return new WaitForSeconds(buttonsAudioSource.clip.length);
         GameStateManager.Instance.isNewGame = true;
-        SceneManager.LoadScene("SampleScene");    
+        SceneManager.LoadScene(GameStateManager.Instance.MainScene);    
     }
 
     private IEnumerator WaitForSoundAndLoadResetScene()
@@ -151,7 +151,7 @@ public class MainMenuLogic : MonoBehaviour
         GameStateManager.Instance.ResetData();
         isResetGamePanelShown = false;
         GameStateManager.Instance.isNewGame = true;
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(GameStateManager.Instance.MainScene);
     }
 
     private IEnumerator WaitForSoundAndLoadQuitGame()

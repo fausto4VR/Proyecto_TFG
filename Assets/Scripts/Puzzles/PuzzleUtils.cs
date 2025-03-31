@@ -1,12 +1,13 @@
 using System.Text.RegularExpressions;
 using System.Text;
 
-// QUITAR
+// QUITAR ----------------------------------------------------------
 // Enum que tiene los posibles tipos de resultados proporcionados
 public enum ResultType
 {
     Empty, Failure, Success
 }
+// -----------------------------------------------------------------
 
 public static class PuzzleUtils
 {

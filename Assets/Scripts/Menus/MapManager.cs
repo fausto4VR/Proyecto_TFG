@@ -23,7 +23,7 @@ public class MapManager : MonoBehaviour
     
     void Update()
     {
-        if(!string.IsNullOrEmpty(GameLogicManager.Instance.secondClue) && !isThirdOptionActive)
+        if(!string.IsNullOrEmpty(GameLogicManager.Instance.Clues[1]) && !isThirdOptionActive)
         {
             thirdOptionKey.SetActive(true);
             thirdOptionPanel.SetActive(true);
@@ -81,7 +81,7 @@ public class MapManager : MonoBehaviour
 
     public void GoToParkScene()
     {
-        if(!string.IsNullOrEmpty(GameLogicManager.Instance.secondClue))
+        if(!string.IsNullOrEmpty(GameLogicManager.Instance.Clues[1]))
         {
             SceneManager.LoadScene("ParkScene");
         }

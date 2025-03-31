@@ -40,6 +40,13 @@ public class PuzzleUIManager : MonoBehaviour
     [Header("Variable Section")]
     private float transparentSupportButtonColor = 0.63f;
     
+    // QUITAR ----------------------------------------------------------
+    [Header("QUITAR")]   
+    public ResultType isCorrectResult;
+    public bool isCheckTrigger;
+    public bool isNecesaryResetInputs;
+    // -----------------------------------------------------------------
+    
     private Color unlockSupportButtonColor;
     private Image firstSupportImage;
     private Image secondSupportImage;
@@ -57,10 +64,6 @@ public class PuzzleUIManager : MonoBehaviour
     private AudioSource failureSolutionAudioSource;
     private AudioSource accessDeniedudioSource;
 
-    // QUITAR    
-    public ResultType isCorrectResult;
-    public bool isCheckTrigger;
-    public bool isNecesaryResetInputs;
 
     void Start()
     {
@@ -77,19 +80,19 @@ public class PuzzleUIManager : MonoBehaviour
         failureSolutionAudioSource = audioSources[4];
         accessDeniedudioSource = audioSources[5];
 
-        if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
+        if(GetComponent<PuzzleLogicManager>().PuzzleSupports[0])
         {
             firstSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
             firstSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
         }
 
-        if(GetComponent<PuzzleLogicManager>().puzzleSupports[1])
+        if(GetComponent<PuzzleLogicManager>().PuzzleSupports[1])
         {
             secondSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
             secondSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
         }
 
-        if(GetComponent<PuzzleLogicManager>().puzzleSupports[2])
+        if(GetComponent<PuzzleLogicManager>().PuzzleSupports[2])
         {
             thirdSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
             thirdSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
@@ -99,38 +102,38 @@ public class PuzzleUIManager : MonoBehaviour
         StartCoroutine(ExecuteAfterDelay());
     }
 
-    // Corrutina para esperar que la lista de pistas esté inicializada y activar el botón de omitir el puzle si fuese necesario
+    // Corrutina para esperar que la lista de ayudas esté inicializada y activar el botón de omitir el puzle si fuese necesario
     private IEnumerator ExecuteAfterDelay()
     {
-        while (GetComponent<PuzzleLogicManager>().puzzleSupports == null || 
-           GetComponent<PuzzleLogicManager>().puzzleSupports.Length == 0)
+        while (GetComponent<PuzzleLogicManager>().PuzzleSupports == null || 
+           GetComponent<PuzzleLogicManager>().PuzzleSupports.Length == 0)
         {
             yield return null; // Espera un frame
         }
 
-        if(GetComponent<PuzzleLogicManager>().puzzleSupports[0] && GetComponent<PuzzleLogicManager>().puzzleSupports[1] 
-            && GetComponent<PuzzleLogicManager>().puzzleSupports[2])
+        if(GetComponent<PuzzleLogicManager>().PuzzleSupports[0] && GetComponent<PuzzleLogicManager>().PuzzleSupports[1] 
+            && GetComponent<PuzzleLogicManager>().PuzzleSupports[2])
         {
             skipButton.SetActive(true);
         }
     }
 
-    // Método para cambiar el texto de la primera pista
-    public void SetFirstSupportText(string firstSupportTextInput)
+    // Método para cambiar el texto de la primera ayuda
+    public string FirstSupportText
     {
-        firstSupportText = firstSupportTextInput;
+        set { firstSupportText = value; }
     }
 
-    // Método para cambiar el texto de la segunda pista
-    public void SetSecondSupportText(string secondSupportTextInput)
+    // Método para cambiar el texto de la segunda ayuda
+    public string SecondSupportText
     {
-        secondSupportText = secondSupportTextInput;
+        set { secondSupportText = value; }
     }
 
-    // Método para cambiar el texto de la tercera pista
-    public void SetThirdSupportText(string thirdSupportTextInput)
+    // Método para cambiar el texto de la tercera ayuda
+    public string ThirdSupportText
     {
-        thirdSupportText = thirdSupportTextInput;
+        set { thirdSupportText = value; }
     }
 
     // Método para mostrar el panel de éxito despúes de acertar la solución de un puzle
@@ -139,7 +142,7 @@ public class PuzzleUIManager : MonoBehaviour
         puzzleMusic.Stop();
         successSolutionAudioSource.Play();
         successsPanel.SetActive(true);
-        int points = GetComponent<PuzzleLogicManager>().CalculatePoints(true);
+        int points = GetComponent<PuzzleLogicManager>().UpdatePoints(true);
         pointsSuccessText.text = points + "/50";
         GetComponent<PuzzleLogicManager>().DetectToClosePanel(true);
     }
@@ -150,7 +153,7 @@ public class PuzzleUIManager : MonoBehaviour
         puzzleMusic.Stop();
         failureSolutionAudioSource.Play();
         failurePanel.SetActive(true);
-        int points = GetComponent<PuzzleLogicManager>().CalculatePoints(false);
+        int points = GetComponent<PuzzleLogicManager>().UpdatePoints(false);
         pointsFailureText.text = points + "/50";
         GetComponent<PuzzleLogicManager>().DetectToClosePanel(false);
     }
@@ -212,7 +215,7 @@ public class PuzzleUIManager : MonoBehaviour
         }
     }
 
-    // Método para mostar el panel de pistas
+    // Método para mostar el panel de ayudas
     public void DisplaySupportPanel(Button button)
     {
         buttonsAudioSource.Play();
@@ -220,12 +223,12 @@ public class PuzzleUIManager : MonoBehaviour
 
         if(supportSectionPanel.activeInHierarchy && isPanelShown)
         {
-            // Sección para cerrar el panel de pistas
+            // Sección para cerrar el panel de ayudas
             if(lastSupportButtonActivated == supportButtonTag)
             {
                 CloseSupportPanel();
             }
-            // Sección para cambiar entre pistas
+            // Sección para cambiar entre ayudas
             else
             {
                 lastSupportButtonActivated = supportButtonTag;
@@ -234,7 +237,7 @@ public class PuzzleUIManager : MonoBehaviour
                 ShowSupport(supportButtonTag);
             }
         }
-        // Sección para abrir el panel de pistas con la que corresponda
+        // Sección para abrir el panel de ayudas con la que corresponda
         else if (!supportSectionPanel.activeInHierarchy && !isPanelShown)
         {
             supportSectionPanel.SetActive(true);
@@ -246,7 +249,7 @@ public class PuzzleUIManager : MonoBehaviour
         }
     }
 
-    // Método para cerrar él panel de pistas
+    // Método para cerrar él panel de ayudas
     private void CloseSupportPanel()
     {
         supportSectionPanel.SetActive(false);
@@ -258,7 +261,7 @@ public class PuzzleUIManager : MonoBehaviour
         isPanelShown = false;
     }
 
-    // Método para mostrar la pista correspondiente
+    // Método para mostrar la ayuda correspondiente
     private void ShowSupport(string supportButtonTag)
     {
         if(supportButtonTag == "Support1")
@@ -267,12 +270,12 @@ public class PuzzleUIManager : MonoBehaviour
             secondSupportImage.color = new Color(secondSupportImage.color.r, secondSupportImage.color.g, secondSupportImage.color.b, transparentSupportButtonColor);
             thirdSupportImage.color = new Color(thirdSupportImage.color.r, thirdSupportImage.color.g, thirdSupportImage.color.b, transparentSupportButtonColor);
 
-            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[0])
+            if(!GetComponent<PuzzleLogicManager>().PuzzleSupports[0])
             {
                 supportText.SetActive(false);
                 supportUnlockButton.SetActive(true);               
             }
-            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
+            else if(GetComponent<PuzzleLogicManager>().PuzzleSupports[0])
             {
                 supportUnlockButton.SetActive(false);  
                 supportText.SetActive(true);
@@ -286,12 +289,12 @@ public class PuzzleUIManager : MonoBehaviour
             secondSupportImage.color = new Color(secondSupportImage.color.r, secondSupportImage.color.g, secondSupportImage.color.b, 1f);
             thirdSupportImage.color = new Color(thirdSupportImage.color.r, thirdSupportImage.color.g, thirdSupportImage.color.b, transparentSupportButtonColor);
 
-            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[1])
+            if(!GetComponent<PuzzleLogicManager>().PuzzleSupports[1])
             {
                 supportText.SetActive(false);
                 supportUnlockButton.SetActive(true);               
             }
-            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[1])
+            else if(GetComponent<PuzzleLogicManager>().PuzzleSupports[1])
             {
                 supportUnlockButton.SetActive(false);
                 supportText.SetActive(true);
@@ -305,12 +308,12 @@ public class PuzzleUIManager : MonoBehaviour
             secondSupportImage.color = new Color(secondSupportImage.color.r, secondSupportImage.color.g, secondSupportImage.color.b, transparentSupportButtonColor);
             thirdSupportImage.color = new Color(thirdSupportImage.color.r, thirdSupportImage.color.g, thirdSupportImage.color.b, 1f);
 
-            if(!GetComponent<PuzzleLogicManager>().puzzleSupports[2])
+            if(!GetComponent<PuzzleLogicManager>().PuzzleSupports[2])
             {
                 supportText.SetActive(false);
                 supportUnlockButton.SetActive(true);               
             }
-            else if(GetComponent<PuzzleLogicManager>().puzzleSupports[2])
+            else if(GetComponent<PuzzleLogicManager>().PuzzleSupports[2])
             {
                 supportUnlockButton.SetActive(false);
                 supportText.SetActive(true);
@@ -319,7 +322,7 @@ public class PuzzleUIManager : MonoBehaviour
         }
     }
 
-    // Método para desbloquear las pistas
+    // Método para desbloquear las ayudas
     public void UnlockSupport()
     {
         if(lastSupportButtonActivated == "Support1")
@@ -328,19 +331,21 @@ public class PuzzleUIManager : MonoBehaviour
             firstSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
             firstSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
             supportText.GetComponent<TMP_Text>().text = firstSupportText;
-            GetComponent<PuzzleLogicManager>().puzzleSupports[0] = true;
+            GetComponent<PuzzleLogicManager>().SetPuzzleSupportsByIndex(0, true);
+            GetComponent<PuzzleLogicManager>().UpdatePoints(false);
             supportUnlockButton.SetActive(false);
             supportText.SetActive(true);
         }
         else if(lastSupportButtonActivated == "Support2")
         {
-            if(GetComponent<PuzzleLogicManager>().puzzleSupports[0])
+            if(GetComponent<PuzzleLogicManager>().PuzzleSupports[0])
             {
                 unlockSupportAudioSource.Play();
                 secondSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
                 secondSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
                 supportText.GetComponent<TMP_Text>().text = secondSupportText;
-                GetComponent<PuzzleLogicManager>().puzzleSupports[1] = true;
+                GetComponent<PuzzleLogicManager>().SetPuzzleSupportsByIndex(1, true);
+                GetComponent<PuzzleLogicManager>().UpdatePoints(false);
                 supportUnlockButton.SetActive(false);
                 supportText.SetActive(true);
             }
@@ -352,13 +357,14 @@ public class PuzzleUIManager : MonoBehaviour
         }
         else if(lastSupportButtonActivated == "Support3")
         {
-            if(GetComponent<PuzzleLogicManager>().puzzleSupports[0] && GetComponent<PuzzleLogicManager>().puzzleSupports[1])
+            if(GetComponent<PuzzleLogicManager>().PuzzleSupports[0] && GetComponent<PuzzleLogicManager>().PuzzleSupports[1])
             {
                 unlockSupportAudioSource.Play();
                 thirdSupportButton.GetComponent<Image>().color = unlockSupportButtonColor;
                 thirdSupportPanelButton.GetComponent<Image>().color = unlockSupportButtonColor;
                 supportText.GetComponent<TMP_Text>().text = thirdSupportText;
-                GetComponent<PuzzleLogicManager>().puzzleSupports[2] = true;
+                GetComponent<PuzzleLogicManager>().SetPuzzleSupportsByIndex(2, true);
+                GetComponent<PuzzleLogicManager>().UpdatePoints(false);
                 supportUnlockButton.SetActive(false);
                 supportText.SetActive(true);
                 skipButton.SetActive(true);
@@ -371,7 +377,7 @@ public class PuzzleUIManager : MonoBehaviour
         }
     }
 
-    // Método para cerrar un panel pulsando fuera de él
+    // Método para omitir el tipado del enunciado del puzle pulsando en la pantalla
     public void OutStatementDisplay()
     {
         outStatementDetectionButton.SetActive(false);

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
@@ -8,38 +7,27 @@ public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
 
-    // REVISAR
+    [Header("Variable Section")]
+    [SerializeField] private string mainScene = "SampleScene";
+
+    // QUITAR ----------------------------------------------------------
+    [Header("QUITAR")]
     public bool isPuzzleRecentlyCompleted;
     public float[] actualPlayerPosition;
     public float[] actualCameraPosition;
     public bool isPuzzleIncomplete;
-    public bool[] lastPuzzleSupports;
-    public int lastPuzzlePoints;
-    public string actualPuzzleName;
     public bool isLoadGame;
     public bool isNewGame;
+    // -----------------------------------------------------------------
 
-    // REVISAR
-    private GameObject player;
-    private string sceneName;
-    private string guilty;
-    private string firstClue = "";
-    private string secondClue = "";
-    private string thirdClue = "";
-    private int storyPhase;
-    private string lastPuzzleComplete;
-    private bool[] knownSuspects;
-    private bool[] knownTutorials;
-    private bool[] knownDialogues;
-    private bool isBadEnding;    
-    private int endOpportunities;
 
-    // Este es el contenedor de los textos cargados
+    // Contenedor de los textos cargados
     public GameTextDictionary gameText { get; private set; }
-
-    // En el Awake definimos su comportamiento como singleton    
+    
+    // En el Awake se define su comportamiento como singleton. Además se genera  la clave de encriptación y se cargan los 
+    // textos del juego y las fases de la historia   
     void Awake()
-    {
+    {        
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -49,65 +37,122 @@ public class GameStateManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        loadGameTexts();
+        SaveManager.GenerateKey();
+        LoadGameTexts();
+        StoryStateManager.LoadGameStory();
     }
 
-    // REVISAR
+    // QUITAR ----------------------------------------------------------
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            LoadGameTexts();
+            StoryStateManager.LoadGameStory();
+        }        
+    }
+    // -----------------------------------------------------------------
+
+    // Método para consultar la escena principal
+    public string MainScene
+    {
+        get { return mainScene; }
+    }
+
+    // Método para guardar los datos
     public void SaveData()
     {
-        player = GameObject.Find("Player");
-        SaveManager.SavePlayerData(player);
-
-        sceneName = SceneManager.GetActiveScene().name;
-        guilty = GameLogicManager.Instance.guilty;
-        firstClue = GameLogicManager.Instance.firstClue;
-        secondClue = GameLogicManager.Instance.secondClue;
-        thirdClue = GameLogicManager.Instance.thirdClue;
-        storyPhase = GameLogicManager.Instance.storyPhase;
-        lastPuzzleComplete = GameLogicManager.Instance.lastPuzzleComplete;
-        knownSuspects = GameLogicManager.Instance.knownSuspects;
-        knownTutorials = GameLogicManager.Instance.knownTutorials;        
-        knownDialogues = GameLogicManager.Instance.knownDialogues;        
-        isBadEnding = GameLogicManager.Instance.isBadEnding;
-        endOpportunities = GameLogicManager.Instance.endOpportunities;
-        SaveManager.SaveGameData(sceneName, guilty, firstClue, secondClue, thirdClue, storyPhase, lastPuzzleComplete, 
-            knownSuspects, knownTutorials, knownDialogues, isBadEnding, endOpportunities);
-
+        SavePlayerData();
+        SaveGameData();
         SavePuzzleData();
-
         Debug.Log("Datos guardados");
     }
 
-    // REVISAR
+    // Método para cargar los datos
     public void LoadData()
     {
-        GameData gameData = SaveManager.LoadGameData();
-        GameLogicManager.Instance.guilty = gameData.gameGuilty;
-        GameLogicManager.Instance.firstClue = gameData.gameFirstClue;
-        GameLogicManager.Instance.secondClue = gameData.gameSecondClue;
-        GameLogicManager.Instance.thirdClue = gameData.gameThirdClue;
-        GameLogicManager.Instance.storyPhase = gameData.gameStoryPhase;
-        GameLogicManager.Instance.lastPuzzleComplete = gameData.gameLastPuzzleComplete;
-        GameLogicManager.Instance.knownSuspects = gameData.gameKnownSuspects;
-        GameLogicManager.Instance.knownTutorials = gameData.gameKnownTutorials;
-        GameLogicManager.Instance.knownDialogues = gameData.gameKnownDialogues;        
-        GameLogicManager.Instance.isBadEnding = gameData.gameIsBadEnding;
-        GameLogicManager.Instance.endOpportunities = gameData.gameEndOpportunities;
-        SceneManager.LoadScene(gameData.gameScene);
-
+        LoadGameData();
         LoadPuzzleData();
 
         // Evento que se dispara cuando la escena está cargada
         SceneManager.sceneLoaded += OnSceneLoaded;
+        
+        Debug.Log("Datos cargados");
+    }
+    
+    // Método para reiniciar los datos
+    public void ResetData()
+    {
+        SaveManager.ResetPlayerData();
+        SaveManager.ResetGameData();
+        SaveManager.ResetPuzzleData();
+        Debug.Log("Datos reseteados");
     }
 
-    // REVISAR
+    // Método para obtener los parámatros del jugador y guardarlos
+    private void SavePlayerData()
+    {  
+        GameObject player = GameObject.Find("Player");        
+        float positionX = player.transform.position.x;
+        float positionY = player.transform.position.y;
+        float positionZ = player.transform.position.z;
+
+        PlayerData playerData = new PlayerData(positionX, positionY, positionZ);
+        SaveManager.SavePlayerData(playerData);
+    }
+
+    // Método para obtener los parámatros del juego y guardarlos
+    private void SaveGameData()
+    {      
+        string sceneName = SceneManager.GetActiveScene().name;
+        string guilty = GameLogicManager.Instance.Guilty;
+        List<string> clues = GameLogicManager.Instance.Clues;
+        int storyPhaseAux = GameLogicManager.Instance.StoryPhaseAux; // QUITAR
+        StoryPhase storyPhase = GameLogicManager.Instance.CurrentStoryPhase; 
+        bool[] knownSuspects = GameLogicManager.Instance.KnownSuspects;
+        bool[] knownTutorials = GameLogicManager.Instance.KnownTutorials;        
+        bool[] knownDialogues = GameLogicManager.Instance.KnownDialogues;        
+        bool isBadEnding = GameLogicManager.Instance.IsBadEnding;
+        int endOpportunities = GameLogicManager.Instance.EndOpportunities;
+
+        GameData gameData = new GameData(sceneName, guilty, clues, storyPhaseAux, storyPhase, knownSuspects, knownTutorials, 
+            knownDialogues, isBadEnding, endOpportunities);
+
+        SaveManager.SaveGameData(gameData);
+    }
+
+    // Método para obtener los parámatros de los puzles y guardarlos
+    private void SavePuzzleData()
+    {
+        List<PuzzleState> puzzleStateList = GameLogicManager.Instance.PuzzleStateList;
+        PuzzleData puzzleData = new PuzzleData(puzzleStateList);
+        SaveManager.SavePuzzleData(puzzleData);
+    }
+
+    // Método para cargar los datos y obtener los parámatros del juego
+    private void LoadGameData()
+    {
+        GameData gameData = SaveManager.LoadGameData();
+
+        GameLogicManager.Instance.Guilty = gameData.gameGuilty;
+        GameLogicManager.Instance.Clues = gameData.gameClues;
+        GameLogicManager.Instance.StoryPhaseAux = gameData.gameStoryPhaseAux; // QUITAR
+        GameLogicManager.Instance.CurrentStoryPhase = gameData.gameStoryPhase;
+        GameLogicManager.Instance.KnownSuspects = gameData.gameKnownSuspects;
+        GameLogicManager.Instance.KnownTutorials = gameData.gameKnownTutorials;
+        GameLogicManager.Instance.KnownDialogues = gameData.gameKnownDialogues;        
+        GameLogicManager.Instance.IsBadEnding = gameData.gameIsBadEnding;
+        GameLogicManager.Instance.EndOpportunities = gameData.gameEndOpportunities;
+
+        SceneManager.LoadScene(gameData.gameScene);
+    }
+
     // Método que se llama cuando una escena es completamente cargada
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
         PlayerData playerData = SaveManager.LoadPlayerData();
-        player = GameObject.Find("Player");
+        GameObject player = GameObject.Find("Player");
 
         if (player != null)
         {
@@ -117,135 +162,19 @@ public class GameStateManager : MonoBehaviour
         {
             Debug.LogError("No se ha encontrado al jugador en la escena.");
         }
-        Debug.Log("Datos cargados");
     }
 
-    // REVISAR
-    public void ResetData()
-    {
-        SaveManager.ResetPlayerData();
-        SaveManager.ResetGameData();
-        SaveManager.ResetPuzzleData();
-        Debug.Log("Datos reseteados");
-    }
-
-    // REVISAR
-    private void SavePuzzleData()
-    {
-        PuzzleData puzzleData = SaveManager.LoadPuzzleData();
-        bool[] emptyBool = new bool[3];
-
-        if(actualPuzzleName == "Puzzle1")
-        {
-            SaveManager.SavePuzzleData(lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0, 
-                emptyBool, 0, emptyBool, 0, emptyBool, 0);
-        }
-        else if(actualPuzzleName == "Puzzle2")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, lastPuzzleSupports, 
-                lastPuzzlePoints, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0);
-        }
-        else if(actualPuzzleName == "Puzzle3")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, emptyBool, 0, emptyBool, 0, 
-                emptyBool, 0, emptyBool, 0);
-        }
-        else if(actualPuzzleName == "Puzzle4")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, emptyBool, 0, emptyBool, 0, emptyBool, 0);
-        }
-        else if(actualPuzzleName == "Puzzle5")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, 
-                emptyBool, 0, emptyBool, 0);
-        }
-        else if(actualPuzzleName == "Puzzle6")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleData.gamePuzzle5Supports, 
-                puzzleData.gamePuzzle5Points, lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0, emptyBool, 0);
-        }
-        else if(actualPuzzleName == "Puzzle7")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleData.gamePuzzle5Supports, 
-                puzzleData.gamePuzzle5Points, puzzleData.gamePuzzle6Supports, puzzleData.gamePuzzle6Points, 
-                lastPuzzleSupports, lastPuzzlePoints, emptyBool, 0);
-        }
-        else if(actualPuzzleName == "Puzzle8")
-        {
-            SaveManager.SavePuzzleData(puzzleData.gamePuzzle1Supports, puzzleData.gamePuzzle1Points, puzzleData.gamePuzzle2Supports, 
-                puzzleData.gamePuzzle2Points, puzzleData.gamePuzzle3Supports, puzzleData.gamePuzzle3Points, 
-                puzzleData.gamePuzzle4Supports, puzzleData.gamePuzzle4Points, puzzleData.gamePuzzle5Supports, 
-                puzzleData.gamePuzzle5Points, puzzleData.gamePuzzle6Supports, puzzleData.gamePuzzle6Points, 
-                puzzleData.gamePuzzle7Supports, puzzleData.gamePuzzle7Points, lastPuzzleSupports, lastPuzzlePoints);
-        }
-    }
-
-    // REVISAR
+    // Método para cargar los datos y obtener los parámatros de los puzles
     private void LoadPuzzleData()
     {
         PuzzleData puzzleData = SaveManager.LoadPuzzleData();
-        lastPuzzleComplete = GameLogicManager.Instance.lastPuzzleComplete;
-
-        if(lastPuzzleComplete == "")
-        {
-            lastPuzzleSupports = puzzleData.gamePuzzle1Supports;
-            lastPuzzlePoints = puzzleData.gamePuzzle1Points;
-        }
-        else if(lastPuzzleComplete == "Puzzle1")
-        {
-            lastPuzzleSupports = puzzleData.gamePuzzle2Supports;
-            lastPuzzlePoints = puzzleData.gamePuzzle2Points;
-        }
-        else if(lastPuzzleComplete == "Puzzle2")
-        {
-            lastPuzzleSupports = puzzleData.gamePuzzle3Supports;
-            lastPuzzlePoints = puzzleData.gamePuzzle3Points;
-        }
-        else if(lastPuzzleComplete == "Puzzle3")
-        {
-            lastPuzzleSupports = puzzleData.gamePuzzle4Supports;
-            lastPuzzlePoints = puzzleData.gamePuzzle4Points;
-        }
-        else if(lastPuzzleComplete == "Puzzle4")
-        {
-            lastPuzzleSupports = puzzleData.gamePuzzle5Supports;
-            lastPuzzlePoints = puzzleData.gamePuzzle5Points;
-        }
-        else if(lastPuzzleComplete == "Puzzle5")
-        {
-            lastPuzzleSupports = puzzleData.gamePuzzle6Supports;
-            lastPuzzlePoints = puzzleData.gamePuzzle6Points;
-        }
-        else if(lastPuzzleComplete == "Puzzle6")
-        {
-            lastPuzzleSupports = puzzleData.gamePuzzle7Supports;
-            lastPuzzlePoints = puzzleData.gamePuzzle7Points;
-        }
-        else if(lastPuzzleComplete == "Puzzle7")
-        {
-            lastPuzzleSupports = puzzleData.gamePuzzle8Supports;
-            lastPuzzlePoints = puzzleData.gamePuzzle8Points;
-        }
-        else
-        {
-            lastPuzzleSupports = new bool[3];
-            lastPuzzlePoints = 0;
-        }
+        GameLogicManager.Instance.PuzzleStateList = puzzleData.gamePuzzleStates;
     }
 
     // Método para cargar los textos del juego desde el fichero json
-    public void loadGameTexts() 
+    private void LoadGameTexts() 
     {
-        string path = Path.Combine(Application.streamingAssetsPath, "gameText.json");
+        string path = Path.Combine(Application.streamingAssetsPath, "GameText.json");
 
         if (File.Exists(path))
         {
@@ -254,12 +183,12 @@ public class GameStateManager : MonoBehaviour
 
             if (gameText == null)
             {
-                Debug.LogError("Hubo un error al parsear el archivo JSON.");
+                Debug.LogError("Hubo un error al parsear el archivo JSON GameText.");
             }
         }
         else
         {
-            Debug.LogError("No se ha encontrado el archivo gameText.json en StreamingAssets.");
+            Debug.LogError("No se ha encontrado el archivo GameText.json en StreamingAssets.");
         }
     }
 
@@ -267,8 +196,15 @@ public class GameStateManager : MonoBehaviour
     [System.Serializable]
     public class GameTextDictionary
     {
+        public List<string> guiltyNames;
         public TextPuzzle puzzle_1;
-        public TextPuzzle puzzle_2;
+        public TextPuzzle puzzle_2;        
+        public TextPuzzle puzzle_3;
+        public TextPuzzle puzzle_4;
+        public TextPuzzle puzzle_5;
+        public TextPuzzle puzzle_6;
+        public TextPuzzle puzzle_7;
+        public TextPuzzle puzzle_8;
     }
 
     // Estructura de datos que representa los textos asociados a un "puzzle"

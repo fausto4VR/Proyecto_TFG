@@ -32,7 +32,8 @@ public class AvanceClues : MonoBehaviour
 
     void Update()
     {
-        if(GetComponent<DialogueManager>().isClueUnlock && storyPhase == GameLogicManager.Instance.storyPhase && isPlayerInRange)
+        // QUITAR AUX
+        if(GetComponent<DialogueManager>().isClueUnlock && storyPhase == GameLogicManager.Instance.StoryPhaseAux && isPlayerInRange)
         {
             player.GetComponent<PlayerMovement>().isPlayerTalking = true;
             cluePanel.SetActive(true);
@@ -70,23 +71,23 @@ public class AvanceClues : MonoBehaviour
     {
         string clueTextString = "Has desbloqueado la primera pista: \n";
 
-        if(GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[0] || 
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[1] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[6] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[7])
+        if(GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[0] || 
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[1] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[6] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[7])
         {
-            GameLogicManager.Instance.firstClue = "Tiene los ojos marrones";
-            clueTextString += GameLogicManager.Instance.firstClue;
+            GameLogicManager.Instance.Clues[0] = "Tiene los ojos marrones";
+            clueTextString += GameLogicManager.Instance.Clues[0];
             clueImage.sprite = firstClueSprite1;
 
         }
-        else if(GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[2] || 
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[3] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[4] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[5])
+        else if(GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[2] || 
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[3] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[4] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[5])
         {
-            GameLogicManager.Instance.firstClue = "Tiene los ojos verdes";
-            clueTextString += GameLogicManager.Instance.firstClue;
+            GameLogicManager.Instance.Clues[0] = "Tiene los ojos verdes";
+            clueTextString += GameLogicManager.Instance.Clues[0];
             clueImage.sprite = firstClueSprite2;
         }
 
@@ -97,23 +98,23 @@ public class AvanceClues : MonoBehaviour
     {
         string clueTextString = "Has desbloqueado la segunda pista: \n";
 
-        if(GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[0] || 
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[1] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[4] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[5])
+        if(GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[0] || 
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[1] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[4] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[5])
         {
-            GameLogicManager.Instance.secondClue = "Mechón de pelo negro";
-            clueTextString += GameLogicManager.Instance.secondClue;
+            GameLogicManager.Instance.Clues[1] = "Mechón de pelo negro";
+            clueTextString += GameLogicManager.Instance.Clues[1];
             clueImage.sprite = secondClueSprite1;
 
         }
-        else if(GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[2] || 
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[3] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[6] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[7])
+        else if(GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[2] || 
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[3] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[6] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[7])
         {
-            GameLogicManager.Instance.secondClue = "Mechón de pelo rubio";
-            clueTextString += GameLogicManager.Instance.secondClue;
+            GameLogicManager.Instance.Clues[1] = "Mechón de pelo rubio";
+            clueTextString += GameLogicManager.Instance.Clues[1];
             clueImage.sprite = secondClueSprite2;
         }
 
@@ -124,23 +125,23 @@ public class AvanceClues : MonoBehaviour
     {
         string clueTextString = "Has desbloqueado la tercera pista: \n";
 
-        if(GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[0] || 
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[2] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[4] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[6])
+        if(GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[0] || 
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[2] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[4] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[6])
         {
-            GameLogicManager.Instance.thirdClue = "Tiene una cicatriz";
-            clueTextString += GameLogicManager.Instance.thirdClue;
+            GameLogicManager.Instance.Clues[2] = "Tiene una cicatriz";
+            clueTextString += GameLogicManager.Instance.Clues[2];
             clueImage.sprite = thirdClueSprite1;
 
         }
-        else if(GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[1] || 
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[3] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[5] ||
-            GameLogicManager.Instance.guilty == GameLogicManager.Instance.guiltyNames[7])
+        else if(GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[1] || 
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[3] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[5] ||
+            GameLogicManager.Instance.Guilty == GameLogicManager.Instance.GuiltyNames[7])
         {
-            GameLogicManager.Instance.thirdClue = "Tiene un pendiente";
-            clueTextString += GameLogicManager.Instance.thirdClue;
+            GameLogicManager.Instance.Clues[2]  = "Tiene un pendiente";
+            clueTextString += GameLogicManager.Instance.Clues[2];
             clueImage.sprite = thirdClueSprite2;
         }
 
