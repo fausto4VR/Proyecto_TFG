@@ -10,6 +10,8 @@ public class GameLogicManager : MonoBehaviour
     [Header("Variable Section")]
     [SerializeField] private string sceneToDestroy = "MenuScene";
 
+    private GameObject player;
+    private GameObject virtualCamera;
     private List<string> guiltyNames = new List<string>();
     private string guilty;
     private List<string> clues = new List<string>();
@@ -22,6 +24,11 @@ public class GameLogicManager : MonoBehaviour
     private bool isBadEnding;
     private int endOpportunities;
     private List<PuzzleState> puzzleStateList;
+
+    private float[] temporarilyPlayerPosition;
+    private float[] temporarilyCameraPosition;
+    private bool isPuzzleCompleted;
+
 
     // En el Awake se define su comportamiento como singleton 
     void Awake()
@@ -91,6 +98,20 @@ public class GameLogicManager : MonoBehaviour
             GameStateManager.Instance.LoadData();
         }
         // -----------------------------------------------------------------
+    }
+
+    // Métodos para obtener y para cambiar el objeto player, es decir, el avatar del jugador
+    public GameObject Player
+    {
+        get { return player; }
+        set { player = value; }
+    }
+
+    // Métodos para obtener y para cambiar el objeto virtual camera, es decir, la cámara del juego
+    public GameObject VirtualCamera
+    {
+        get { return virtualCamera; }
+        set { virtualCamera = value; }
     }
 
     // Método para obtener los posibles culpables
@@ -176,6 +197,13 @@ public class GameLogicManager : MonoBehaviour
     {
         get { return new List<PuzzleState>(puzzleStateList); }
         set { puzzleStateList = new List<PuzzleState>(value); }
+    }
+
+    // Métodos para obtener y para cambiar el tipo de final
+    public bool IsPuzzleCompleted
+    {
+        get { return isPuzzleCompleted; }
+        set { isPuzzleCompleted = value; }
     }
 
     // Método para cargar la información de quien es el culpable o asignarlo si no existe
@@ -368,6 +396,22 @@ public class GameLogicManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        // Se busca el objeto player que haya en esta escena
+        GameObject newPlayer = GameObject.Find("Player");
+
+        if (newPlayer != null)
+        {
+            player = newPlayer;
+        }
+
+        // Se busca el objeto virtual camera que haya en esta escena
+        GameObject newVirtualCamera = GameObject.Find("Virtual Camera");
+
+        if (newVirtualCamera != null)
+        {
+            virtualCamera = newVirtualCamera;
+        }
+
         // Se activa el NPC correspondiente en función del final del juego
         if (scene.name == GameStateManager.Instance.MainScene)
         {
@@ -383,5 +427,27 @@ public class GameLogicManager : MonoBehaviour
                 father.transform.GetChild(0).gameObject.SetActive(true);
             }
         }
+    }
+
+    // Método para guardar la posición del jugador y de la cámara antes de lanzar un puzle
+    public void SaveTemporarilyPosition()
+    {
+        temporarilyPlayerPosition[0] = player.transform.position.x;
+        temporarilyPlayerPosition[1] = player.transform.position.y;
+        temporarilyPlayerPosition[2] = player.transform.position.z;
+
+        temporarilyCameraPosition[0] = virtualCamera.transform.position.x;
+        temporarilyCameraPosition[1] = virtualCamera.transform.position.y;
+        temporarilyCameraPosition[2] = virtualCamera.transform.position.z;
+    }
+
+    // Método para cargar la posición del jugador y de la cámara antes de lanzar un puzle
+    public void LoadTemporarilyPosition()
+    {
+        player.transform.position = new Vector3(temporarilyPlayerPosition[0], temporarilyPlayerPosition[1], 
+            temporarilyPlayerPosition[2]);
+
+        virtualCamera.transform.position = new Vector3(temporarilyCameraPosition[0], temporarilyCameraPosition[1], 
+            temporarilyCameraPosition[2]);
     }
 }

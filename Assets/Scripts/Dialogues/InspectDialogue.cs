@@ -23,6 +23,7 @@ public class InspectDialogue : MonoBehaviour
     public bool didObjectAdvanceStory;
     public bool isPuzzleReturn = false;
     public bool isClueDialogueFinish = false;
+    public string puzzleScene;
 
     void Update()
     {
@@ -37,11 +38,6 @@ public class InspectDialogue : MonoBehaviour
                     didObjectAdvanceStory = true;
                     GetComponent<DialogueManager>().dialogueLines = dialogueLines;
                     GetComponent<DialogueManager>().characterNameLines = characterNameLines;
-
-                    if(GetComponent<DialogueManager>().isClueUnlockTrigger)
-                    {
-                        isClueDialogueFinish = true;
-                    }
                 }
                 // QUITAR AUX
                 else if(storyPhaseToUnlockDialogue == (GameLogicManager.Instance.StoryPhaseAux - 1))
@@ -66,7 +62,10 @@ public class InspectDialogue : MonoBehaviour
             {
                 didConversationStart = true;
                 isPuzzleReturn = false;
-                isClueDialogueFinish = true;
+                if(GetComponent<DialogueManager>().isClueUnlockTrigger)
+                {
+                    isClueDialogueFinish = true;
+                }
                 player.GetComponent<PlayerMovement>().isPlayerTalking = true;
                 GetComponent<DialogueManager>().dialogueLines = dialogueLinesToRecentPhase;
                 GetComponent<DialogueManager>().characterNameLines = characterNameLinesToRecentPhase;
@@ -76,12 +75,7 @@ public class InspectDialogue : MonoBehaviour
         if(GameStateManager.Instance.isPuzzleIncomplete)
         {
             GameStateManager.Instance.isPuzzleIncomplete = false;
-
-            player.transform.position = new Vector3(GameStateManager.Instance.actualPlayerPosition[0],
-                GameStateManager.Instance.actualPlayerPosition[1], GameStateManager.Instance.actualPlayerPosition[2]);
-
-            virtualCamara.transform.position = new Vector3(GameStateManager.Instance.actualCameraPosition[0],
-                GameStateManager.Instance.actualCameraPosition[1], GameStateManager.Instance.actualPlayerPosition[2]);
+            GameLogicManager.Instance.LoadTemporarilyPosition();
         }        
     }
 }

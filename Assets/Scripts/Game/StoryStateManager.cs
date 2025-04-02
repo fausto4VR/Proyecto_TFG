@@ -98,7 +98,6 @@ public static class StoryStateManager
     {
         if (Enum.TryParse(nameString, out StoryPhaseOption phase))
         {
-            Debug.Log("Fase convertida con éxito: " + phase);
             return phase;
         }
         else
@@ -228,7 +227,7 @@ public class StoryPhase
 
         if (parts.Length != 2)
         {
-            Debug.LogError("La cadena de la fase no está en el formato correcto (fase.subfase).");
+            Debug.LogError("La cadena de la fase no está en el formato correcto (fase.subfase): " + currentPhaseString);
             return SubphaseTemporaryOrder.Error;
         }
 

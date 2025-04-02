@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
-using System;
 
 public class PuzzleLogicManager : MonoBehaviour
 {
@@ -188,11 +187,7 @@ public class PuzzleLogicManager : MonoBehaviour
     {
         UpdatePuzzleData(true);
         GameLogicManager.Instance.LastPuzzleComplete = puzzleName;
-
-        // QUITAR ----------------------------------------------------------
-        GameStateManager.Instance.isPuzzleRecentlyCompleted = true;
-        // ----------------------------------------------------------------- 
-
+        GameLogicManager.Instance.IsPuzzleCompleted = true;
         SceneManager.LoadScene(sceneToReturn);
     }
 

@@ -20,13 +20,34 @@
                     "actions": 1
                 },
                 {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 1",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Puzzle2",
+            "subphases": 
+            [
+                {
+                    "type": "Dialogue",
+                    "name": "**Ejemplo1**",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "**Ejemplo2**",
+                    "actions": 3
+                },
+                {
                     "type": "Trigger",
-                    "name": "Temporary **DELETE**",
+                    "name": "**Ejemplo3**",
                     "actions": 2
                 },
                 {
                     "type": "ReadyForPuzzle",
-                    "name": "Ready for Puzzle 1",
+                    "name": "**Ejemplo4**",
                     "actions": 1
                 }
             ]

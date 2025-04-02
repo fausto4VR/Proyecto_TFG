@@ -176,12 +176,20 @@ public class DialogueManager : MonoBehaviour
                 multipleChoiceDialogue.dialoguePanel.SetActive(false);
                 multipleChoiceDialogue.didDialogueStart = false;
                 dialogueMark.SetActive(true);
+
+                // PROVISIONAL
+                player.GetComponent<PlayerMovement>().isPlayerTalking = false;
+                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
             }
             else if(storyPhaseDialogue != null)
             {
                 storyPhaseDialogue.dialoguePanel.SetActive(false);
                 storyPhaseDialogue.didConversationStart = false;
                 dialogueMark.SetActive(true);
+
+                // PROVISIONAL
+                player.GetComponent<PlayerMovement>().isPlayerTalking = false;
+                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
             }
             else if(playerLogicManager != null)
             {
@@ -189,6 +197,10 @@ public class DialogueManager : MonoBehaviour
                 playerLogicManager.didConversationStart = false;
                 playerLogicManager.isEmptyInspected = false;
                 playerLogicManager.isObjectInspected = false;
+
+                // PROVISIONAL
+                player.GetComponent<PlayerMovement>().isPlayerTalking = false;
+                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
             }
 
             else if(inspectDialogue != null)
@@ -199,9 +211,9 @@ public class DialogueManager : MonoBehaviour
 
                 if(inspectDialogue.didObjectAdvanceStory)
                 {
-                    if(GetComponent<AvanceStory>() != null)
+                    if(GetComponent<AdvanceStoryManager>() != null)
                     {
-                        inspectDialogue.isStoryAdvanced = true;
+                        GetComponent<AdvanceStoryManager>().AdvanceStoryState();
                     }
                     
                     inspectDialogue.didObjectAdvanceStory = false;
@@ -209,17 +221,23 @@ public class DialogueManager : MonoBehaviour
 
                 if(isClueUnlockTrigger && GetComponent<InspectDialogue>().isClueDialogueFinish)
                 {
-                    isClueUnlock = true;
+                    GetComponent<CluesDisplayManager>().ShowDiscoveredClue();
                     GetComponent<InspectDialogue>().isClueDialogueFinish = false;
                 }
                 else
                 {
                     GetComponent<InspectDialogue>().isClueDialogueFinish = false;
                 }
-            }
 
-            player.GetComponent<PlayerMovement>().isPlayerTalking = false;
-            player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
+                // PROVISIONAL
+                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
+            }
+            else
+            {
+                // PROVISIONAL
+                player.GetComponent<PlayerMovement>().isPlayerTalking = false;
+                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
+            }
         }
     }
 

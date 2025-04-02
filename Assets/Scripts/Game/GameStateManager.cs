@@ -12,9 +12,6 @@ public class GameStateManager : MonoBehaviour
 
     // QUITAR ----------------------------------------------------------
     [Header("QUITAR")]
-    public bool isPuzzleRecentlyCompleted;
-    public float[] actualPlayerPosition;
-    public float[] actualCameraPosition;
     public bool isPuzzleIncomplete;
     public bool isLoadGame;
     public bool isNewGame;
@@ -92,7 +89,7 @@ public class GameStateManager : MonoBehaviour
     // Método para obtener los parámatros del jugador y guardarlos
     private void SavePlayerData()
     {  
-        GameObject player = GameObject.Find("Player");        
+        GameObject player = GameLogicManager.Instance.Player;       
         float positionX = player.transform.position.x;
         float positionY = player.transform.position.y;
         float positionZ = player.transform.position.z;
@@ -152,7 +149,7 @@ public class GameStateManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
         PlayerData playerData = SaveManager.LoadPlayerData();
-        GameObject player = GameObject.Find("Player");
+        GameObject player = GameLogicManager.Instance.Player;
 
         if (player != null)
         {
