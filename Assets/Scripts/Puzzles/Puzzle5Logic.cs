@@ -14,9 +14,11 @@ public class Puzzle5Logic : MonoBehaviour
 
     void Start()
     {
-        GetComponent<PuzzleUIManager>().FirstSupportText = GameStateManager.Instance.gameText.puzzle_5.first_support_text;
-        GetComponent<PuzzleUIManager>().SecondSupportText = GameStateManager.Instance.gameText.puzzle_5.second_support_text;
-        GetComponent<PuzzleUIManager>().ThirdSupportText = GameStateManager.Instance.gameText.puzzle_5.third_support_text;
+        GetComponent<PuzzleUIManager>().FirstSupportText = GameStateManager.Instance.gameText.puzzle5.firstSupportText;
+        GetComponent<PuzzleUIManager>().SecondSupportText = GameStateManager.Instance.gameText.puzzle5.secondSupportText;
+        GetComponent<PuzzleUIManager>().ThirdSupportText = GameStateManager.Instance.gameText.puzzle5.thirdSupportText;
+
+        GetComponent<PuzzleLogicManager>().ShowStatement(GameStateManager.Instance.gameText.puzzle5.puzzleStatementText);
     }
 
     void Update()

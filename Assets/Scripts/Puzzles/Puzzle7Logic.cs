@@ -32,9 +32,11 @@ public class Puzzle7Logic : MonoBehaviour
 
     void Start()
     {
-        GetComponent<PuzzleUIManager>().FirstSupportText = GameStateManager.Instance.gameText.puzzle_7.first_support_text;
-        GetComponent<PuzzleUIManager>().SecondSupportText = GameStateManager.Instance.gameText.puzzle_7.second_support_text;
-        GetComponent<PuzzleUIManager>().ThirdSupportText = GameStateManager.Instance.gameText.puzzle_7.third_support_text;
+        GetComponent<PuzzleUIManager>().FirstSupportText = GameStateManager.Instance.gameText.puzzle7.firstSupportText;
+        GetComponent<PuzzleUIManager>().SecondSupportText = GameStateManager.Instance.gameText.puzzle7.secondSupportText;
+        GetComponent<PuzzleUIManager>().ThirdSupportText = GameStateManager.Instance.gameText.puzzle7.thirdSupportText;
+
+        GetComponent<PuzzleLogicManager>().ShowStatement(GameStateManager.Instance.gameText.puzzle7.puzzleStatementText);
     }
 
     void Update()

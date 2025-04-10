@@ -15,7 +15,7 @@ public class GameLogicManager : MonoBehaviour
     private List<string> guiltyNames = new List<string>();
     private string guilty;
     private List<string> clues = new List<string>();
-    private int storyPhaseAux;
+    private int storyPhaseAux; // QUITAR
     private StoryPhase storyPhase;
     private string lastPuzzleComplete;
     private bool[] knownSuspects;
@@ -25,8 +25,9 @@ public class GameLogicManager : MonoBehaviour
     private int endOpportunities;
     private List<PuzzleState> puzzleStateList;
 
-    private float[] temporarilyPlayerPosition;
-    private float[] temporarilyCameraPosition;
+    private float[] temporarilyPlayerPosition = new float[3];
+    private float[] temporarilyCameraPosition = new float[3];
+    private PlayerState temporarilyPlayerState;
     private bool isPuzzleCompleted;
 
 
@@ -58,6 +59,9 @@ public class GameLogicManager : MonoBehaviour
         PuzzleData puzzleData = SaveManager.LoadPuzzleData();
         FoundPuzzles(puzzleData);
 
+        player.GetComponent<PlayerLogicManager>().InitializeFirstState();
+        temporarilyPlayerState = player.GetComponent<PlayerLogicManager>().PlayerState;
+
         // QUITAR ----------------------------------------------------------
         if(GameStateManager.Instance.isLoadGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
         {
@@ -70,6 +74,10 @@ public class GameLogicManager : MonoBehaviour
             storyPhaseAux = 1; // QUITAR
             GameStateManager.Instance.SaveData();
             GameStateManager.Instance.isNewGame = false; 
+        }
+        if(storyPhaseAux == 0)
+        {
+            storyPhaseAux = 1;
         }
         // -----------------------------------------------------------------      
     }
@@ -125,21 +133,48 @@ public class GameLogicManager : MonoBehaviour
     public string Guilty
     {
         get { return guilty; }
-        set { guilty = value; }
+        set {             
+            if (value == null || value == "")
+            {
+                FoundGuilty(null);
+            }
+            else
+            {
+                guilty = value;
+            }
+        }
     }
 
     // Métodos para obtener y para cambiar las pistas 
     public List<string> Clues
     {
         get { return new List<string>(clues); }
-        set { clues = new List<string>(value); }
+        set {             
+            if (clues == null || clues.Count == 0 || clues.All(element => element != "" || element != null))
+            {
+                FoundClues(null);
+            }
+            else
+            {
+                clues = value;
+            }
+        }
     }
 
     // QUITAR --------------------------------------------------------- 
     public int StoryPhaseAux
     {
         get { return storyPhaseAux; }
-        set { storyPhaseAux = value; }
+        set {             
+            if (value == 0)
+            {
+                storyPhaseAux = 1;
+            }
+            else
+            {
+                storyPhaseAux = value;
+            }
+        }
     }
     // -----------------------------------------------------------------
 
@@ -204,6 +239,13 @@ public class GameLogicManager : MonoBehaviour
     {
         get { return isPuzzleCompleted; }
         set { isPuzzleCompleted = value; }
+    }
+
+    // Método para obtener el estado actual del jugador
+    public PlayerState TemporalPlayerState
+    {
+        get { return temporarilyPlayerState; }
+        set { temporarilyPlayerState = value; }
     }
 
     // Método para cargar la información de quien es el culpable o asignarlo si no existe
@@ -398,7 +440,6 @@ public class GameLogicManager : MonoBehaviour
 
         // Se busca el objeto player que haya en esta escena
         GameObject newPlayer = GameObject.Find("Player");
-
         if (newPlayer != null)
         {
             player = newPlayer;
@@ -412,6 +453,7 @@ public class GameLogicManager : MonoBehaviour
             virtualCamera = newVirtualCamera;
         }
 
+        // REVISAR ---------------------------------------------------------
         // Se activa el NPC correspondiente en función del final del juego
         if (scene.name == GameStateManager.Instance.MainScene)
         {
@@ -432,6 +474,8 @@ public class GameLogicManager : MonoBehaviour
     // Método para guardar la posición del jugador y de la cámara antes de lanzar un puzle
     public void SaveTemporarilyPosition()
     {
+        temporarilyPlayerState = Player.GetComponent<PlayerLogicManager>().PlayerState;
+
         temporarilyPlayerPosition[0] = player.transform.position.x;
         temporarilyPlayerPosition[1] = player.transform.position.y;
         temporarilyPlayerPosition[2] = player.transform.position.z;

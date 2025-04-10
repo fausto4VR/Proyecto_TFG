@@ -59,7 +59,6 @@ public class TutorialDialogue : MonoBehaviour
             }
 
             player.GetComponent<PlayerMovement>().isPlayerDoingTutorial = true;
-            player.GetComponent<PlayerLogicManager>().isTutorialInProgress = true;
             tutorialPanel.SetActive(true);
 
             if(turorialDialogueLines.Count() == 1)
@@ -113,7 +112,6 @@ public class TutorialDialogue : MonoBehaviour
         isTutorialDone = true;
         isTutorialInProgress = false;
         player.GetComponent<PlayerMovement>().isPlayerDoingTutorial = false;
-        player.GetComponent<PlayerLogicManager>().isTutorialInProgress = false;
         ShowVisualSupport(false);
         tutorialPanel.SetActive(false);
         GameLogicManager.Instance.KnownTutorials[tutorialIndexOrder] = true;

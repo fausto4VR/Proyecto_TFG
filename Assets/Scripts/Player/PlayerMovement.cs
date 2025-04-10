@@ -2,44 +2,56 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Variable Section")]
     [SerializeField] private float speed = 3f;
-    private Rigidbody2D playerRb;
-    private Vector2 moveInput;
-    private Animator playerAnimator;
+
+    // QUITAR ---------------------------------------------------------
+    [Header("QUITAR")]
     public bool isPlayerTalking = false;
     public bool isPlayerInspecting = false;
     public bool isPlayerDoingTutorial = false;
     public bool isPlayerInPause = false;
+    // -----------------------------------------------------------------
+
+    private Vector2 moveInput;
+    private Rigidbody2D playerRb;
+    private Animator playerAnimator;
+
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
-        playerAnimator = GetComponent<Animator>();            
+        playerAnimator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        if(!isPlayerTalking && !isPlayerInspecting && !isPlayerDoingTutorial && !isPlayerInPause)
+        // Se recogen las entradas de movimiento (ejes horizontal y vertical) proporcionadas por el jugador    
+        if(GetComponent<PlayerLogicManager>().PlayerState.CanMove())
         {  
             float moveX = Input.GetAxisRaw("Horizontal");
             float moveY = Input.GetAxisRaw("Vertical");
             moveInput = new Vector2(moveX, moveY).normalized;
 
+            // Actualiza los parámetros de animación según las entradas del jugador
             playerAnimator.SetFloat("Horizontal", moveX);
             playerAnimator.SetFloat("Vertical", moveY);
             playerAnimator.SetFloat("Speed", moveInput.sqrMagnitude);
         }
         else
         {
+            // Si el jugador no puede moverse, desactiva las animaciones de movimiento
             playerAnimator.SetFloat("Horizontal", 0f);
             playerAnimator.SetFloat("Vertical", 0f);
             playerAnimator.SetFloat("Speed", 0f);
         }    
     }
 
+    // Se ejecuta a intervalos fijos, independientemente de la tasa de FPS, por lo que se usa para la lógica relacionada con la física
     private void FixedUpdate()
     {
-        if(!isPlayerTalking && !isPlayerInspecting && !isPlayerDoingTutorial && !isPlayerInPause)
+        // Sectualiza la posición del jugador de acuerdo con la entrada de movimiento mediante la física del Rigidbody2D
+        if(GetComponent<PlayerLogicManager>().PlayerState.CanMove())
         {
             playerRb.MovePosition(playerRb.position + moveInput * speed * Time.fixedDeltaTime);
         }

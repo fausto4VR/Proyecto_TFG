@@ -79,6 +79,7 @@ public class StoryPhaseDialogue : MonoBehaviour
 
                 storyPhaseIndex = GameLogicManager.Instance.StoryPhaseAux; // QUITAR
                 player.GetComponent<PlayerMovement>().isPlayerTalking = true;
+                PlayerEvents.StartTalking();
 
                 int dialogueIndex = -1;
                 for (int i = 0; i < storyPhasesToUnlockDialogue.Length; i++)

@@ -28,6 +28,12 @@ public class AdvanceStoryManager : MonoBehaviour
         AdvanceStoryAfterPuzzle();
     }
 
+    // Método para obtener la fase seleccionada
+    public string SelectedSubphase
+    {
+        get { return selectedSubphase; }
+    }
+
     // Método para cargar la posición del jugador al volver de un puzle y avanzar la historia
     private void AdvanceStoryAfterPuzzle()
     {
@@ -79,10 +85,10 @@ public class AdvanceStoryManager : MonoBehaviour
         }
     }
 
-
     // Corrutina para agragar un pequeño tiempo de transición antes de lanzar el puzle
     private IEnumerator WaitAndLoadScene()
     {
+        GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.OnExit();
         yield return new WaitForSeconds(transitionTime);
         SceneManager.LoadScene(inspectDialogue.puzzleScene);
     }

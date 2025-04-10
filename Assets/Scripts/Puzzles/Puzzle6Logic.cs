@@ -12,9 +12,11 @@ public class Puzzle6Logic : MonoBehaviour
 
     void Start()
     {
-        GetComponent<PuzzleUIManager>().FirstSupportText = GameStateManager.Instance.gameText.puzzle_6.first_support_text;
-        GetComponent<PuzzleUIManager>().SecondSupportText = GameStateManager.Instance.gameText.puzzle_6.second_support_text;
-        GetComponent<PuzzleUIManager>().ThirdSupportText = GameStateManager.Instance.gameText.puzzle_6.third_support_text;
+        GetComponent<PuzzleUIManager>().FirstSupportText = GameStateManager.Instance.gameText.puzzle6.firstSupportText;
+        GetComponent<PuzzleUIManager>().SecondSupportText = GameStateManager.Instance.gameText.puzzle6.secondSupportText;
+        GetComponent<PuzzleUIManager>().ThirdSupportText = GameStateManager.Instance.gameText.puzzle6.thirdSupportText;
+
+        GetComponent<PuzzleLogicManager>().ShowStatement(GameStateManager.Instance.gameText.puzzle6.puzzleStatementText);
     }
 
     void Update()

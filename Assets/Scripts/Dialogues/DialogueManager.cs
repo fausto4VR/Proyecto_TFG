@@ -3,6 +3,11 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+public enum ConversationPhase
+{
+    Started, Continued, Ended
+}
+
 public class DialogueManager : MonoBehaviour
 {
     [SerializeField] private GameObject dialogueMark;
@@ -30,6 +35,8 @@ public class DialogueManager : MonoBehaviour
     private PlayerLogicManager playerLogicManager;
     private AudioSource typingDialogueAudioSource;
 
+    public ConversationPhase conversationPhase;
+
     void Start()
     {
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
@@ -47,88 +54,91 @@ public class DialogueManager : MonoBehaviour
     }
 
     void Update()
-    {
-        if(multipleChoiceDialogue != null)
+    {   
+        if(GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is TalkingState)
         {
-            if(isPlayerInRange == true && multipleChoiceDialogue.didDialogueStart == true && !didConversationStart
-                && multipleChoiceDialogue.didConversationStart)
+            if(multipleChoiceDialogue != null)
             {
-                StartDialogue();
-            }
-
-            if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) 
-                && multipleChoiceDialogue.didDialogueStart == true && didConversationStart) 
-            {
-                if(dialogueText.text == dialogueLines[lineIndex])
+                if(isPlayerInRange == true && multipleChoiceDialogue.didDialogueStart == true && !didConversationStart
+                    && multipleChoiceDialogue.didConversationStart)
                 {
-                    NextDialogueLine();
+                    StartDialogue();
                 }
-                else
-                {
-                    ShowLineDirectly();
-                }
-            }
-        }
 
-        if(storyPhaseDialogue != null)
-        {
-            if(isPlayerInRange == true && !didConversationStart && storyPhaseDialogue.didConversationStart)
-            {
-                StartDialogue();
-            }
-
-            if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
-            {
-                if(dialogueText.text == dialogueLines[lineIndex])
+                if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) 
+                    && multipleChoiceDialogue.didDialogueStart == true && didConversationStart) 
                 {
-                    NextDialogueLine();
-                }
-                else
-                {
-                    ShowLineDirectly();
+                    if(dialogueText.text == dialogueLines[lineIndex])
+                    {
+                        NextDialogueLine();
+                    }
+                    else
+                    {
+                        ShowLineDirectly();
+                    }
                 }
             }
-        }
 
-        if(inspectDialogue != null)
-        {
-            if(isPlayerInRange == true && !didConversationStart && inspectDialogue.didConversationStart)
+            if(storyPhaseDialogue != null)
             {
-                inspectDialogue.dialoguePanel.SetActive(true);
-                StartDialogue();
+                if(isPlayerInRange == true && !didConversationStart && storyPhaseDialogue.didConversationStart)
+                {
+                    StartDialogue();
+                }
+
+                if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
+                {
+                    if(dialogueText.text == dialogueLines[lineIndex])
+                    {
+                        NextDialogueLine();
+                    }
+                    else
+                    {
+                        ShowLineDirectly();
+                    }
+                }
             }
 
-            if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
+            if(inspectDialogue != null)
             {
-                if(dialogueText.text == dialogueLines[lineIndex])
+                if(isPlayerInRange == true && !didConversationStart && inspectDialogue.didConversationStart)
                 {
-                    NextDialogueLine();
+                    inspectDialogue.dialoguePanel.SetActive(true);
+                    StartDialogue();
                 }
-                else
+
+                if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
                 {
-                    ShowLineDirectly();
+                    if(dialogueText.text == dialogueLines[lineIndex])
+                    {
+                        NextDialogueLine();
+                    }
+                    else
+                    {
+                        ShowLineDirectly();
+                    }
                 }
             }
-        }
 
-        if(playerLogicManager != null)
-        {
-            if(!didConversationStart && playerLogicManager.didConversationStart)
+            if(playerLogicManager != null && dialogueLines != null && dialogueLines.Length > 0)
             {
-                playerLogicManager.inspectLayout.SetActive(false);
-                playerLogicManager.dialoguePanel.SetActive(true);
-                StartDialogue();
-            }
-
-            if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
-            {
-                if(dialogueText.text == dialogueLines[lineIndex])
+                if(conversationPhase == ConversationPhase.Started)
                 {
-                    NextDialogueLine();
+                    playerLogicManager.inspectLayout.SetActive(false);
+                    playerLogicManager.dialoguePanel.SetActive(true);
+                    StartDialogue();
                 }
-                else
+
+                if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && conversationPhase == ConversationPhase.Continued) 
                 {
-                    ShowLineDirectly();
+                    if(dialogueText.text == dialogueLines[lineIndex])
+                    {
+                        NextDialogueLine();
+                    }
+                    else
+                    {
+                        ShowLineDirectly();
+                    }
                 }
             }
         }
@@ -137,6 +147,7 @@ public class DialogueManager : MonoBehaviour
     private void StartDialogue()
     {
         didConversationStart = true;
+        conversationPhase = ConversationPhase.Continued;
 
         if(multipleChoiceDialogue != null)
         {
@@ -180,6 +191,7 @@ public class DialogueManager : MonoBehaviour
                 // PROVISIONAL
                 player.GetComponent<PlayerMovement>().isPlayerTalking = false;
                 player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
+                PlayerEvents.FinishTalkingWithoutClue();
             }
             else if(storyPhaseDialogue != null)
             {
@@ -190,24 +202,24 @@ public class DialogueManager : MonoBehaviour
                 // PROVISIONAL
                 player.GetComponent<PlayerMovement>().isPlayerTalking = false;
                 player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
+                PlayerEvents.FinishTalkingWithoutClue();
             }
             else if(playerLogicManager != null)
             {
                 playerLogicManager.dialoguePanel.SetActive(false);
-                playerLogicManager.didConversationStart = false;
-                playerLogicManager.isEmptyInspected = false;
-                playerLogicManager.isObjectInspected = false;
+                didConversationStart = false;
+                playerLogicManager.IsInspectionComplete = false;
 
                 // PROVISIONAL
                 player.GetComponent<PlayerMovement>().isPlayerTalking = false;
                 player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
+                PlayerEvents.FinishTalkingWithoutClue();
             }
-
             else if(inspectDialogue != null)
             {
                 inspectDialogue.dialoguePanel.SetActive(false);
                 inspectDialogue.didConversationStart = false;
-                player.GetComponent<PlayerLogicManager>().isObjectInspected = false;
+                player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
 
                 if(inspectDialogue.didObjectAdvanceStory)
                 {
@@ -226,6 +238,7 @@ public class DialogueManager : MonoBehaviour
                 }
                 else
                 {
+                    PlayerEvents.FinishTalkingWithoutClue();
                     GetComponent<InspectDialogue>().isClueDialogueFinish = false;
                 }
 
@@ -237,7 +250,10 @@ public class DialogueManager : MonoBehaviour
                 // PROVISIONAL
                 player.GetComponent<PlayerMovement>().isPlayerTalking = false;
                 player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
+                PlayerEvents.FinishTalkingWithoutClue();
             }
+
+            conversationPhase = ConversationPhase.Ended;
         }
     }
 
@@ -254,7 +270,7 @@ public class DialogueManager : MonoBehaviour
     {
         if(characterNameLines[lineIndex] == "Player")
         {
-            characterNameText.text = player.GetComponent<PlayerLogicManager>().playerName;
+            characterNameText.text = player.GetComponent<PlayerLogicManager>().PlayerName;
         }
         else
         {
@@ -266,7 +282,7 @@ public class DialogueManager : MonoBehaviour
     {
         if(characterNameLines[lineIndex] == "Player")
         {
-            profileImage.sprite = player.GetComponent<PlayerLogicManager>().playerImage;
+            profileImage.sprite = player.GetComponent<PlayerLogicManager>().PlayerImage;
         }
         else
         {
@@ -293,6 +309,13 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    // REVISAR ---------------------------------------------------------
+    // Método para que otros scripts puedan comenzar la conversación
+    public void StartConversation()
+    {
+        conversationPhase = ConversationPhase.Started;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
@@ -304,7 +327,7 @@ public class DialogueManager : MonoBehaviour
 
             if(inspectDialogue != null)
             {
-                player.GetComponent<PlayerLogicManager>().isInspectInRange = true;
+                player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = true;
             }
 
             isPlayerInRange = true;
@@ -322,7 +345,7 @@ public class DialogueManager : MonoBehaviour
 
             if(inspectDialogue != null)
             {
-                player.GetComponent<PlayerLogicManager>().isInspectInRange = false;
+                player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = false;
             }
 
             isPlayerInRange = false;

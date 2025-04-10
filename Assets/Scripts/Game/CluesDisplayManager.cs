@@ -24,13 +24,12 @@ public class CluesDisplayManager : MonoBehaviour
     [Header("Variable Section")]
     [SerializeField] private int currentClueIndex;
 
-    [SubphaseSelector]
-    [SerializeField] private string selectedSubphase;
-
     // QUITAR ----------------------------------------------------------
     [Header("QUITAR")]
     [SerializeField] private GameObject player;
     // -----------------------------------------------------------------
+
+    private string selectedSubphase;
     
     // REVISAR AUDIO
     private AudioSource cluesAudioSource;
@@ -39,12 +38,13 @@ public class CluesDisplayManager : MonoBehaviour
     {
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         cluesAudioSource = audioSources[2];
+        selectedSubphase = GetComponent<AdvanceStoryManager>().SelectedSubphase;
     }
 
     // Método para mostrar la pista descubierta al jugador
     public void ShowDiscoveredClue()
     {
-        if(GameLogicManager.Instance.CurrentStoryPhase.CheckCurrentPhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent)
+        if(GameLogicManager.Instance.CurrentStoryPhase.CheckCurrentPhase(selectedSubphase) == SubphaseTemporaryOrder.IsBefore)
         {
             // QUITAR ----------------------------------------------------------
             player.GetComponent<PlayerMovement>().isPlayerTalking = true;
@@ -52,6 +52,7 @@ public class CluesDisplayManager : MonoBehaviour
 
             cluePanel.SetActive(true);
             cluesAudioSource.Play();
+            PlayerEvents.FinishTalkingWithClue();
 
             if(currentClueIndex == 0)
             {
@@ -68,6 +69,12 @@ public class CluesDisplayManager : MonoBehaviour
 
             StartCoroutine(WaitForInputToClosePanel());
         }
+        // QUITAR ----------------------------------------------------------
+        else
+        {
+            player.GetComponent<PlayerMovement>().isPlayerTalking = false;
+        }
+        // -----------------------------------------------------------------
     }
 
     // Método para mostrar la primera pista
@@ -130,8 +137,9 @@ public class CluesDisplayManager : MonoBehaviour
     // Corrutina para cerrar el panel que muestra la pista
     private IEnumerator WaitForInputToClosePanel()
     {        
-        yield return new WaitForSeconds(cluesAudioSource.clip.length);
+        yield return new WaitForSeconds(0.5f);
         yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0));
+        PlayerEvents.FinishShowingInformation();
         cluePanel.SetActive(false);
 
         // QUITAR ----------------------------------------------------------

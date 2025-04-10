@@ -17,12 +17,15 @@ public class GameStateManager : MonoBehaviour
     public bool isNewGame;
     // -----------------------------------------------------------------
 
-
     // Contenedor de los textos cargados
     public GameTextDictionary gameText { get; private set; }
+
+    // Contenedor de las conversaciones cargadas
+    public GameConversationDictionary gameConversations { get; private set; }
+
     
     // En el Awake se define su comportamiento como singleton. Además se genera  la clave de encriptación y se cargan los 
-    // textos del juego y las fases de la historia   
+    // textos del juego, las conversaciones y las fases de la historia   
     void Awake()
     {        
         if (Instance != null && Instance != this)
@@ -34,8 +37,12 @@ public class GameStateManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        // Se establece la tasa máxima de frames
+        Application.targetFrameRate = 120;
+        
         SaveManager.GenerateKey();
         LoadGameTexts();
+        LoadGameConversations();
         StoryStateManager.LoadGameStory();
     }
 
@@ -80,6 +87,9 @@ public class GameStateManager : MonoBehaviour
     // Método para reiniciar los datos
     public void ResetData()
     {
+        GameLogicManager.Instance.TemporalPlayerState = GameLogicManager.Instance.Player
+            .GetComponent<PlayerLogicManager>().DefaultStateInitialized;
+        
         SaveManager.ResetPlayerData();
         SaveManager.ResetGameData();
         SaveManager.ResetPuzzleData();
@@ -144,6 +154,13 @@ public class GameStateManager : MonoBehaviour
         SceneManager.LoadScene(gameData.gameScene);
     }
 
+    // Método para cargar los datos y obtener los parámatros de los puzles
+    private void LoadPuzzleData()
+    {
+        PuzzleData puzzleData = SaveManager.LoadPuzzleData();
+        GameLogicManager.Instance.PuzzleStateList = puzzleData.gamePuzzleStates;
+    }
+
     // Método que se llama cuando una escena es completamente cargada
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -159,13 +176,6 @@ public class GameStateManager : MonoBehaviour
         {
             Debug.LogError("No se ha encontrado al jugador en la escena.");
         }
-    }
-
-    // Método para cargar los datos y obtener los parámatros de los puzles
-    private void LoadPuzzleData()
-    {
-        PuzzleData puzzleData = SaveManager.LoadPuzzleData();
-        GameLogicManager.Instance.PuzzleStateList = puzzleData.gamePuzzleStates;
     }
 
     // Método para cargar los textos del juego desde el fichero json
@@ -194,23 +204,108 @@ public class GameStateManager : MonoBehaviour
     public class GameTextDictionary
     {
         public List<string> guiltyNames;
-        public TextPuzzle puzzle_1;
-        public TextPuzzle puzzle_2;        
-        public TextPuzzle puzzle_3;
-        public TextPuzzle puzzle_4;
-        public TextPuzzle puzzle_5;
-        public TextPuzzle puzzle_6;
-        public TextPuzzle puzzle_7;
-        public TextPuzzle puzzle_8;
+        public TextPuzzle puzzle1;
+        public TextPuzzle puzzle2;        
+        public TextPuzzle puzzle3;
+        public TextPuzzle puzzle4;
+        public TextPuzzle puzzle5;
+        public TextPuzzle puzzle6;
+        public TextPuzzle puzzle7;
+        public TextPuzzle puzzle8;
     }
 
     // Estructura de datos que representa los textos asociados a un "puzzle"
     [System.Serializable]
     public class TextPuzzle
     {
-        public string puzzle_statement_text;
-        public string first_support_text;
-        public string second_support_text;
-        public string third_support_text;
+        public string puzzleStatementText;
+        public string firstSupportText;
+        public string secondSupportText;
+        public string thirdSupportText;
+    }
+
+    // Método para cargar las conversaciones del juego desde el fichero json
+    private void LoadGameConversations() 
+    {
+        string path = Path.Combine(Application.streamingAssetsPath, "GameConversations.json");
+
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            gameConversations = JsonUtility.FromJson<GameConversationDictionary>(json);
+
+            if (gameConversations == null)
+            {
+                Debug.LogError("Hubo un error al parsear el archivo JSON GameConversations.");
+            }
+        }
+        else
+        {
+            Debug.LogError("No se ha encontrado el archivo GameConversations.json en StreamingAssets.");
+        }
+    }
+
+    // Estructura de datos que representa el diccionario de conversaciones del juego y sirve para parsear el JSON 
+    [System.Serializable]
+    public class GameConversationDictionary
+    {        
+        public List<DialogueLine> defaultInspectConversation;
+        public List<InspectInformation> inspectConversations;
+        public List<MultipleChoiceInformation> multipleChoiceConversations;
+        public List<StoryPhaseInformation> storyPhaseConversations;
+        public List<TutorialInformation> tutorialTexts;
+    }
+
+    // Estructura de datos que representa el diálogo al inpeccionar un objeto 
+    [System.Serializable]
+    public class InspectInformation
+    {
+        public string objectName;
+        public List<DialogueLine> currectDialogue;
+        public List<DialogueLine> afterRecentDialogue;
+        public List<DialogueLine> afterDistantDialogue;
+    }
+
+    // Estructura de datos que representa un diálogo con varias opciones
+    [System.Serializable]
+    public class MultipleChoiceInformation
+    {
+        public string objectName;
+        public List<DialogueLine> firstDialogue;
+        public List<DialogueLine> secondDialogue;
+        public List<DialogueLine> thirdDialogue;
+    }
+
+    // Estructura de datos que representa un diálogo que cambia en función de la fase de la historia
+    [System.Serializable]
+    public class StoryPhaseInformation
+    {
+        public string objectName;
+        public List<StoryPhaseDialogue> dialogues;
+    }
+
+    // Estructura de datos que representa un diálogo concreto en una fase de la historia
+    [System.Serializable]
+    public class StoryPhaseDialogue
+    {
+        public string phase;
+        public string subphase;
+        public List<DialogueLine> dialogue;
+    }
+
+    // Estructura de datos que representa el texto que muestra un tutorial
+    [System.Serializable]
+    public class TutorialInformation
+    {
+        public string objectName;
+        public List<DialogueLine> text;
+    }
+
+    // Estructura de datos que representa una línea de diálogo
+    [System.Serializable]
+    public class DialogueLine
+    {
+        public string speaker;
+        public string line;
     }
 }

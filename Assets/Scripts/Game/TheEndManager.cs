@@ -82,13 +82,7 @@ public class TheEndManager : MonoBehaviour
         if(isFinalScreenShown && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
             GoBackFromTheFinalScreen();
-        }  
-
-        //QUITAR
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            GameStateManager.Instance.ResetData();
-        }    
+        }
     }
 
     public void DisplayTheEndPanel()

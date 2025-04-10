@@ -2,16 +2,13 @@ using UnityEngine;
 
 public class FollowPlayerUI : MonoBehaviour
 {
-    public RectTransform inspectLayoutTransform;
-    public Vector3 inspectPositionOffset;
+    [Header("UI Objects Section")]
+    public RectTransform inspectLayoutTransform;    
     public RectTransform mapLayoutTransform;
-    public Vector3 mapPositionOffset;
 
-    void Start()
-    {
-        inspectPositionOffset = new Vector3(0f, 0f, 0f);        
-        mapPositionOffset = new Vector3(0f, 0f, 0f);
-    }
+    [Header("Variable Section")]
+    [SerializeField] private Vector3 inspectPositionOffset = new Vector3(0f, 0f, 0f);
+    [SerializeField] private Vector3 mapPositionOffset = new Vector3(0f, 0f, 0f);
     
     void Update()
     {

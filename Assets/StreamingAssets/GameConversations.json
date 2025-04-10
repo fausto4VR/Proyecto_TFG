@@ -1,0 +1,100 @@
+{
+    "defaultInspectConversation":
+    [
+        {
+            "speaker": "Player",
+            "line": "Aquí no hay nada relevante para la investigación."
+        } 
+    ],
+    "inspectConversations":
+    [
+        {
+            "objectName": "Inspect Object 1",
+            "currectDialogue": 
+            [
+                {
+                    "speaker": "",
+                    "line": ""
+                },
+                {
+                    "speaker": "",
+                    "line": ""
+                }
+            ],
+            "afterRecentDialogue": 
+            [
+                {
+                    "speaker": "",
+                    "line": ""
+                }
+            ],
+            "afterDistantDialogue": 
+            [
+                {
+                    "speaker": "",
+                    "line": ""
+                }
+            ]
+        }
+    ],
+    "multipleChoiceConversations":
+    [
+        {
+            "objectName": "Multiple Choice Object 1",
+            "firstDialogue": 
+            [
+                {
+                    "speaker": "",
+                    "line": ""
+                }
+            ],
+            "secondDialogue": 
+            [
+                {
+                    "speaker": "",
+                    "line": ""
+                }
+            ],
+            "thirdDialogue": 
+            [
+                {
+                    "speaker": "",
+                    "line": ""
+                }
+            ]
+        }
+    ],
+    "storyPhaseConversations":
+    [
+        {
+            "objectName": "Story Phase Object 1",
+            "dialogues": 
+            [
+                {
+                    "phase": "",
+                    "subphase": "",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "",
+                            "line": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "tutorialTexts":
+    [
+        {
+            "objectName": "Tutorial Object 1",
+            "text":
+            [
+                {
+                    "speaker": "****",
+                    "line": ""
+                }
+            ]
+        }
+    ]
+}

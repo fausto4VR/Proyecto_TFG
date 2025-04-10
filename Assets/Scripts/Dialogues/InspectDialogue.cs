@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class InspectDialogue : MonoBehaviour
 {
-    [SerializeField] private GameObject player;
-    [SerializeField] private GameObject virtualCamara;
     [SerializeField, TextArea(4,5)] private string[] dialogueLines;
     [SerializeField] private string[] characterNameLines;
     [SerializeField, TextArea(4,5)] private string[] dialogueLinesToRecentPhase;
@@ -29,7 +27,7 @@ public class InspectDialogue : MonoBehaviour
     {
         if (GetComponent<DialogueManager>().isPlayerInRange)
         {
-            if(player.GetComponent<PlayerLogicManager>().isObjectInspected == true)
+            if(GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete == true)
             {
                 // QUITAR AUX
                 if(storyPhaseToUnlockDialogue == GameLogicManager.Instance.StoryPhaseAux)
@@ -54,8 +52,9 @@ public class InspectDialogue : MonoBehaviour
                     GetComponent<DialogueManager>().characterNameLines = characterNameLinesToPastPhase;
                 }
                 else
-                {
-                    player.GetComponent<PlayerLogicManager>().showDefaultMessage();
+                {                     
+                    GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().ShowDefaultMessage();
+                    GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
                 }
             }
             else if(isPuzzleReturn)
@@ -66,7 +65,7 @@ public class InspectDialogue : MonoBehaviour
                 {
                     isClueDialogueFinish = true;
                 }
-                player.GetComponent<PlayerMovement>().isPlayerTalking = true;
+                GameLogicManager.Instance.Player.GetComponent<PlayerMovement>().isPlayerTalking = true;
                 GetComponent<DialogueManager>().dialogueLines = dialogueLinesToRecentPhase;
                 GetComponent<DialogueManager>().characterNameLines = characterNameLinesToRecentPhase;
             }
@@ -74,6 +73,7 @@ public class InspectDialogue : MonoBehaviour
 
         if(GameStateManager.Instance.isPuzzleIncomplete)
         {
+            PlayerEvents.FinishTalkingWithoutClue();
             GameStateManager.Instance.isPuzzleIncomplete = false;
             GameLogicManager.Instance.LoadTemporarilyPosition();
         }        
