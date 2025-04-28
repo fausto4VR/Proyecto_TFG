@@ -19,7 +19,7 @@ public enum StorySubphaseType
 // Enum de la relación tempral entre las subfases
 public enum SubphaseTemporaryOrder
 {
-    IsBefore, IsAfter, IsCurrent, IsDistant, Error
+    IsRecentBefore, IsDistantBefore, IsRecentAfter, IsDistantAfter, IsCurrent, Error
 }
 
 // Clase para gestionar el estado actual de la historia del juego
@@ -38,9 +38,21 @@ public static class StoryStateManager
 
         StoryPhaseOption phaseName = ParseStringToPhaseOption(gameStory.phases[0].name);
         List<StorySubphase> storySubphases = ObtainSubphases(gameStory.phases[0].subphases);
-        StoryPhase firstPhase = new StoryPhase(phaseName, storySubphases, null);
+        StoryPhase firstPhase = new StoryPhase(phaseName, storySubphases);
         
         return firstPhase;
+    }
+
+    // Método para crear la lista de fases y subfases
+    public static List<string> CreateSubphasesList()
+    {
+        List<string> subphases = gameStory.phases
+        .SelectMany(phase => 
+            new[] { $"{phase.name}.{phase.name} Beginning" }
+            .Concat(phase.subphases.Select(subphase => $"{phase.name}.{subphase.name}"))
+        ).ToList();
+
+        return subphases;
     }
 
     // Método para avanzar la historia según corresponda
@@ -60,11 +72,14 @@ public static class StoryStateManager
             return null;
         }
 
-        int currentSubphaseIndex = currentStoryPhase.storySubphases.IndexOf(currentStoryPhase.currentSubphase);
+        int currentSubphaseIndex = currentStoryPhase.storySubphases.FindIndex(s => 
+            s.subphaseName == currentStoryPhase.currentSubphase.subphaseName &&
+            s.subphaseType == currentStoryPhase.currentSubphase.subphaseType &&
+            s.actions == currentStoryPhase.currentSubphase.actions);
 
         if (currentSubphaseIndex == -1)
         {
-            Debug.LogError($"No se encontró la subfase actual '{currentStoryPhase.currentSubphase}' en la fase '{currentStoryPhase.phaseName}'.");
+            Debug.LogError($"No se encontró la subfase actual '{currentStoryPhase.currentSubphase.subphaseName}' en la fase '{currentStoryPhase.phaseName}'.");
             return null;
         }
 
@@ -89,8 +104,7 @@ public static class StoryStateManager
 
         StoryPhaseInformation nextPhaseInfo = gameStory.phases[currentIndex + 1];
 
-        return new StoryPhase(ParseStringToPhaseOption(nextPhaseInfo.name), ObtainSubphases(nextPhaseInfo.subphases),
-            currentStoryPhase.storySubphases.Last());
+        return new StoryPhase(ParseStringToPhaseOption(nextPhaseInfo.name), ObtainSubphases(nextPhaseInfo.subphases));
     }
 
     // Método para convertir un string en un tipo del enum StoryPhaseOption
@@ -175,18 +189,16 @@ public class StoryPhase
 {
     public StoryPhaseOption phaseName { get; private set; }
     public List<StorySubphase> storySubphases { get; private set; }
-    public StorySubphase currentSubphase { get; private set; }
-    public List<string> subphaseObjectNames { get; private set; }
-    private StorySubphase previousSubphase;
+    public StorySubphase currentSubphase { get; set; }
+    public List<string> subphaseObjectNames { get; set; }
 
-    public StoryPhase(StoryPhaseOption name, List<StorySubphase> subphases, StorySubphase previousSubphaseInput)
+    public StoryPhase(StoryPhaseOption name, List<StorySubphase> subphases)
     {
         phaseName = name;
         storySubphases = new List<StorySubphase>(subphases);
         StorySubphase beginningSubPhase = new StorySubphase(StorySubphaseType.Beginning, name.ToString() + " Beginning");
         storySubphases.Insert(0, beginningSubPhase);
         currentSubphase = beginningSubPhase;
-        previousSubphase = previousSubphaseInput;
         subphaseObjectNames = new List<string>();
     }
 
@@ -214,71 +226,39 @@ public class StoryPhase
 
         if (subphaseObjectNames.Count >= currentSubphase.actions)
         {
-            previousSubphase = currentSubphase;
             currentSubphase = storySubphases[currentIndex + 1];
             subphaseObjectNames.Clear();
         }
     }
 
     // Método para comprobar si la subfase dada es la actual
-    public SubphaseTemporaryOrder CheckCurrentPhase(string currentPhaseString)
+    public SubphaseTemporaryOrder ComparePhase(string phaseToCompare)
     {
-        string[] parts = currentPhaseString.Split('.');
+        string[] parts = phaseToCompare.Split('.');
 
         if (parts.Length != 2)
         {
-            Debug.LogError("La cadena de la fase no está en el formato correcto (fase.subfase): " + currentPhaseString);
+            Debug.LogError("La cadena de la fase no está en el formato correcto (fase.subfase): " + phaseToCompare);
             return SubphaseTemporaryOrder.Error;
         }
 
-        string phaseNameString = parts[0];
-        string subphaseNameString = parts[1];
-        StoryPhaseOption phaseNameEnum = StoryStateManager.ParseStringToPhaseOption(phaseNameString);
+        List<string> subphases = StoryStateManager.CreateSubphasesList();
 
-        if (phaseName != phaseNameEnum)
-        {
-            bool isFirstSubphase = currentSubphase == storySubphases.First();
-            bool isLastSubphase = currentSubphase == storySubphases.Last();
-            bool isPreviousPhase = (int)phaseNameEnum == (int)phaseName - 1;
-            bool isNextPhase = (int)phaseNameEnum == (int)phaseName + 1;
+        string thisPhase= $"{phaseName}.{currentSubphase.subphaseName}";
 
-            if (isFirstSubphase && isPreviousPhase && previousSubphase != null && previousSubphase.subphaseName == subphaseNameString)
-            {
-                return SubphaseTemporaryOrder.IsBefore;
-            }
-            
-            if (isLastSubphase && isNextPhase)
-            {
-                var nextPhase = StoryStateManager.gameStory.phases
-                    .FirstOrDefault(p => p.name == phaseNameString);
+        int thisIndex = subphases.IndexOf(thisPhase);
+        int compareIndex = subphases.IndexOf(phaseToCompare);
 
-                if (nextPhase != null && nextPhase.subphases != null 
-                    && nextPhase.subphases.FirstOrDefault()?.name == subphaseNameString)
-                {
-                    return SubphaseTemporaryOrder.IsAfter;
-                }
-            }
+        if (thisIndex == -1 || compareIndex == -1) return SubphaseTemporaryOrder.Error;
 
-            return SubphaseTemporaryOrder.IsDistant;
-        }
+        if (thisIndex == compareIndex) return SubphaseTemporaryOrder.IsCurrent;
+        else if (thisIndex == compareIndex + 1) return SubphaseTemporaryOrder.IsRecentBefore;
+        else if (thisIndex > compareIndex) return SubphaseTemporaryOrder.IsDistantBefore;
+        else if (thisIndex == compareIndex - 1) return SubphaseTemporaryOrder.IsRecentAfter;
+        else if (thisIndex < compareIndex) return SubphaseTemporaryOrder.IsDistantAfter;
 
-        int comparedSubphaseIndex = storySubphases.FindIndex(s => s.subphaseName == subphaseNameString);
-        int currentSubphaseIndex = storySubphases.IndexOf(currentSubphase);
-
-        if (comparedSubphaseIndex == -1)
-        {
-            Debug.LogError($"La subfase '{subphaseNameString}' no existe en la fase actual.");
-            return SubphaseTemporaryOrder.Error;
-        }
-
-        if (comparedSubphaseIndex < currentSubphaseIndex)
-            return SubphaseTemporaryOrder.IsBefore;
-
-        if (comparedSubphaseIndex > currentSubphaseIndex)
-            return SubphaseTemporaryOrder.IsAfter;
-
-        return SubphaseTemporaryOrder.IsCurrent;
-        }
+        return SubphaseTemporaryOrder.Error;
+    }
 }
 
 // Clase que describe una subfase de una fase de la historia

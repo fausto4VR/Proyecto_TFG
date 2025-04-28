@@ -9,30 +9,146 @@
     "inspectConversations":
     [
         {
-            "objectName": "Inspect Object 1",
-            "currectDialogue": 
+            "objectName": "Story Object 1",
+            "currentDialogue": 
             [
                 {
-                    "speaker": "",
-                    "line": ""
+                    "speaker": "Player",
+                    "line": "¿Qué es esto? ¿Podría ser lo que estaba buscando?"
                 },
                 {
-                    "speaker": "",
-                    "line": ""
+                    "speaker": "Player",
+                    "line": "Pero falta algo. Creo que tengo que resolver un puzle para averiguar lo que está pasando."
                 }
             ],
             "afterRecentDialogue": 
             [
                 {
-                    "speaker": "",
-                    "line": ""
+                    "speaker": "Player",
+                    "line": "La palabra que he descubierto es TIEMPO."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Tengo que averiguar que puede significar esto. Creo que antes he visto un reloj."
                 }
             ],
             "afterDistantDialogue": 
             [
                 {
-                    "speaker": "",
-                    "line": ""
+                    "speaker": "Player",
+                    "line": "Es verdad... Este objeto me suena."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Pero de eso hace mucho tiempo."
+                }
+            ]
+        },
+        {
+            "objectName": "Story Object 2",
+            "currentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Por fin lo he encontrado. Esto es justo lo que estaba buscando."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "De hecho creo que hay una pista. La primera que encuentro."
+                }
+            ],
+            "afterRecentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Según esto debo ir al reactor nuclear."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Espero que me vaya bien."
+                }
+            ],
+            "afterDistantDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Es verdad... Este objeto me suena."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Pero de eso hace mucho tiempo."
+                }
+            ]
+        },
+        {
+            "objectName": "Story Object 3",
+            "currentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Esto es justo lo que estaba buscando."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "De hecho creo que hay una pista. La segunda que encuentro."
+                }
+            ],
+            "afterRecentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Según esto debo ir a mirar en el parque municipal."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Espero que me vaya bien."
+                }
+            ],
+            "afterDistantDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Es verdad... Este objeto me suena."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Pero de eso hace mucho tiempo."
+                }
+            ]
+        },
+        {
+            "objectName": "Story Object 4",
+            "currentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Esto es justo lo que estaba buscando."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "De hecho creo que hay una pista. La tercera que encuentro."
+                }
+            ],
+            "afterRecentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Según esto debo ir y encontrar al jefe de policía."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Espero que me vaya bien."
+                }
+            ],
+            "afterDistantDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Es verdad... Este objeto me suena."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Pero de eso hace mucho tiempo."
                 }
             ]
         }
@@ -40,26 +156,54 @@
     "multipleChoiceConversations":
     [
         {
-            "objectName": "Multiple Choice Object 1",
+            "objectName": "Suspect NPC",
             "firstDialogue": 
             [
                 {
-                    "speaker": "",
-                    "line": ""
+                    "speaker": "Player",
+                    "line": "¿Cuáles son tus hobbies?"
+                },
+                {
+                    "speaker": "Sospechosa 1",
+                    "line": "Contestar tus preguntas desde luego que no."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Que simpática..."
                 }
             ],
             "secondDialogue": 
             [
                 {
-                    "speaker": "",
-                    "line": ""
+                    "speaker": "Sospechosa 1",
+                    "line": "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor."
+                },
+                {
+                    "speaker": "Sospechosa 1",
+                    "line": "Una olla de algo más vaca que carnero, salpicón las más noches, duelos y quebrantos los sábados, lantejas los viernes, algún palomino de añadidura los domingos, consumían las tres partes de su hacienda."
+                },
+                {
+                    "speaker": "Sospechosa 1",
+                    "line": "El resto della concluían sayo de velarte, calzas de velludo para las fiestas, con sus pantuflos de lo mesmo, y los días de entresemana se honraba con su vellorí de lo más fino."
+                },
+                {
+                    "speaker": "Sospechosa 1",
+                    "line": "Tenía en su casa una ama que pasaba de los cuarenta y una sobrina que no llegaba a los veinte, y un mozo de campo y plaza que así ensillaba el rocín como tomaba la podadera."
                 }
             ],
             "thirdDialogue": 
             [
                 {
-                    "speaker": "",
-                    "line": ""
+                    "speaker": "Player",
+                    "line": "¿Alguna novedad?"
+                },
+                {
+                    "speaker": "Sospechosa 1",
+                    "line": "La verdad es que me acaba de llamar mi amiga. Por lo visto han visto a alguien extraño saliendo de la casa."
+                },
+                {
+                    "speaker": "Sospechosa 1",
+                    "line": "Supongo que ya sabremos algo más adelante."
                 }
             ]
         }
@@ -67,17 +211,69 @@
     "storyPhaseConversations":
     [
         {
-            "objectName": "Story Phase Object 1",
+            "objectName": "Supporting NPC",
             "dialogues": 
             [
                 {
-                    "phase": "",
-                    "subphase": "",
+                    "phase": "Prologue",
+                    "subphase": "Prologue Beginning",
                     "dialogue":
                     [
                         {
-                            "speaker": "",
-                            "line": ""
+                            "speaker": "Claudia",
+                            "line": "Buenas tardes. Mi nombre es Claudia."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Encantado de conocerte."
+                        },
+                        {
+                            "speaker": "Claudia",
+                            "line": "Igualmente."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Ending",
+                    "subphase": "Ending Beginning",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Claudia",
+                            "line": "Me alegro de verte. La verdad es que llevo un tiempo buscandote porque quiero hacerte una pregunta."
+                        },
+                        {
+                            "speaker": "Claudia",
+                            "line": "¿Quién crees que es el culpable?"
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "La verdad es que estoy un poco perdido. No tengo ni idea."
+                        },
+                        {
+                            "speaker": "Claudia",
+                            "line": "Pues dímelo cuando lo sepas."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "objectName": "Dialogue Trigger Sample",
+            "dialogues": 
+            [
+                {
+                    "phase": "Ending",
+                    "subphase": "Ending Beginning",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Player",
+                            "line": "Tengo que ir a comprar el pan."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Da igual, mejor lo dejo para mañana."
                         }
                     ]
                 }
@@ -87,12 +283,16 @@
     "tutorialTexts":
     [
         {
-            "objectName": "Tutorial Object 1",
+            "objectName": "Tutorial Trigger Sample",
             "text":
             [
                 {
-                    "speaker": "****",
-                    "line": ""
+                    "speaker": "***",
+                    "line": "Esto es un tutorial. Para mostrar la siguiente parte, si hubiera, pulsa la barra espaciadora."
+                },
+                {
+                    "speaker": "***",
+                    "line": "Una vez llegado al final del tutorial, puedes pulsar la barra espaciadora para cerrarlo. O la tecla E en cualquier momento."
                 }
             ]
         }

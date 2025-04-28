@@ -1,33 +1,17 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+
+// Enum de las pistas que existen en el juego
+public enum ClueType
+{
+    FirstClue, SecondClue, ThirdClue, None
+}
 
 public class CluesDisplayManager : MonoBehaviour
-{
-    [Header("Panel Section")]
-    [SerializeField] private GameObject cluePanel;
-    [SerializeField] private TMP_Text clueText;
-    [SerializeField] private Image clueImage;
-
-    [Header("Sprites Section")]
-    [SerializeField] private Sprite firstClueSprite1;    
-    [SerializeField] private Sprite firstClueSprite2;
-    [SerializeField] private Sprite secondClueSprite1;
-    [SerializeField] private Sprite secondClueSprite2;
-    [SerializeField] private Sprite thirdClueSprite1;
-    [SerializeField] private Sprite thirdClueSprite2;
-
-    [Header("Sound Section")] 
-    [SerializeField] private GameObject audioSourcesManager;
-    
+{    
     [Header("Variable Section")]
-    [SerializeField] private int currentClueIndex;
-
-    // QUITAR ----------------------------------------------------------
-    [Header("QUITAR")]
-    [SerializeField] private GameObject player;
-    // -----------------------------------------------------------------
+    [SerializeField] private ClueType currentClue;
+    [SerializeField] private float waitingTimeToClose = 0.5f;
 
     private string selectedSubphase;
     
@@ -36,6 +20,7 @@ public class CluesDisplayManager : MonoBehaviour
 
     void Start()
     {
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         cluesAudioSource = audioSources[2];
         selectedSubphase = GetComponent<AdvanceStoryManager>().SelectedSubphase;
@@ -44,37 +29,37 @@ public class CluesDisplayManager : MonoBehaviour
     // Método para mostrar la pista descubierta al jugador
     public void ShowDiscoveredClue()
     {
-        if(GameLogicManager.Instance.CurrentStoryPhase.CheckCurrentPhase(selectedSubphase) == SubphaseTemporaryOrder.IsBefore)
+        if(GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsRecentBefore)
         {
-            // QUITAR ----------------------------------------------------------
-            player.GetComponent<PlayerMovement>().isPlayerTalking = true;
-            // -----------------------------------------------------------------
-
-            cluePanel.SetActive(true);
+            GameLogicManager.Instance.UIManager.CluePanel.SetActive(true);
             cluesAudioSource.Play();
-            PlayerEvents.FinishTalkingWithClue();
 
-            if(currentClueIndex == 0)
+            bool[] clues = GameLogicManager.Instance.KnownClues;
+
+            if(currentClue == ClueType.FirstClue)
             {
                 ShowFirstClue();
+                clues[0] = true;
             }
-            else if(currentClueIndex == 1)
+            else if(currentClue == ClueType.SecondClue)
             {
                 ShowSecondClue();
+                clues[1] = true;
             }
-            else if(currentClueIndex == 2)
+            else if(currentClue == ClueType.ThirdClue)
             {
                 ShowThirdClue();
+                clues[2] = true;
             }
+
+            GameLogicManager.Instance.KnownClues = clues;
 
             StartCoroutine(WaitForInputToClosePanel());
         }
-        // QUITAR ----------------------------------------------------------
         else
         {
-            player.GetComponent<PlayerMovement>().isPlayerTalking = false;
+            PlayerEvents.FinishShowingInformation();
         }
-        // -----------------------------------------------------------------
     }
 
     // Método para mostrar la primera pista
@@ -85,15 +70,16 @@ public class CluesDisplayManager : MonoBehaviour
 
         if(clueTextString.Contains("Tiene los ojos marrones"))
         {
-            clueImage.sprite = firstClueSprite1;
+            GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.FirstClueSprite1;
 
         }
         else if(clueTextString.Contains("Tiene los ojos verdes"))
         {
-            clueImage.sprite = firstClueSprite2;
+            GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.FirstClueSprite2;
+
         }
 
-        clueText.text = clueTextString;
+        GameLogicManager.Instance.UIManager.ClueText.text = clueTextString;
     }
 
     // Método para mostrar la segunda pista
@@ -104,15 +90,17 @@ public class CluesDisplayManager : MonoBehaviour
 
         if(clueTextString.Contains("Mechón de pelo negro"))
         {
-            clueImage.sprite = secondClueSprite1;
+            GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.SecondClueSprite1;
+;
 
         }
         else if(clueTextString.Contains("Mechón de pelo rubio"))
         {
-            clueImage.sprite = secondClueSprite2;
+            GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.SecondClueSprite2;
+;
         }
 
-        clueText.text = clueTextString;
+        GameLogicManager.Instance.UIManager.ClueText.text = clueTextString;
     }
 
     // Método para mostrar la tercera pista
@@ -123,27 +111,23 @@ public class CluesDisplayManager : MonoBehaviour
 
         if(clueTextString.Contains("Tiene una cicatriz"))
         {
-            clueImage.sprite = thirdClueSprite1;
+            GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.ThirdClueSprite1;
 
         }
         else if(clueTextString.Contains("Tiene un pendiente"))
         {
-            clueImage.sprite = thirdClueSprite2;
+            GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.ThirdClueSprite2;
         }
 
-        clueText.text = clueTextString;
+        GameLogicManager.Instance.UIManager.ClueText.text = clueTextString;
     }
 
     // Corrutina para cerrar el panel que muestra la pista
     private IEnumerator WaitForInputToClosePanel()
     {        
-        yield return new WaitForSeconds(0.5f);
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0));
+        yield return new WaitForSeconds(waitingTimeToClose);
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.E));
         PlayerEvents.FinishShowingInformation();
-        cluePanel.SetActive(false);
-
-        // QUITAR ----------------------------------------------------------
-        player.GetComponent<PlayerMovement>().isPlayerTalking = false;
-        // -----------------------------------------------------------------
+        GameLogicManager.Instance.UIManager.CluePanel.SetActive(false);
     }
 }

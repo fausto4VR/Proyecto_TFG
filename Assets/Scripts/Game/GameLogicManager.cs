@@ -15,12 +15,12 @@ public class GameLogicManager : MonoBehaviour
     private List<string> guiltyNames = new List<string>();
     private string guilty;
     private List<string> clues = new List<string>();
-    private int storyPhaseAux; // QUITAR
     private StoryPhase storyPhase;
     private string lastPuzzleComplete;
+    private bool[] knownClues;
     private bool[] knownSuspects;
-    private bool[] knownTutorials;
-    private bool[] knownDialogues;
+    private Dictionary<string, bool> knownTutorials;
+    private Dictionary<string, bool> knownDialogues;
     private bool isBadEnding;
     private int endOpportunities;
     private List<PuzzleState> puzzleStateList;
@@ -29,6 +29,8 @@ public class GameLogicManager : MonoBehaviour
     private float[] temporarilyCameraPosition = new float[3];
     private PlayerState temporarilyPlayerState;
     private bool isPuzzleCompleted;
+    private bool isPuzzleIncomplete;
+    private bool isPlayerInicialized;
 
 
     // En el Awake se define su comportamiento como singleton 
@@ -51,7 +53,6 @@ public class GameLogicManager : MonoBehaviour
         GameData gameData = SaveManager.LoadGameData();
         FoundGuilty(gameData);
         FoundClues(gameData);
-        FoundGamePhaseAux(gameData); // QUITAR
         FoundGamePhase(gameData);
         FoundKnownInformation(gameData);
         FoundEnding(gameData);
@@ -71,13 +72,8 @@ public class GameLogicManager : MonoBehaviour
 
         if(GameStateManager.Instance.isNewGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
         {
-            storyPhaseAux = 1; // QUITAR
             GameStateManager.Instance.SaveData();
             GameStateManager.Instance.isNewGame = false; 
-        }
-        if(storyPhaseAux == 0)
-        {
-            storyPhaseAux = 1;
         }
         // -----------------------------------------------------------------      
     }
@@ -161,23 +157,6 @@ public class GameLogicManager : MonoBehaviour
         }
     }
 
-    // QUITAR --------------------------------------------------------- 
-    public int StoryPhaseAux
-    {
-        get { return storyPhaseAux; }
-        set {             
-            if (value == 0)
-            {
-                storyPhaseAux = 1;
-            }
-            else
-            {
-                storyPhaseAux = value;
-            }
-        }
-    }
-    // -----------------------------------------------------------------
-
     // Métodos para obtener y para cambiar la fase de la historia
     public StoryPhase CurrentStoryPhase
     {
@@ -193,6 +172,13 @@ public class GameLogicManager : MonoBehaviour
     }
 
     // Métodos para obtener y para cambiar los sospechosos conocidos 
+    public bool[] KnownClues
+    {
+        get { return (bool[])knownClues.Clone(); }
+        set { knownClues = (bool[])value.Clone(); }
+    }
+
+    // Métodos para obtener y para cambiar los sospechosos conocidos 
     public bool[] KnownSuspects
     {
         get { return (bool[])knownSuspects.Clone(); }
@@ -200,17 +186,17 @@ public class GameLogicManager : MonoBehaviour
     }
 
     // Métodos para obtener y para cambiar los tutoriales conocidos
-    public bool[] KnownTutorials
+    public Dictionary<string, bool> KnownTutorials
     {
-        get { return (bool[])knownTutorials.Clone(); }
-        set { knownTutorials = (bool[])value.Clone(); }
+        get { return new Dictionary<string, bool>(knownTutorials); }
+        set { knownTutorials = new Dictionary<string, bool>(value); }
     }
 
     // Métodos para obtener y para cambiar los diálogos conocidos
-    public bool[] KnownDialogues
+    public Dictionary<string, bool> KnownDialogues
     {
-        get { return (bool[])knownDialogues.Clone(); }
-        set { knownDialogues = (bool[])value.Clone(); }
+        get { return new Dictionary<string, bool>(knownDialogues); }
+        set { knownDialogues = new Dictionary<string, bool>(value); }
     }
 
     // Métodos para obtener y para cambiar el tipo de final
@@ -234,18 +220,38 @@ public class GameLogicManager : MonoBehaviour
         set { puzzleStateList = new List<PuzzleState>(value); }
     }
 
-    // Métodos para obtener y para cambiar el tipo de final
+    // Métodos para obtener y para cambiar si se ha completado el último puzle
     public bool IsPuzzleCompleted
     {
         get { return isPuzzleCompleted; }
         set { isPuzzleCompleted = value; }
     }
 
-    // Método para obtener el estado actual del jugador
+    // Métodos para obtener y para cambiar si se ha regresado del último puzle sin completar
+    public bool IsPuzzleIncomplete
+    {
+        get { return isPuzzleIncomplete; }
+        set { isPuzzleIncomplete = value; }
+    }
+
+    // Métodos para obtener y para cambiar si se ha inicializado el jugador
+    public bool IsPlayerInicialized
+    {
+        get { return isPlayerInicialized; }
+        set { isPlayerInicialized = value; }
+    }
+
+    // Métodos para obtener y para cambiar el estado actual del jugador
     public PlayerState TemporalPlayerState
     {
         get { return temporarilyPlayerState; }
         set { temporarilyPlayerState = value; }
+    }
+
+    // Métodos para obtener el componente que gestiona el UI general
+    public GameUIManager UIManager
+    {
+        get { return GetComponent<GameUIManager>(); }
     }
 
     // Método para cargar la información de quien es el culpable o asignarlo si no existe
@@ -312,34 +318,13 @@ public class GameLogicManager : MonoBehaviour
         }        
     }
 
-    // QUITAR ---------------------------------------------------------
-    private void FoundGamePhaseAux(GameData gameData)
-    {
-        if(gameData != null)
-        {
-            if(gameData.gameStoryPhaseAux != 0)
-            {
-                storyPhaseAux = gameData.gameStoryPhaseAux;
-            }
-            else
-            {
-                storyPhaseAux = 0;
-            }
-        }
-        else
-        {
-            storyPhaseAux = 0;
-        }
-    }
-    // -----------------------------------------------------------------
-
     // Método para cargar la información de la fase de historia en la que se encuentra el jugador o asignaer la primera si no existe
     private void FoundGamePhase(GameData gameData)
     {
         if(gameData != null && gameData.gameStoryPhase != null && gameData.gameStoryPhase.storySubphases != null 
             && gameData.gameStoryPhase.storySubphases.Count > 0)
         {
-            storyPhase = gameData.gameStoryPhase;
+            storyPhase = gameData.gameStoryPhase.ToStoryPhase();
         }
         else
         {
@@ -350,6 +335,15 @@ public class GameLogicManager : MonoBehaviour
     // Método para cargar la información de apartados que conoce el jugador o asignar los valores por defecto en caso contrario
     private void FoundKnownInformation(GameData gameData)
     {
+        if(gameData != null && gameData.gameKnownClues?.Length > 0)
+        {
+            knownClues = gameData.gameKnownClues;
+        }
+        else
+        {
+            knownClues = new bool[3];
+        }
+
         if(gameData != null && gameData.gameKnownSuspects?.Length > 0)
         {
             knownSuspects = gameData.gameKnownSuspects;
@@ -359,23 +353,22 @@ public class GameLogicManager : MonoBehaviour
             knownSuspects = new bool[8];
         }
 
-        if(gameData != null && gameData.gameKnownTutorials?.Length > 0)
+        if (gameData != null && gameData.gameKnownTutorials != null && gameData.gameKnownTutorials.Count > 0)
         {
-            knownTutorials = gameData.gameKnownTutorials;
+            knownTutorials = new Dictionary<string, bool>(gameData.GetKnownTutorials());
         }
         else
         {
-            knownTutorials = new bool[8];
+            knownTutorials = new Dictionary<string, bool>();
         }
 
-        if(gameData != null && gameData.gameKnownDialogues?.Length > 0)
+        if (gameData != null && gameData.gameKnownDialogues != null && gameData.gameKnownDialogues.Count > 0)
         {
-            knownDialogues = gameData.gameKnownDialogues;
+            knownDialogues = new Dictionary<string, bool>(gameData.GetKnownDialogues());
         }
         else
         {
-            knownDialogues = new bool[8];
-            knownDialogues[0] = true;
+            knownDialogues = new Dictionary<string, bool>();
         }
     }
 
@@ -417,16 +410,22 @@ public class GameLogicManager : MonoBehaviour
         }
     }
 
-    // Método que se llama cuando se activa el objeto y sirve para ejecutar OnSceneLoaded cuando se carga una nueva escena
+    // Método que se llama cuando se activa el objeto y sirve para suscribirse a eventos
     void OnEnable()
     {
+        if (this == null || gameObject == null) return;
+
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
-    // Método que se llama cuando se desactiva o se destruye el objeto y sirve para evitar llamadas innecesarias al OnSceneLoaded
+    // Método que se llama cuando se desactiva o se destruye el objeto y sirve para desuscribirse a eventos
     void OnDisable()
     {
+        if (this == null || gameObject == null) return;
+        
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
     // Método que se ejecuta cada vez que se carga una escena
@@ -443,19 +442,25 @@ public class GameLogicManager : MonoBehaviour
         if (newPlayer != null)
         {
             player = newPlayer;
+            isPlayerInicialized = true;
         }
 
         // Se busca el objeto virtual camera que haya en esta escena
         GameObject newVirtualCamera = GameObject.Find("Virtual Camera");
-
         if (newVirtualCamera != null)
         {
             virtualCamera = newVirtualCamera;
         }
 
+        // Se busca el objeto canvas que haya en esta escena
+        GetComponent<GameUIManager>().FindCanvas();
+
+        // Se busca el objeto soundtrack que haya en esta escena
+        GetComponent<GameUIManager>().FindAudio();
+
         // REVISAR ---------------------------------------------------------
         // Se activa el NPC correspondiente en función del final del juego
-        if (scene.name == GameStateManager.Instance.MainScene)
+        /*if (scene.name == GameStateManager.Instance.MainScene)
         {
             GameData gameData = SaveManager.LoadGameData();
             if(gameData != null && gameData.gameStoryPhaseAux >= 200 && gameData.gameStoryPhaseAux < 400)
@@ -468,7 +473,15 @@ public class GameLogicManager : MonoBehaviour
                 GameObject father = GameObject.Find("Father");
                 father.transform.GetChild(0).gameObject.SetActive(true);
             }
-        }
+        }*/
+        // -----------------------------------------------------------------
+    }
+
+    // Método que se ejecuta cada vez que se descarga una escena
+    private void OnSceneUnloaded(Scene current)
+    {
+        Player = null;
+        isPlayerInicialized = false;
     }
 
     // Método para guardar la posición del jugador y de la cámara antes de lanzar un puzle

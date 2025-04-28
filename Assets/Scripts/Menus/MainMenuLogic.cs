@@ -36,13 +36,15 @@ public class MainMenuLogic : MonoBehaviour
 
             if(gameData != null)
             {
-                if(gameData.gameStoryPhaseAux != 0)
+                // if(gameData.gameStoryPhaseAux != 0)
+                if(gameData.gameStoryPhase != null)
                 {                    
                     buttonsAudioSource.Play();
                     isResetGamePanelShown = true;
                     resetGamePanel.SetActive(true);
                 }
-                else if(gameData.gameStoryPhaseAux == 0)
+                //else if(gameData.gameStoryPhaseAux == 0)
+                else if(gameData.gameStoryPhase == null)
                 {
                     buttonsAudioSource.Play();
                     StartCoroutine(WaitForSoundAndLoadNewScene());        
@@ -93,12 +95,14 @@ public class MainMenuLogic : MonoBehaviour
 
         if(gameData != null)
         {
-            if(gameData.gameStoryPhaseAux != 0)
+            // if(gameData.gameStoryPhaseAux != 0)
+            if(gameData.gameStoryPhase != null)
             {
                 continueButtonDisabled.SetActive(false);
                 continueButton.SetActive(true);
             }
-            else if(gameData.gameStoryPhaseAux == 0)
+            // else if(gameData.gameStoryPhaseAux == 0)
+            else if(gameData.gameStoryPhase == null)
             {
                 continueButton.SetActive(false);
                 continueButtonDisabled.SetActive(true);

@@ -31,11 +31,7 @@ public class PuzzleUIManager : MonoBehaviour
     
     [Header("Detection Section")]
     [SerializeField] private GameObject outStatementDetectionButton;
-    [SerializeField] private GameObject outPanelDetectionButton; 
-
-    [Header("Sound Section")]   
-    [SerializeField] private GameObject audioSourcesManager;    
-    [SerializeField] private AudioSource puzzleMusic;
+    [SerializeField] private GameObject outPanelDetectionButton;
     
     [Header("Variable Section")]
     private float transparentSupportButtonColor = 0.63f;
@@ -63,6 +59,7 @@ public class PuzzleUIManager : MonoBehaviour
     private AudioSource successSolutionAudioSource;
     private AudioSource failureSolutionAudioSource;
     private AudioSource accessDeniedudioSource;
+    private AudioSource puzzleMusic;
 
 
     void Start()
@@ -73,12 +70,14 @@ public class PuzzleUIManager : MonoBehaviour
         secondSupportImage = secondSupportPanelButton.GetComponent<Image>();
         thirdSupportImage = thirdSupportPanelButton.GetComponent<Image>();
 
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         buttonsAudioSource = audioSources[1];
         unlockSupportAudioSource = audioSources[2];
         successSolutionAudioSource = audioSources[3];
         failureSolutionAudioSource = audioSources[4];
         accessDeniedudioSource = audioSources[5];
+        puzzleMusic = GameLogicManager.Instance.UIManager.PuzzleMusic;
 
         if(GetComponent<PuzzleLogicManager>().PuzzleSupports[0])
         {
@@ -139,7 +138,7 @@ public class PuzzleUIManager : MonoBehaviour
     // Método para mostrar el panel de éxito despúes de acertar la solución de un puzle
     public void ShowSuccessPanel()
     {
-        puzzleMusic.Stop();
+        puzzleMusic.Pause();
         successSolutionAudioSource.Play();
         successsPanel.SetActive(true);
         int points = GetComponent<PuzzleLogicManager>().UpdatePoints(true);
@@ -150,7 +149,7 @@ public class PuzzleUIManager : MonoBehaviour
     // Método para mostrar el panel de fallo despúes de fallar la solución de un puzle
     public void ShowFailurePanel()
     {
-        puzzleMusic.Stop();
+        puzzleMusic.Pause();
         failureSolutionAudioSource.Play();
         failurePanel.SetActive(true);
         int points = GetComponent<PuzzleLogicManager>().UpdatePoints(false);
@@ -177,7 +176,7 @@ public class PuzzleUIManager : MonoBehaviour
         }
     }
 
-    // Método para mostar el panel de ayuda
+    // Método para mostrar el panel de ayuda
     public void DisplayHelpPanel()
     {
         buttonsAudioSource.Play();
@@ -196,7 +195,7 @@ public class PuzzleUIManager : MonoBehaviour
         }
     }
 
-    // Método para mostar el panel de saltar puzle
+    // Método para mostrar el panel de saltar puzle
     public void DisplaySkipPanel()
     {
         buttonsAudioSource.Play();
@@ -215,7 +214,7 @@ public class PuzzleUIManager : MonoBehaviour
         }
     }
 
-    // Método para mostar el panel de ayudas
+    // Método para mostrar el panel de ayudas
     public void DisplaySupportPanel(Button button)
     {
         buttonsAudioSource.Play();

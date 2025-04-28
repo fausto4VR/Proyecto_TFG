@@ -12,7 +12,6 @@ public class GameStateManager : MonoBehaviour
 
     // QUITAR ----------------------------------------------------------
     [Header("QUITAR")]
-    public bool isPuzzleIncomplete;
     public bool isLoadGame;
     public bool isNewGame;
     // -----------------------------------------------------------------
@@ -114,16 +113,16 @@ public class GameStateManager : MonoBehaviour
         string sceneName = SceneManager.GetActiveScene().name;
         string guilty = GameLogicManager.Instance.Guilty;
         List<string> clues = GameLogicManager.Instance.Clues;
-        int storyPhaseAux = GameLogicManager.Instance.StoryPhaseAux; // QUITAR
         StoryPhase storyPhase = GameLogicManager.Instance.CurrentStoryPhase; 
+        bool[] knownClues = GameLogicManager.Instance.KnownClues; 
         bool[] knownSuspects = GameLogicManager.Instance.KnownSuspects;
-        bool[] knownTutorials = GameLogicManager.Instance.KnownTutorials;        
-        bool[] knownDialogues = GameLogicManager.Instance.KnownDialogues;        
+        Dictionary<string, bool> knownTutorials = GameLogicManager.Instance.KnownTutorials;        
+        Dictionary<string, bool> knownDialogues = GameLogicManager.Instance.KnownDialogues;        
         bool isBadEnding = GameLogicManager.Instance.IsBadEnding;
         int endOpportunities = GameLogicManager.Instance.EndOpportunities;
 
-        GameData gameData = new GameData(sceneName, guilty, clues, storyPhaseAux, storyPhase, knownSuspects, knownTutorials, 
-            knownDialogues, isBadEnding, endOpportunities);
+        GameData gameData = new GameData(sceneName, guilty, clues, storyPhase, knownClues, knownSuspects, 
+            knownTutorials, knownDialogues, isBadEnding, endOpportunities);
 
         SaveManager.SaveGameData(gameData);
     }
@@ -143,11 +142,11 @@ public class GameStateManager : MonoBehaviour
 
         GameLogicManager.Instance.Guilty = gameData.gameGuilty;
         GameLogicManager.Instance.Clues = gameData.gameClues;
-        GameLogicManager.Instance.StoryPhaseAux = gameData.gameStoryPhaseAux; // QUITAR
-        GameLogicManager.Instance.CurrentStoryPhase = gameData.gameStoryPhase;
+        GameLogicManager.Instance.CurrentStoryPhase = gameData.gameStoryPhase.ToStoryPhase();        
+        GameLogicManager.Instance.KnownClues = gameData.gameKnownClues;
         GameLogicManager.Instance.KnownSuspects = gameData.gameKnownSuspects;
-        GameLogicManager.Instance.KnownTutorials = gameData.gameKnownTutorials;
-        GameLogicManager.Instance.KnownDialogues = gameData.gameKnownDialogues;        
+        GameLogicManager.Instance.KnownTutorials = gameData.GetKnownTutorials();
+        GameLogicManager.Instance.KnownDialogues = gameData.GetKnownDialogues();        
         GameLogicManager.Instance.IsBadEnding = gameData.gameIsBadEnding;
         GameLogicManager.Instance.EndOpportunities = gameData.gameEndOpportunities;
 
@@ -261,7 +260,7 @@ public class GameStateManager : MonoBehaviour
     public class InspectInformation
     {
         public string objectName;
-        public List<DialogueLine> currectDialogue;
+        public List<DialogueLine> currentDialogue;
         public List<DialogueLine> afterRecentDialogue;
         public List<DialogueLine> afterDistantDialogue;
     }

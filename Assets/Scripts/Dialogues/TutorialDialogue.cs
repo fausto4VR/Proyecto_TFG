@@ -1,135 +1,181 @@
-using System.Linq;
-using TMPro;
+using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+using System.Linq;
 
-public class TutorialDialogue : MonoBehaviour
+// Enum del posicionamiento del tutorial en pantalla
+public enum TutorialPlacement
 {
-    [SerializeField, TextArea(4,5)] private string[] turorialDialogueLines;
-    [SerializeField] private GameObject player;
-    [SerializeField] private GameObject tutorialPanel;
-    [SerializeField] private GameObject talkingTutorial;
-    [SerializeField] private TMP_Text tutorialText;
-    [SerializeField] private int tutorialIndexOrder;
-    [SerializeField] private Option panelSide;
-    [SerializeField] private GameObject audioSourcesManager;
+    Left, Right
+}
 
-    private enum Option {Left, Right}
-    private bool isPlayerInRange;
-    private bool isTutorialDone;
-    private int turorialDialogueLineIndex;
-    private bool isVisualSupportShown;
-    private bool isTutorialInProgress;
+public class TutorialDialogue : MonoBehaviour, IDialogueLogic
+{
+    [Header("UI Objects Section")]
+    [SerializeField] private List<GameObject> visualSupports;
+    
+    [Header("Variable Section")]
+    [SerializeField] private TutorialPlacement tutorialPlacement;
+    [SerializeField] private List<int> tutorialSupportPhases;
+    
+    private Coroutine skipCoroutine;
+    private Coroutine tutorialCoroutine;
+    private string[] tutorialText;
+    private int tutorialIndex;
+    private int visualSupportIndex;
+
+    // REVISAR AUDIO
     private AudioSource tutorialAudioSource;
 
 
     void Start()
     {        
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;        
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         tutorialAudioSource = audioSources[5];
 
-        turorialDialogueLineIndex = 0;
+        if (tutorialSupportPhases == null || tutorialSupportPhases.Count == 0) new List<int>();
+        if (tutorialSupportPhases != null && visualSupports.Count() > 0) tutorialSupportPhases.Add(visualSupports.Count() - 1);
+        tutorialIndex = 0;
 
-        if(panelSide == Option.Left)
+        if (tutorialSupportPhases.Count() > 0 && visualSupports.Count() > 0 && !(tutorialSupportPhases.Count() == visualSupports.Count()))
+        Debug.LogError($"No esta bien establecido el número de fases ({tutorialSupportPhases.Count()}) con respecto a las ayudas visuales ({visualSupports.Count()}) en el tutorial.");
+
+        if(tutorialPlacement == TutorialPlacement.Left)
         {
-            RectTransform rectTransform = tutorialPanel.GetComponent<RectTransform>();
+            RectTransform rectTransform = GameLogicManager.Instance.UIManager.TutorialPanel.GetComponent<RectTransform>();
             if(rectTransform.anchoredPosition.x > 0)
-            {
-                rectTransform.anchoredPosition = new Vector2(-rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
-            }
+            rectTransform.anchoredPosition = new Vector2(-rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
         }
 
-        if(panelSide == Option.Right)
+        if(tutorialPlacement == TutorialPlacement.Right)
         {
-            RectTransform rectTransform = tutorialPanel.GetComponent<RectTransform>();
+            RectTransform rectTransform = GameLogicManager.Instance.UIManager.TutorialPanel.GetComponent<RectTransform>();
             if(rectTransform.anchoredPosition.x < 0)
-            {
-                rectTransform.anchoredPosition = new Vector2(-rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
-            }
+            rectTransform.anchoredPosition = new Vector2(-rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
+
         }
     }
 
-    void Update()
+    // Método que se llama cuando se entra en el rango de diálogo de un objeto
+    public void WaitForDialogueInput()
     {
-        if(isPlayerInRange && !isTutorialDone && !GameLogicManager.Instance.KnownTutorials[tutorialIndexOrder])
+        if (skipCoroutine != null) StopCoroutine(skipCoroutine);
+
+        if (!GameLogicManager.Instance.KnownTutorials.TryGetValue(gameObject.name, out bool isKnown) || !isKnown) 
         {
-            if(!isTutorialInProgress)
-            {
-                isTutorialInProgress = true;
-                tutorialAudioSource.Play();
-            }
+            skipCoroutine = StartCoroutine(WaitToSkipTutorial());
 
-            player.GetComponent<PlayerMovement>().isPlayerDoingTutorial = true;
-            tutorialPanel.SetActive(true);
+            tutorialAudioSource.Play();
 
-            if(turorialDialogueLines.Count() == 1)
-            {
-                tutorialText.text = turorialDialogueLines[0];
+            PlayerEvents.StartShowingInformation();
 
-                if(!isVisualSupportShown)
-                {
-                    ShowVisualSupport(true);
-                    isVisualSupportShown = true;
-                }
-
-                if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
-                {
-                    FinishTutorial();
-                }
-            }
-            else if(turorialDialogueLines.Count() > 1 && turorialDialogueLineIndex < turorialDialogueLines.Count())
-            {
-                tutorialText.text = turorialDialogueLines[turorialDialogueLineIndex];
-
-                if(!isVisualSupportShown)
-                {
-                    ShowVisualSupport(true);
-                    isVisualSupportShown = true;
-                }
-
-                if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
-                {
-                    turorialDialogueLineIndex++;
-                    isVisualSupportShown = false; 
-                }               
-            }
-            else if(turorialDialogueLines.Count() > 1 && turorialDialogueLineIndex == turorialDialogueLines.Count())
-            {
-                FinishTutorial();            
-            }
+            GameLogicManager.Instance.UIManager.TutorialPanel.SetActive(true);
+            ManageTutorialText();
+            ShowVisualSupport(true);
         }
+    } 
+
+    // Corrutina para esperar a que el jugador quiera saltarse el tutorial una vez empezado
+    private IEnumerator WaitToSkipTutorial()
+    {
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return null;
+
+        EndTutorial();
     }
 
+    // Método para gestionar el texto que se muestra en el tutorial
+    private void ManageTutorialText()
+    {
+        tutorialText = GameStateManager.Instance.gameConversations.tutorialTexts
+            .FirstOrDefault(text => text.objectName == gameObject.name)?.text
+            .Select(dialogue => dialogue.line).ToArray() ?? new string[0];
+
+        GameLogicManager.Instance.UIManager.TutorialText.text = tutorialText[0];
+        
+        tutorialIndex = 0;
+        visualSupportIndex = 0;
+
+        tutorialCoroutine = StartCoroutine(NextTutorialText(tutorialIndex+1));
+    }
+
+    // Corrutina para mostrar el siguiente texto en el tutorial
+    private IEnumerator NextTutorialText(int currentTutorialIndex)
+    {
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+        yield return null;
+
+        if (currentTutorialIndex >= tutorialText.Length)
+        {
+            EndTutorial();
+            yield break;
+        }
+
+        GameLogicManager.Instance.UIManager.TutorialText.text = tutorialText[currentTutorialIndex];
+        ShowVisualSupport(true);
+
+        tutorialIndex = currentTutorialIndex;
+        tutorialCoroutine = StartCoroutine(NextTutorialText(currentTutorialIndex + 1));
+    }
+
+    // Método para terminar de mostrar el tutorial
+    private void EndTutorial()
+    {
+        Dictionary<string, bool> updatedTutorials = GameLogicManager.Instance.KnownTutorials;
+        updatedTutorials[gameObject.name] = true;
+        GameLogicManager.Instance.KnownTutorials = updatedTutorials;
+
+        PlayerEvents.FinishShowingInformation();
+
+        GameLogicManager.Instance.UIManager.TutorialPanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.TutorialText.text = "***";
+        ShowVisualSupport(false);
+        tutorialIndex = 0;
+        visualSupportIndex = 0;
+    }
+
+    // Método para activar o desactivar la ayuda visual del tutorial
     private void ShowVisualSupport(bool activation)
     {
-        if(tutorialIndexOrder == 0)
+        if(activation)
         {
-            talkingTutorial.SetActive(activation);
+            if (visualSupports != null && visualSupports.Count > 0 && tutorialSupportPhases != null && tutorialSupportPhases.Count > 0)
+            {
+                foreach (int tutorialPhase in tutorialSupportPhases)
+                {
+                    if(tutorialIndex <= tutorialPhase)
+                    {
+                        if(visualSupportIndex > 0 && visualSupportIndex < visualSupports.Count()) 
+                        visualSupports[visualSupportIndex-1].SetActive(false);
+
+                        if(visualSupportIndex < visualSupports.Count())visualSupports[visualSupportIndex].SetActive(true);
+
+                        visualSupportIndex++;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            visualSupports.ForEach(support => support.SetActive(false));
         }
     }
 
-    private void FinishTutorial()
+   // Método que se llama cuando se sale del rango de diálogo de un objeto
+   public void ExitOfDialogueRange()
     {
-        isTutorialDone = true;
-        isTutorialInProgress = false;
-        player.GetComponent<PlayerMovement>().isPlayerDoingTutorial = false;
-        ShowVisualSupport(false);
-        tutorialPanel.SetActive(false);
-        GameLogicManager.Instance.KnownTutorials[tutorialIndexOrder] = true;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.gameObject.CompareTag("Player"))
+        if (skipCoroutine != null)
         {
-            isPlayerInRange = true;
+            StopCoroutine(skipCoroutine);
+            skipCoroutine = null;
         }
-    }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if(collision.gameObject.CompareTag("Player"))
+        if (tutorialCoroutine != null)
         {
-            isPlayerInRange = false;
+            StopCoroutine(tutorialCoroutine);
+            tutorialCoroutine = null;
         }
     }
 }

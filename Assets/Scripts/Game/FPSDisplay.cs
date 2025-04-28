@@ -27,6 +27,8 @@ public class FPSDisplay : MonoBehaviour
 
     void OnGUI()
     {
+        if (this == null || gameObject == null) return;
+        
         int w = Screen.width;
         int h = Screen.height;
 

@@ -73,7 +73,7 @@ public class PauseMenuLogic : MonoBehaviour
         pauseAudioSource = audioSources[6];
         buttonsAudioSource = audioSources[1];
 
-        lastStoryPhase = GameLogicManager.Instance.StoryPhaseAux; // QUITAR
+        //lastStoryPhase = GameLogicManager.Instance.StoryPhaseAux; // QUITAR
 
         suspectImages.Add(suspectImage1);
         suspectImages.Add(suspectImage2);
@@ -111,7 +111,8 @@ public class PauseMenuLogic : MonoBehaviour
         }
 
         // QUITAR AUX
-        if(lastStoryPhase + 1 == GameLogicManager.Instance.StoryPhaseAux)
+        // if(lastStoryPhase + 1 == GameLogicManager.Instance.StoryPhaseAux)
+        if(lastStoryPhase + 1 == 100)
         {
             if(lastStoryPhase < objectiveTextPhases.Length)
             {
@@ -219,7 +220,8 @@ public class PauseMenuLogic : MonoBehaviour
             if(gameData != null)
             {
                 // QUITAR AUX
-                if(GameLogicManager.Instance.StoryPhaseAux == gameData.gameStoryPhaseAux)
+                // if(GameLogicManager.Instance.StoryPhaseAux == gameData.gameStoryPhaseAux)
+                if(GameLogicManager.Instance.CurrentStoryPhase == gameData.gameStoryPhase.ToStoryPhase())
                 {
                     afterSaveText.text = "La partida se ha guardado correctamente.";
                 }

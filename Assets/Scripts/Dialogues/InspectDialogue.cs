@@ -1,81 +1,210 @@
 using UnityEngine;
+using System.Collections;
+using System.Linq;
 
-public class InspectDialogue : MonoBehaviour
-{
-    [SerializeField, TextArea(4,5)] private string[] dialogueLines;
-    [SerializeField] private string[] characterNameLines;
-    [SerializeField, TextArea(4,5)] private string[] dialogueLinesToRecentPhase;
-    [SerializeField] private string[] characterNameLinesToRecentPhase;
-    [SerializeField, TextArea(4,5)] private string[] dialogueLinesToPastPhase;
-    [SerializeField] private string[] characterNameLinesToPastPhase;
-    [SerializeField] private int storyPhaseToUnlockDialogue;
-
+public class InspectDialogue : MonoBehaviour, IDialogueLogic
+{   
+    [Header("Variable Section")]
+    [SerializeField] private string puzzleAssociated;
+    [SerializeField] private bool isAdvanceStoryTrigger;
+    [SerializeField] private bool isPuzzleTriggerObject;
+    [SerializeField] private bool isClueUnlockTrigger;
+    
     [SubphaseSelector]
     [SerializeField] private string selectedSubphase;
 
-    public bool didConversationStart;
-    public GameObject dialoguePanel;
-    public bool isPuzzleTriggerObject;
-    public string puzzleAssociated;
-    public bool isStoryAdvanced;
-    public bool didObjectAdvanceStory;
-    public bool isPuzzleReturn = false;
-    public bool isClueDialogueFinish = false;
-    public string puzzleScene;
+    private Coroutine waitCoroutine;
+    private Coroutine skipCoroutine;
+    private bool isAdvanceStory;    
+    private bool isNecesaryShowClue;
 
-    void Update()
+    // REVISAR AUDIO
+    private AudioSource inspectionSuccess;
+
+
+    void Start()
     {
-        if (GetComponent<DialogueManager>().isPlayerInRange)
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        inspectionSuccess = audioSources[9];
+    }
+
+    // Método que se llama cuando se entra en el rango de diálogo de un objeto
+    public void WaitForDialogueInput()
+    {
+        waitCoroutine = StartCoroutine(WaitUntilInspectionComplete());
+    }
+
+    // Corrutina para esperar que se complete la inspección del objeto 
+    private IEnumerator WaitUntilInspectionComplete()
+    {
+        PlayerLogicManager playerLogic = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>();
+        yield return new WaitUntil(() => playerLogic.IsInspectionComplete);
+
+        SelectDialogue();
+        skipCoroutine = StartCoroutine(WaitToSkipDialogue());
+        WaitForDialogueInput();      
+    }
+
+    // Método para seleccionar el diálogo correspondiente en función de cuando se inspeccionó el objeto
+    private void SelectDialogue()
+    {
+        if(GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent)
         {
-            if(GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete == true)
-            {
-                // QUITAR AUX
-                if(storyPhaseToUnlockDialogue == GameLogicManager.Instance.StoryPhaseAux)
-                {
-                    didConversationStart = true;
-                    didObjectAdvanceStory = true;
-                    GetComponent<DialogueManager>().dialogueLines = dialogueLines;
-                    GetComponent<DialogueManager>().characterNameLines = characterNameLines;
-                }
-                // QUITAR AUX
-                else if(storyPhaseToUnlockDialogue == (GameLogicManager.Instance.StoryPhaseAux - 1))
-                {
-                    didConversationStart = true;
-                    GetComponent<DialogueManager>().dialogueLines = dialogueLinesToRecentPhase;
-                    GetComponent<DialogueManager>().characterNameLines = characterNameLinesToRecentPhase;
-                }
-                // QUITAR AUX
-                else if(storyPhaseToUnlockDialogue < (GameLogicManager.Instance.StoryPhaseAux + 1))
-                {
-                    didConversationStart = true;
-                    GetComponent<DialogueManager>().dialogueLines = dialogueLinesToPastPhase;
-                    GetComponent<DialogueManager>().characterNameLines = characterNameLinesToPastPhase;
-                }
-                else
-                {                     
-                    GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().ShowDefaultMessage();
-                    GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
-                }
-            }
-            else if(isPuzzleReturn)
-            {
-                didConversationStart = true;
-                isPuzzleReturn = false;
-                if(GetComponent<DialogueManager>().isClueUnlockTrigger)
-                {
-                    isClueDialogueFinish = true;
-                }
-                GameLogicManager.Instance.Player.GetComponent<PlayerMovement>().isPlayerTalking = true;
-                GetComponent<DialogueManager>().dialogueLines = dialogueLinesToRecentPhase;
-                GetComponent<DialogueManager>().characterNameLines = characterNameLinesToRecentPhase;
-            }
+            string[] dialogueLines = GameStateManager.Instance.gameConversations.inspectConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.currentDialogue
+                .Select(dialogue => dialogue.line).ToArray() ?? new string[0];
+
+            string[] characterNameLines = GameStateManager.Instance.gameConversations.inspectConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.currentDialogue
+                .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
+
+            if(isAdvanceStoryTrigger) isAdvanceStory = true;
+            if(isClueUnlockTrigger) isNecesaryShowClue = true;
+            inspectionSuccess.Play();
+            GetComponent<DialogueManager>().StartConversation(ConversationType.InspectDialogue, dialogueLines, characterNameLines);
+        }
+        else if (GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsRecentBefore)
+        {
+            string[] dialogueLines = GameStateManager.Instance.gameConversations.inspectConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.afterRecentDialogue
+                .Select(dialogue => dialogue.line).ToArray() ?? new string[0];
+
+            string[] characterNameLines = GameStateManager.Instance.gameConversations.inspectConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.afterRecentDialogue
+                .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
+
+            GetComponent<DialogueManager>().StartConversation(ConversationType.InspectDialogue, dialogueLines, characterNameLines);
+        }
+        else if (GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsDistantBefore)
+        {
+            string[] dialogueLines = GameStateManager.Instance.gameConversations.inspectConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.afterDistantDialogue
+                .Select(dialogue => dialogue.line).ToArray() ?? new string[0];
+
+            string[] characterNameLines = GameStateManager.Instance.gameConversations.inspectConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.afterDistantDialogue
+                .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
+
+            GetComponent<DialogueManager>().StartConversation(ConversationType.InspectDialogue, dialogueLines, characterNameLines);
+        }
+        else
+        {
+            GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().ShowDefaultMessage();
         }
 
-        if(GameStateManager.Instance.isPuzzleIncomplete)
+        GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
+    }
+
+    // Corrutina para esperar a que el jugador quiera saltarse el diálogo una vez empezado
+    private IEnumerator WaitToSkipDialogue()
+    {
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return null;
+
+        if (GetComponent<DialogueManager>().CurrentConversationPhase != ConversationPhase.Ended)
         {
-            PlayerEvents.FinishTalkingWithoutClue();
-            GameStateManager.Instance.isPuzzleIncomplete = false;
-            GameLogicManager.Instance.LoadTemporarilyPosition();
-        }        
+            inspectionSuccess.Stop();
+            GetComponent<DialogueManager>().EndConversation(ConversationType.InspectDialogue);
+        }
+
+    }
+
+    // Método que se llama cuando se sale del rango de diálogo de un objeto
+    public void ExitOfDialogueRange()
+    {
+        if (waitCoroutine != null)
+        {
+            StopCoroutine(waitCoroutine);
+            waitCoroutine = null;
+        }
+
+        if (skipCoroutine != null)
+        {
+            StopCoroutine(skipCoroutine);
+            skipCoroutine = null;
+        }
+    }
+
+    // Método para mostrar el diálogo al jugador después de completar un puzle
+    public void ShowAfterPuzzleDialogue()
+    {
+        if(isClueUnlockTrigger) isNecesaryShowClue = true;
+
+        string[] dialogueLines = GameStateManager.Instance.gameConversations.inspectConversations
+            .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.afterRecentDialogue
+            .Select(dialogue => dialogue.line).ToArray() ?? new string[0];
+
+        string[] characterNameLines = GameStateManager.Instance.gameConversations.inspectConversations
+            .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.afterRecentDialogue
+            .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
+
+        skipCoroutine = StartCoroutine(WaitToSkipDialogue());
+        GetComponent<DialogueManager>().StartConversation(ConversationType.InspectDialogue, dialogueLines, characterNameLines);
+    }
+
+    // Métodos para obtener y para cambiar si es necesario avanzar la historia
+    public bool IsAdvanceStory
+    {
+        get { return isAdvanceStory; }
+        set { isAdvanceStory = value; }
+    }
+
+    // Métodos para obtener y para cambiar si es un objeto que active un puzle
+    public bool IsPuzzleTriggerObject
+    {
+        get { return isPuzzleTriggerObject; }
+        set { isPuzzleTriggerObject = value; }
+    }
+
+    // Métodos para obtener y para cambiar si es necesario mostrar la pista correspondiente
+    public bool IsNecesaryShowClue
+    {
+        get { return isNecesaryShowClue; }
+        set { isNecesaryShowClue = value; }
+    }
+
+    // Método para obtener el puzzle asociado al objeto
+    public string PuzzleAssociated
+    {
+        get { return puzzleAssociated; }
+    }
+
+    // Método para obtener la fase seleccionada
+    public string SelectedSubphase
+    {
+        get { return selectedSubphase; }
+    }
+
+    // Método para obtener el nombre de la escena al puzzle asociado al objeto
+    public string PuzzleScene
+    {
+        get { return puzzleAssociated + "Scene"; }
+    }
+
+    // Método para actualizar el editor cada vez que se modifica un valor en el Inspector
+    private void OnValidate()
+    {
+        if (this == null || gameObject == null) return;
+
+        if (isPuzzleTriggerObject || isClueUnlockTrigger)
+        {
+            isAdvanceStoryTrigger = true;
+        }
+
+        if (isAdvanceStoryTrigger && GetComponent<AdvanceStoryManager>() == null)
+        {
+            Debug.LogError($"[{gameObject.name}] Falta el componente AdvanceStoryManager necesario para avanzar la historia.", this);
+        }
+
+        if (isClueUnlockTrigger && GetComponent<CluesDisplayManager>() == null)
+        {
+            Debug.LogError($"[{gameObject.name}] Falta el componente CluesDisplayManager necesario para mostrar la pista asociada.", this);
+        }
+
+        if (isPuzzleTriggerObject && string.IsNullOrEmpty(puzzleAssociated))
+        {
+            Debug.LogError($"[{gameObject.name}] Falta el nombre del puzle que es necesario para mostrarlo.", this);
+        }
     }
 }

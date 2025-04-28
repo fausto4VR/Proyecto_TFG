@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using System.Linq;
 
 // Clase para gestionar el dropdown de fases de la historia en el editor
 [CustomPropertyDrawer(typeof(SubphaseSelectorAttribute))]
@@ -8,6 +7,10 @@ public class SubphaseSelectorDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+        // Se comprueba si salta un error de inicialización
+        if (property == null || property.serializedObject == null || property.serializedObject.targetObject == null)
+        return;
+
         // Se carga las fases de la historia si no están cargadas ya
         if (StoryStateManager.gameStory == null)
         {
@@ -24,13 +27,8 @@ public class SubphaseSelectorDrawer : PropertyDrawer
             return;
         }
         
-        // Se construye la lista de subfases disponibles en el dropdown
-        var subphases = StoryStateManager.gameStory.phases
-        .SelectMany(phase => 
-            new[] { $"{phase.name}.{phase.name} Beginning" }
-            .Concat(phase.subphases.Select(subphase => $"{phase.name}.{subphase.name}"))
-        )
-        .ToList();
+        // Se llama al método para crear la lista de subfases disponibles en el dropdown
+        var subphases = StoryStateManager.CreateSubphasesList();
 
         // Se muestra una advertencia en el caso de que no haya subfases disponibles
         if (subphases.Count == 0)

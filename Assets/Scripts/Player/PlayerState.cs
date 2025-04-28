@@ -71,6 +71,7 @@ public class IdleState : PlayerState
         PlayerEvents.OnInspectionStarted += HandleInspectionStarted;
         PlayerEvents.OnTalkingStarted += HandleTalkingStarted;
         PlayerEvents.OnShowingInformationStarted += HandleShowingInformationStarted;
+        NextPlayerState = PlayerStatePhase.Default;
     }
 
     public override void OnExit()
@@ -112,6 +113,7 @@ public class InspectionState : PlayerState
     {
         PlayerEvents.OnInspectionFinished += HandleInspectionFinished;
         PlayerEvents.OnInspectionAborted += HandleInspectionAborted;
+        NextPlayerState = PlayerStatePhase.Default;
     }
 
     public override void OnExit()
@@ -148,6 +150,7 @@ public class TalkingState : PlayerState
     {
         PlayerEvents.OnTalkingFinishedWithoutClue += HandleTalkingFinishedWithoutClue;
         PlayerEvents.OnTalkingFinishedWithClue += HandleTalkingFinishedWithClue;
+        NextPlayerState = PlayerStatePhase.Default;
     }
 
     public override void OnExit()
@@ -183,6 +186,7 @@ public class ShowingInformationState : PlayerState
     public override void OnEnter()
     {
         PlayerEvents.OnShowingInformationFinished += HandleShowingInformationFinished;
+        NextPlayerState = PlayerStatePhase.Default;
     }
 
     public override void OnExit()

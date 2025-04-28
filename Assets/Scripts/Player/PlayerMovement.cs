@@ -16,10 +16,17 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Rigidbody2D playerRb;
     private Animator playerAnimator;
+    
+    // REVISAR AUDIO
+    private AudioSource footstepAudioSource;
 
 
     void Start()
-    {
+    {        
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
+        AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
+        footstepAudioSource = audioSources[8];
+
         playerRb = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
     }
@@ -37,6 +44,17 @@ public class PlayerMovement : MonoBehaviour
             playerAnimator.SetFloat("Horizontal", moveX);
             playerAnimator.SetFloat("Vertical", moveY);
             playerAnimator.SetFloat("Speed", moveInput.sqrMagnitude);
+
+            if (moveInput.sqrMagnitude > 0)
+            {
+                if (!footstepAudioSource.isPlaying)
+                    footstepAudioSource.Play();
+            }
+            else
+            {
+                if (footstepAudioSource.isPlaying)
+                    footstepAudioSource.Stop();
+            }
         }
         else
         {
@@ -44,6 +62,8 @@ public class PlayerMovement : MonoBehaviour
             playerAnimator.SetFloat("Horizontal", 0f);
             playerAnimator.SetFloat("Vertical", 0f);
             playerAnimator.SetFloat("Speed", 0f);
+
+            if (footstepAudioSource.isPlaying) footstepAudioSource.Stop();
         }    
     }
 

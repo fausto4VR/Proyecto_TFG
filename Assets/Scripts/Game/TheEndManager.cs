@@ -157,7 +157,7 @@ public class TheEndManager : MonoBehaviour
 
     private void ShowEnding()
     {
-        worldMusic.Stop();
+        worldMusic.Pause();
         theEndAudioSource.Play();
 
         if(GameLogicManager.Instance.IsBadEnding)
@@ -197,7 +197,7 @@ public class TheEndManager : MonoBehaviour
 
     private void GoToBadEnding(string selectedGuilty)
     {
-        worldMusic.Stop();
+        worldMusic.Pause();
         theEndAudioSource.Play();
 
         isTheEndPanelShown = false;
@@ -226,7 +226,7 @@ public class TheEndManager : MonoBehaviour
 
     private void GoToGoodEnding()
     {
-        worldMusic.Stop();
+        worldMusic.Pause();
         theEndAudioSource.Play();
 
         isTheEndPanelShown = false;
@@ -250,7 +250,7 @@ public class TheEndManager : MonoBehaviour
 
     private void GoToAnotherTry(string selectedGuilty)
     {
-        worldMusic.Stop();
+        worldMusic.Pause();
         theEndAudioSource.Play();
 
         isTheEndPanelShown = false;
@@ -307,7 +307,7 @@ public class TheEndManager : MonoBehaviour
             {
                 if(GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty)
                 {
-                    GameLogicManager.Instance.StoryPhaseAux = storyPhaseToUnlockFinalDialogue; // QUITAR
+                    //GameLogicManager.Instance.StoryPhaseAux = storyPhaseToUnlockFinalDialogue; // QUITAR
                 }
 
                 storyPhaseToUnlockFinalDialogue += 5;
@@ -322,7 +322,7 @@ public class TheEndManager : MonoBehaviour
             {
                 if(GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty)
                 {
-                    GameLogicManager.Instance.StoryPhaseAux = storyPhaseToUnlockFinalDialogue; // QUITAR
+                    //GameLogicManager.Instance.StoryPhaseAux = storyPhaseToUnlockFinalDialogue; // QUITAR
                 }
                 
                 storyPhaseToUnlockFinalDialogue += 5;

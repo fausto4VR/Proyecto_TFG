@@ -19,6 +19,8 @@ public class AdvanceStoryManager : MonoBehaviour
         inspectDialogue = GetComponent<InspectDialogue>();
         storyPhaseDialogue = GetComponent<StoryPhaseDialogue>();
         StartCoroutine(RestoreStateAfterFrame());
+
+        if(GetComponent<InspectDialogue>() != null) selectedSubphase = GetComponent<InspectDialogue>().SelectedSubphase;
     }
 
     // Corrutina para esperar un frame y asegurarse que todo está correctamente inicializado
@@ -39,9 +41,9 @@ public class AdvanceStoryManager : MonoBehaviour
     {
         if(inspectDialogue != null)
         {
-            if(GameLogicManager.Instance.CurrentStoryPhase.CheckCurrentPhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent 
-                && inspectDialogue.isPuzzleTriggerObject && GameLogicManager.Instance.IsPuzzleCompleted
-                && inspectDialogue.puzzleAssociated == GameLogicManager.Instance.LastPuzzleComplete)
+            if(GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent 
+                && inspectDialogue.IsPuzzleTriggerObject && GameLogicManager.Instance.IsPuzzleCompleted
+                && inspectDialogue.PuzzleAssociated == GameLogicManager.Instance.LastPuzzleComplete)
             {
                 GameLogicManager.Instance.IsPuzzleCompleted = false;
                 GameLogicManager.Instance.LoadTemporarilyPosition();
@@ -50,10 +52,13 @@ public class AdvanceStoryManager : MonoBehaviour
                     GameLogicManager.Instance.CurrentStoryPhase, GetPath(transform));
 
                 GameStateManager.Instance.SaveData();
-
-                // QUITAR ----------------------------------------------------------
-                GetComponent<InspectDialogue>().isPuzzleReturn = true;
-                // -----------------------------------------------------------------
+                inspectDialogue.ShowAfterPuzzleDialogue();
+            }
+            else if (GameLogicManager.Instance.IsPuzzleIncomplete)
+            {
+                PlayerEvents.FinishTalkingWithoutClue();
+                GameLogicManager.Instance.IsPuzzleIncomplete = false;
+                GameLogicManager.Instance.LoadTemporarilyPosition();
             }
         }
     }
@@ -61,12 +66,13 @@ public class AdvanceStoryManager : MonoBehaviour
     // Método para avanzar el estado de la historia
     public void AdvanceStoryState()
     {
-        if(GameLogicManager.Instance.CurrentStoryPhase.CheckCurrentPhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent)
+        if(GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent)
         {
             if(inspectDialogue != null)
             {
-                if(!inspectDialogue.isPuzzleTriggerObject)
+                if(!inspectDialogue.IsPuzzleTriggerObject)
                 {
+                    PlayerEvents.FinishTalkingWithoutClue();
                     GameLogicManager.Instance.CurrentStoryPhase = StoryStateManager.AdvanceStory(
                         GameLogicManager.Instance.CurrentStoryPhase, GetPath(transform));
                 }
@@ -90,7 +96,15 @@ public class AdvanceStoryManager : MonoBehaviour
     {
         GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.OnExit();
         yield return new WaitForSeconds(transitionTime);
-        SceneManager.LoadScene(inspectDialogue.puzzleScene);
+        
+        if (Application.CanStreamedLevelBeLoaded(inspectDialogue.PuzzleScene))
+        {
+            SceneManager.LoadScene(inspectDialogue.PuzzleScene);
+        }
+        else
+        {
+            Debug.LogError($"No se pudo encontrar la escena '{inspectDialogue.PuzzleScene}'. Revisa el nombre o si está añadida en Build Settings.");
+        }
     }
 
     // Método para generar un string a partir de la jerarquía del objeto. Se usará como el ID del objeto

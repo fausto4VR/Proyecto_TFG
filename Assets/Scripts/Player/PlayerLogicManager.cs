@@ -5,11 +5,8 @@ using System.Linq;
 public class PlayerLogicManager : MonoBehaviour
 {
     [Header("UI Objects Section")]
+    [SerializeField] private GameObject inspectLayout;
     [SerializeField] private GameObject inspectProgressBar;
-
-    [Header("Sound Section")]
-    [SerializeField] private GameObject audioSourcesManager;
-    [SerializeField] private AudioSource worldMusic;
 
     [Header("Player Data Section")]
     [SerializeField] private string playerName = "Player";
@@ -19,12 +16,6 @@ public class PlayerLogicManager : MonoBehaviour
     [SerializeField] private float holdInspectKeyTime = 2.0f;
     [SerializeField] private PlayerStatePhase firstPlayerPhase = PlayerStatePhase.Idle;
 
-    // QUITAR ---------------------------------------------------------
-    [Header("QUITAR")]    
-    public GameObject inspectLayout;
-    public GameObject dialoguePanel;
-    // ----------------------------------------------------------------
-
     private PlayerState playerState;
     private PlayerState defaultPlayerState;
     private float holdInspectKeyDuration;
@@ -33,12 +24,15 @@ public class PlayerLogicManager : MonoBehaviour
 
     // REVISAR AUDIO
     private AudioSource inspectAudioSource;
+    private AudioSource worldMusic;
 
 
     void Start()
     {
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         inspectAudioSource = audioSources[3];
+        worldMusic = GameLogicManager.Instance.UIManager.WorldMusic;
 
         defaultPlayerState = GetStateFromPhase(firstPlayerPhase);
 
@@ -48,7 +42,7 @@ public class PlayerLogicManager : MonoBehaviour
             playerState = GameLogicManager.Instance.TemporalPlayerState;
             if (playerState == null) InitializeFirstState();
             playerState.OnEnter();
-        }  
+        } 
     }
 
     // Métdodo para convertir una opción del enum PlayerStatePhase en un tipo de estado del jugador
@@ -90,11 +84,12 @@ public class PlayerLogicManager : MonoBehaviour
             Debug.Log("First Clue: " + GameLogicManager.Instance.Clues[0]);
             Debug.Log("Second Clue: " + GameLogicManager.Instance.Clues[1]);
             Debug.Log("Third Clue: " + GameLogicManager.Instance.Clues[2]);
-            Debug.Log("Story Phase Aux: " + GameLogicManager.Instance.StoryPhaseAux); // QUITAR
             Debug.Log("Story Phase: " + GameLogicManager.Instance.CurrentStoryPhase.phaseName);
             Debug.Log("Story Subphase: " + GameLogicManager.Instance.CurrentStoryPhase.currentSubphase.subphaseName);
             string LastPuzzle = GameLogicManager.Instance.LastPuzzleComplete;
-            Debug.Log("Last Puzzle Complete: " + LastPuzzle == null || LastPuzzle == "" ? "None" : LastPuzzle);
+            Debug.Log((LastPuzzle == null || LastPuzzle == "") ? "Last Puzzle Complete: None" : "Last Puzzle Complete: " + LastPuzzle);
+            string cluesContent = string.Join(", ", GameLogicManager.Instance.KnownClues);
+            Debug.Log("Known Clues: " + cluesContent);
             string suspectsContent = string.Join(", ", GameLogicManager.Instance.KnownSuspects);
             Debug.Log("Known Suspects: " + suspectsContent);
             string tutorialsContent = string.Join(", ", GameLogicManager.Instance.KnownTutorials);
@@ -103,11 +98,12 @@ public class PlayerLogicManager : MonoBehaviour
             Debug.Log("Known Dialogues: " + dialoguesContent);            
             Debug.Log("Is Bad Ending: " + GameLogicManager.Instance.IsBadEnding);       
             Debug.Log("End Opportunities: " + GameLogicManager.Instance.EndOpportunities);
-            Debug.Log("Player State: " + playerState.StateName);
+            Debug.Log("Player State: " + playerState.StateName);            
+            Debug.Log("Player Temporarily State: " + GameLogicManager.Instance.TemporalPlayerState.StateName);
             Debug.Log("Player Position: (" + GameLogicManager.Instance.Player.transform.position.x + ", " 
                 + GameLogicManager.Instance.Player.transform.position.y + ", " 
                 + GameLogicManager.Instance.Player.transform.position.z + ")");
-            Debug.Log("Player Position: (" + GameLogicManager.Instance.VirtualCamera.transform.position.x + ", " 
+            Debug.Log("Camera Position: (" + GameLogicManager.Instance.VirtualCamera.transform.position.x + ", " 
                 + GameLogicManager.Instance.VirtualCamera.transform.position.y + ", " 
                 + GameLogicManager.Instance.VirtualCamera.transform.position.z + ")");
         }
@@ -122,7 +118,7 @@ public class PlayerLogicManager : MonoBehaviour
             
             inspectLayout.SetActive(true);
 
-            worldMusic.Stop();
+            worldMusic.Pause();
             inspectAudioSource.Play();
         }
 
@@ -159,14 +155,14 @@ public class PlayerLogicManager : MonoBehaviour
 
     // Método para mostrar un mensaje por defecto cuando se inspecciona un objeto que no tiene nada relevante
     public void ShowDefaultMessage()
-    {
-        GetComponent<DialogueManager>().dialogueLines = GameStateManager.Instance.gameConversations.defaultInspectConversation
+    {       
+        string[] dialogueLines = GameStateManager.Instance.gameConversations.defaultInspectConversation
             .Select(dialogue => dialogue.line).ToArray();
-        GetComponent<DialogueManager>().characterNameLines = GameStateManager.Instance.gameConversations.defaultInspectConversation
+        string[] characterNameLines = GameStateManager.Instance.gameConversations.defaultInspectConversation
             .Select(dialogue => dialogue.speaker).ToArray();
 
         ResetProgress();
-        GetComponent<DialogueManager>().StartConversation();
+        GetComponent<DialogueManager>().StartConversation(ConversationType.PlayerLogicDialogue, dialogueLines, characterNameLines);
     }
 
     // Método para reiniciar el progreso mientras transcurre la inspección del objeto

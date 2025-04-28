@@ -1,168 +1,245 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Linq;
 
-public class MultipleChoiceDialogue: MonoBehaviour
-{
-
-    [SerializeField, TextArea(4,5)] private string[] firstDialogueLines;
-    [SerializeField] private string[] firstCharacterNameLines;
-    [SerializeField, TextArea(4,5)] private string[] secondDialogueLines;
-    [SerializeField] private string[] secondCharacterNameLines;
-    [SerializeField, TextArea(4,5)] private string[] thirdDialogueLines;
-    [SerializeField] private string[] thirdCharacterNameLines;
-    [SerializeField] private GameObject player;
-    [SerializeField] private GameObject thirdOptionKey;
-    [SerializeField] private GameObject firstOptionButton;
-    [SerializeField] private GameObject secondOptionButton;
-    [SerializeField] private GameObject thirdOptionButton;
-    [SerializeField] private int clueToUnlockDialogue;
-    [SerializeField] private int suspectIndex;    
-    [SerializeField] private TMP_Text firstOptionPanel;
-    [SerializeField] private TMP_Text secondOptionPanel;
-    [SerializeField] private TMP_Text thirdOptionPanel;
+public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
+{ 
+    [Header("Variable Section")]
+    [SerializeField] private ClueType clueToUnlockDialogue;
+    [SerializeField] private int suspectIndex;
     [SerializeField] private string firstOptionText;
     [SerializeField] private string secondOptionText;
     [SerializeField] private string thirdOptionText;
-    [SerializeField] private GameObject audioSourcesManager;  
-
-    public GameObject dialoguePanel;
-    public GameObject choicePanel;
-    public bool didDialogueStart;
-    public bool didConversationStart;
-
-    private bool isDialogueUnlock;
+    
+    private Coroutine waitCoroutine;
+    private Coroutine skipCoroutine;
+    private Coroutine restartCoroutine;
+    private bool isThirdOptionUnlock;
+    
+    // REVISAR AUDIO
     private AudioSource buttonsAudioSource;
+
 
     void Start()
     {
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         buttonsAudioSource = audioSources[1];
     }
 
-    void Update()
+    // Método que se llama cuando se entra en el rango de diálogo de un objeto
+    public void WaitForDialogueInput()
     {
-        CheckDialogueUnlock();
+        if (skipCoroutine != null) StopCoroutine(skipCoroutine);        
+        if (restartCoroutine != null) StopCoroutine(restartCoroutine);
 
-        if(isDialogueUnlock)
-        {
-            thirdOptionKey.SetActive(true);
-            thirdOptionButton.SetActive(true);
-        }
-
-        if (GetComponent<DialogueManager>().isPlayerInRange)
-        {
-            firstOptionButton.GetComponent<Button>().onClick.RemoveAllListeners();
-            firstOptionButton.GetComponent<Button>().onClick.AddListener(() => ChooseFirstOption());
-            
-            secondOptionButton.GetComponent<Button>().onClick.RemoveAllListeners();
-            secondOptionButton.GetComponent<Button>().onClick.AddListener(() => ChooseSecondOption());
-            
-            thirdOptionButton.GetComponent<Button>().onClick.RemoveAllListeners();
-            thirdOptionButton.GetComponent<Button>().onClick.AddListener(() => ChooseThirdOption());
-
-            if (Input.GetKeyDown(KeyCode.E) && !player.GetComponent<PlayerMovement>().isPlayerDoingTutorial)
-            {
-                GameLogicManager.Instance.KnownSuspects[suspectIndex] = true;
-
-                if (!didDialogueStart)
-                {
-                    StartDialogue();
-                }
-                else if (didDialogueStart && !didConversationStart)
-                {
-                    EndDialogue();
-                }
-            }
-        }
-
-        if(didDialogueStart)
-        {
-            if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                ChooseFirstOption();
-            }
-
-            if(Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                ChooseSecondOption();
-            }
-
-            if(Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3) && isDialogueUnlock)
-            {
-                ChooseThirdOption();
-            }
-        }
+        waitCoroutine = StartCoroutine(WaitUntilPlayerStartDialogue());
     }
 
-    private void CheckDialogueUnlock()
+    // Corrutina para esperar a que el jugador quiera comenzar el diálogo
+    private IEnumerator WaitUntilPlayerStartDialogue()
     {
-        if(clueToUnlockDialogue == 1 && !string.IsNullOrEmpty(GameLogicManager.Instance.Clues[0]))
-        {
-            isDialogueUnlock = true;
-        }
-        else if(clueToUnlockDialogue == 2 && !string.IsNullOrEmpty(GameLogicManager.Instance.Clues[1]))
-        {
-            isDialogueUnlock = true;
-        }
-        else if(clueToUnlockDialogue == 3 && !string.IsNullOrEmpty(GameLogicManager.Instance.Clues[2]))
-        {
-            isDialogueUnlock = true;
-        }
-        else if(clueToUnlockDialogue == 4)
-        {
-            isDialogueUnlock = true;
-        }
-    }
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return null;
 
-    public void ChooseFirstOption()
-    {
-        GetComponent<DialogueManager>().dialogueLines = firstDialogueLines;
-        GetComponent<DialogueManager>().characterNameLines = firstCharacterNameLines;
-        GoToConversation();
-    }
+        PlayerEvents.StartTalking();
 
-    public void ChooseSecondOption()
-    {
-        GetComponent<DialogueManager>().dialogueLines = secondDialogueLines;
-        GetComponent<DialogueManager>().characterNameLines = secondCharacterNameLines;
-        GoToConversation();
-    }
-
-    public void ChooseThirdOption()
-    {
-        GetComponent<DialogueManager>().dialogueLines = thirdDialogueLines;
-        GetComponent<DialogueManager>().characterNameLines = thirdCharacterNameLines;
-        GoToConversation();
-    }
-
-    private void GoToConversation()
-    {
-        choicePanel.SetActive(false);
-        GetComponent<DialogueManager>().conversationPanel.SetActive(true);
-        didConversationStart = true;
-    }
-
-    private void StartDialogue()
-    {
-        player.GetComponent<PlayerMovement>().isPlayerTalking = true;        
         buttonsAudioSource.Play();
-        choicePanel.SetActive(true);
-        dialoguePanel.SetActive(true);
 
-        firstOptionPanel.text = firstOptionText;
-        secondOptionPanel.text = secondOptionText;
-        thirdOptionPanel.text = thirdOptionText;
+        GameLogicManager.Instance.UIManager.FirstOptionTextInChoice.text = firstOptionText;
+        GameLogicManager.Instance.UIManager.SecondOptionTextInChoice.text = secondOptionText;
+        GameLogicManager.Instance.UIManager.ThirdOptionTextInChoice.text = thirdOptionText;
 
-        didDialogueStart = true;
-        didConversationStart = false;
+        bool isOptionChosen = false;
+        ManageButtonLogic(isOptionChosen);
+
+        GetComponent<DialogueManager>().DialogueMark.SetActive(false);
+        GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(true);
+        GameLogicManager.Instance.UIManager.DialogueChoiceSection.SetActive(true);
+        ShowThirdOption();
+
+        skipCoroutine = StartCoroutine(WaitToSkipDialogue());
+
+        while (!isOptionChosen)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                isOptionChosen = true;
+                HandleDialogueOptionSelected(ClueType.FirstClue);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                isOptionChosen = true;
+                HandleDialogueOptionSelected(ClueType.SecondClue);
+            }
+            else if ((Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) && isThirdOptionUnlock)
+            {
+                isOptionChosen = true;
+                HandleDialogueOptionSelected(ClueType.ThirdClue);
+            }
+
+            yield return null;
+        }        
     }
 
-    private void EndDialogue()
+    // Método para gestionar la lógica de los botones y que al pulsarlos hagan lo mismo que al seleccionar un número
+    private void ManageButtonLogic(bool isOptionChosen)
     {
-        player.GetComponent<PlayerMovement>().isPlayerTalking = false;
-        choicePanel.SetActive(false);
-        dialoguePanel.SetActive(false);
-        didDialogueStart = false;
+        Button firstButton = GameLogicManager.Instance.UIManager.FirstOptionButtonInChoice.GetComponent<Button>();
+        Button secondButton = GameLogicManager.Instance.UIManager.SecondOptionButtonInChoice.GetComponent<Button>();
+        Button thirdButton = GameLogicManager.Instance.UIManager.ThirdOptionButtonInChoice.GetComponent<Button>();
+
+        firstButton.onClick.RemoveAllListeners();
+        secondButton.onClick.RemoveAllListeners();
+        thirdButton.onClick.RemoveAllListeners();
+
+        firstButton.onClick.AddListener(() =>
+        {
+            if (!isOptionChosen)
+            {
+                isOptionChosen = true;
+                HandleDialogueOptionSelected(ClueType.FirstClue);
+            }
+        });
+
+        secondButton.onClick.AddListener(() =>
+        {
+            if (!isOptionChosen)
+            {
+                isOptionChosen = true;
+                HandleDialogueOptionSelected(ClueType.SecondClue);
+            }
+        });
+
+        thirdButton.onClick.AddListener(() =>
+        {
+            if (isThirdOptionUnlock && !isOptionChosen)
+            {
+                isOptionChosen = true;
+                HandleDialogueOptionSelected(ClueType.ThirdClue);
+            }
+        });
+    }
+
+    // Método para establecer si se puede mostrar la tercera opción de diálogo
+    private void ShowThirdOption()
+    {
+        int indexCurrentClue = (int) clueToUnlockDialogue;
+
+        if(clueToUnlockDialogue == ClueType.None || GameLogicManager.Instance.KnownClues[indexCurrentClue])
+        {
+            isThirdOptionUnlock = true;
+            GameLogicManager.Instance.UIManager.ThirdOptionKeyInChoice.SetActive(true);
+            GameLogicManager.Instance.UIManager.ThirdOptionButtonInChoice.SetActive(true);
+        }
+    }
+
+    // Método para manejar cada opción de diálogo 
+    private void HandleDialogueOptionSelected(ClueType clueType)
+    {
+        GameLogicManager.Instance.KnownSuspects[suspectIndex] = true;
+
+        if (clueType == ClueType.FirstClue)
+        {
+            string[] dialogueLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.firstDialogue
+                .Select(dialogue => dialogue.line).ToArray() ?? new string[0];
+
+            string[] characterNameLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.firstDialogue
+                .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
+            
+            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, 
+                dialogueLines, characterNameLines);
+            
+            restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
+        }
+        else if (clueType == ClueType.SecondClue)
+        {
+            string[] dialogueLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.secondDialogue
+                .Select(dialogue => dialogue.line).ToArray() ?? new string[0];
+
+            string[] characterNameLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.secondDialogue
+                .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
+            
+            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, 
+                dialogueLines, characterNameLines);
+            
+            restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
+        }
+        else if (clueType == ClueType.ThirdClue)
+        {
+            string[] dialogueLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.thirdDialogue
+                .Select(dialogue => dialogue.line).ToArray() ?? new string[0];
+
+            string[] characterNameLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
+                .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.thirdDialogue
+                .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
+            
+            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, 
+                dialogueLines, characterNameLines);
+            
+            restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
+        }
+    }
+
+    // Corrutina para esperar a que el jugador quiera saltarse el diálogo una vez empezado
+    private IEnumerator WaitToSkipDialogue()
+    {
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return null;
+
+        if (GetComponent<DialogueManager>().CurrentConversationPhase != ConversationPhase.Ended)
+        {
+            if (waitCoroutine != null)
+            {
+                StopCoroutine(waitCoroutine);
+                waitCoroutine = null;
+            }
+
+            restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
+
+            GameLogicManager.Instance.UIManager.DialogueChoiceSection.SetActive(false);
+            GetComponent<DialogueManager>().DialogueMark.SetActive(true);
+
+            GetComponent<DialogueManager>().EndConversation(ConversationType.MultipleChoiceDialogue);
+        }
+    }
+
+    // Corrutina para esperar a que el jugador quiera volver a empezar el diálogo
+    private IEnumerator WaitUntilPlayerRestartDialogue()
+    {
+        yield return new WaitUntil(() => GetComponent<DialogueManager>().CurrentConversationPhase == ConversationPhase.Ended);
+        yield return null;
+
+        GetComponent<DialogueManager>().CurrentConversationPhase = ConversationPhase.None;
+
+        WaitForDialogueInput();
+    }
+
+   // Método que se llama cuando se sale del rango de diálogo de un objeto
+   public void ExitOfDialogueRange()
+    {
+        if (waitCoroutine != null)
+        {
+            StopCoroutine(waitCoroutine);
+            waitCoroutine = null;
+        }
+
+        if (skipCoroutine != null)
+        {
+            StopCoroutine(skipCoroutine);
+            skipCoroutine = null;
+        }
+        
+        if (restartCoroutine != null)
+        {
+            StopCoroutine(restartCoroutine);
+            restartCoroutine = null;
+        }
     }
 }

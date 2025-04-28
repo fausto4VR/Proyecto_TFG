@@ -11,9 +11,6 @@ public class PuzzleLogicManager : MonoBehaviour
     [SerializeField] private TMP_Text puzzleStatement;  
     [SerializeField]private GameObject spaceKeyStatement;
 
-    [Header("Sound Section")]
-    [SerializeField] private GameObject audioSourcesManager;   
-
     [Header("Variable Section")]
     [SerializeField] private string sceneToReturn;
     [SerializeField] private string puzzleName;
@@ -33,6 +30,7 @@ public class PuzzleLogicManager : MonoBehaviour
 
     void Start()
     {
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         typingAudioSource = audioSources[0];
 
@@ -174,11 +172,7 @@ public class PuzzleLogicManager : MonoBehaviour
     public void ReturnToGameScene()
     {
         UpdatePuzzleData(false);
-
-        // QUITAR ----------------------------------------------------------
-        GameStateManager.Instance.isPuzzleIncomplete = true;
-        // -----------------------------------------------------------------
-
+        GameLogicManager.Instance.IsPuzzleIncomplete = true;
         SceneManager.LoadScene(sceneToReturn);
     }
 

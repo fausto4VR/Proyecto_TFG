@@ -1,355 +1,363 @@
 using System.Collections;
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 
+// Enum de las fases que puede tener una conversación
 public enum ConversationPhase
 {
-    Started, Continued, Ended
+    None, Started, Continued, Ended
+}
+
+// Enum de los tipos de conversación
+public enum ConversationType
+{
+    InspectDialogue, MultipleChoiceDialogue, StoryPhaseDialogueConversation, StoryPhaseDialogueTrigger, PlayerLogicDialogue
 }
 
 public class DialogueManager : MonoBehaviour
 {
+    [Header("UI Objects Section")]
     [SerializeField] private GameObject dialogueMark;
-    [SerializeField] private TMP_Text dialogueText;
-    [SerializeField] private TMP_Text characterNameText;
-    [SerializeField] private GameObject player;
-    [SerializeField] private Image profileImage;
-    [SerializeField] private Sprite characterImage;
-    [SerializeField]private float typingTime = 0.05f;    
-    
-    public bool isClueUnlockTrigger;
-    public bool isClueUnlock;
-    public GameObject conversationPanel;
-    public string[] dialogueLines;
-    public string[] characterNameLines;
-    [SerializeField]private int charsToPlaySound;  
-    [SerializeField] private GameObject audioSourcesManager; 
 
-    public bool isPlayerInRange;
-    public bool didConversationStart;
-    private int lineIndex;
+    [Header("Character Data Section")]
+    [SerializeField] private Sprite characterProfileImage;  
+
+    [Header("Variable Section")]
+    [SerializeField]private float typingTime = 0.05f;
+    [SerializeField]private int charsToPlaySound;
+    
+    private ConversationPhase conversationPhase = ConversationPhase.None;
+    private ConversationType currentConversationType;
     private MultipleChoiceDialogue multipleChoiceDialogue;
     private StoryPhaseDialogue storyPhaseDialogue;
     private InspectDialogue inspectDialogue;
-    private PlayerLogicManager playerLogicManager;
+    private IDialogueLogic dialogueLogic;
+    private string[] dialogueLines;
+    private string[] characterNameLines;
+    private int lineIndex;
+    private bool isPlayerInRange;
+    private bool isTypingDialogueText;
+
+    // REVISAR AUDIO
     private AudioSource typingDialogueAudioSource;
 
-    public ConversationPhase conversationPhase;
 
     void Start()
-    {
+    {        
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         typingDialogueAudioSource = audioSources[0];
 
         multipleChoiceDialogue = GetComponent<MultipleChoiceDialogue>();
         storyPhaseDialogue = GetComponent<StoryPhaseDialogue>();
         inspectDialogue = GetComponent<InspectDialogue>();
+        dialogueLogic = GetComponent<IDialogueLogic>();
 
-        if(gameObject.name=="Player")
-        {
-            player = gameObject;
-            playerLogicManager = GetComponent<PlayerLogicManager>();
-        }
+        StartCoroutine(WaitForPlayerInitialization());
     }
 
-    void Update()
-    {   
+    // Corrutina para esperar que el jugador esté inicializado y comprobar si se está dentro del rango del diálogo
+    private IEnumerator WaitForPlayerInitialization()
+    {
+        while (!GameLogicManager.Instance.IsPlayerInicialized) yield return null;
+
+        Collider2D objectCollider = GetComponent<Collider2D>();
+        Collider2D playerCollider = GameLogicManager.Instance.Player.GetComponent<Collider2D>();
+
+        if (objectCollider.bounds.Intersects(playerCollider.bounds)) HandleDialogueStart();
+    }
+    
+    // Método para comenzar la conversación. Se llama desde otros scripts
+    public void StartConversation(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames)
+    {
+        StartCoroutine(StartConversationDelay(conversationType, newDialogueLines, newCharacterNames));
+    }
+
+    // Corrutina que espera un frame para asegurarse que se ha actualizado correctamente el estado del jugador
+    private IEnumerator StartConversationDelay(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames)
+    {
+        yield return null;
+
         if(GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is TalkingState)
         {
-            if(multipleChoiceDialogue != null)
-            {
-                if(isPlayerInRange == true && multipleChoiceDialogue.didDialogueStart == true && !didConversationStart
-                    && multipleChoiceDialogue.didConversationStart)
-                {
-                    StartDialogue();
-                }
-
-                if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) 
-                    && multipleChoiceDialogue.didDialogueStart == true && didConversationStart) 
-                {
-                    if(dialogueText.text == dialogueLines[lineIndex])
-                    {
-                        NextDialogueLine();
-                    }
-                    else
-                    {
-                        ShowLineDirectly();
-                    }
-                }
-            }
-
-            if(storyPhaseDialogue != null)
-            {
-                if(isPlayerInRange == true && !didConversationStart && storyPhaseDialogue.didConversationStart)
-                {
-                    StartDialogue();
-                }
-
-                if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
-                {
-                    if(dialogueText.text == dialogueLines[lineIndex])
-                    {
-                        NextDialogueLine();
-                    }
-                    else
-                    {
-                        ShowLineDirectly();
-                    }
-                }
-            }
-
-            if(inspectDialogue != null)
-            {
-                if(isPlayerInRange == true && !didConversationStart && inspectDialogue.didConversationStart)
-                {
-                    inspectDialogue.dialoguePanel.SetActive(true);
-                    StartDialogue();
-                }
-
-                if(isPlayerInRange == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && didConversationStart) 
-                {
-                    if(dialogueText.text == dialogueLines[lineIndex])
-                    {
-                        NextDialogueLine();
-                    }
-                    else
-                    {
-                        ShowLineDirectly();
-                    }
-                }
-            }
-
-            if(playerLogicManager != null && dialogueLines != null && dialogueLines.Length > 0)
-            {
-                if(conversationPhase == ConversationPhase.Started)
-                {
-                    playerLogicManager.inspectLayout.SetActive(false);
-                    playerLogicManager.dialoguePanel.SetActive(true);
-                    StartDialogue();
-                }
-
-                if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && conversationPhase == ConversationPhase.Continued) 
-                {
-                    if(dialogueText.text == dialogueLines[lineIndex])
-                    {
-                        NextDialogueLine();
-                    }
-                    else
-                    {
-                        ShowLineDirectly();
-                    }
-                }
-            }
+            conversationPhase = ConversationPhase.Started;
+            currentConversationType = conversationType;
+            dialogueLines = newDialogueLines;
+            characterNameLines = newCharacterNames;
+            StartDialogue();
+        }
+        else
+        {
+            Debug.LogError("No se ha iniciado correctamente la conversación.");
         }
     }
 
+    // Método para empezar a mostrar el diálogo correspondiente
     private void StartDialogue()
     {
-        didConversationStart = true;
-        conversationPhase = ConversationPhase.Continued;
+        // Si es un diálogo del tipo de multiples opciones se desactiva el panel de elecciones
+        if(currentConversationType == ConversationType.MultipleChoiceDialogue) 
+        GameLogicManager.Instance.UIManager.DialogueChoiceSection.SetActive(false);
 
-        if(multipleChoiceDialogue != null)
-        {
-            multipleChoiceDialogue.choicePanel.SetActive(false);
-        }
+        // Si es un diálogo del tipo de fase de la historia se desactiva el aviso de diálogo
+        if(currentConversationType == ConversationType.StoryPhaseDialogueConversation) 
+        dialogueMark.SetActive(false);
+        
+        // Se activa la sección de conversación en el panel de diálogo 
+        GameLogicManager.Instance.UIManager.DialogueConversationSection.SetActive(true);
 
-        if(multipleChoiceDialogue != null || storyPhaseDialogue != null)
-        {
-            dialogueMark.SetActive(false);
-        }
+        // Si activa el panel de diálogo si no es un diálogo del tipo de multiples opciones  
+        if(currentConversationType != ConversationType.MultipleChoiceDialogue) 
+        GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(true);
 
-        conversationPanel.SetActive(true);
         lineIndex = 0;
-        characterNameText.text = characterNameLines[lineIndex];
-        SelectProfileImage();
-        SelectCharacterName();
+        ShowProfileImage();
+        ShowCharacterName();
         StartCoroutine(ShowLine());
     }
 
+    // Método para mostrar la siguiente línea de diálogo
     private void NextDialogueLine()
     {
-        lineIndex++;
-
         if(lineIndex < dialogueLines.Length)
-        {
-            SelectCharacterName();
-            SelectProfileImage();
+        { 
+            ShowProfileImage();
+            ShowCharacterName();
             StartCoroutine(ShowLine());
         }
         else
         {
-            didConversationStart = false;
-            conversationPanel.SetActive(false);
+            EndDialogue();
+        }
+    }
 
-            if(multipleChoiceDialogue != null)
+    // Método para terminar con el diálogo correspondiente
+    private void EndDialogue()
+    {
+        GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.DialogueConversationSection.SetActive(false);
+
+        // Si es un diálogo del tipo de fase de la historia o del tipo de multiples opciones se activa el aviso de diálogo
+        if(currentConversationType == ConversationType.StoryPhaseDialogueConversation 
+            || currentConversationType == ConversationType.MultipleChoiceDialogue) 
+        dialogueMark.SetActive(true);
+
+        // Si es un diálogo del tipo lógica del jugador o del tipo inspección se da por completada la acción de inspeccionar
+        if(currentConversationType == ConversationType.PlayerLogicDialogue
+            || currentConversationType == ConversationType.InspectDialogue)
+        GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
+
+        // Si es un diálogo del tipo inspección se comprueba si se hace falta avanzar la historia o mostrar la pista
+        if(currentConversationType == ConversationType.InspectDialogue)
+        {
+            // Se hace avanzar la historia cuando sea necesario
+            if(inspectDialogue.IsAdvanceStory)
             {
-                multipleChoiceDialogue.dialoguePanel.SetActive(false);
-                multipleChoiceDialogue.didDialogueStart = false;
-                dialogueMark.SetActive(true);
-
-                // PROVISIONAL
-                player.GetComponent<PlayerMovement>().isPlayerTalking = false;
-                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
-                PlayerEvents.FinishTalkingWithoutClue();
-            }
-            else if(storyPhaseDialogue != null)
-            {
-                storyPhaseDialogue.dialoguePanel.SetActive(false);
-                storyPhaseDialogue.didConversationStart = false;
-                dialogueMark.SetActive(true);
-
-                // PROVISIONAL
-                player.GetComponent<PlayerMovement>().isPlayerTalking = false;
-                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
-                PlayerEvents.FinishTalkingWithoutClue();
-            }
-            else if(playerLogicManager != null)
-            {
-                playerLogicManager.dialoguePanel.SetActive(false);
-                didConversationStart = false;
-                playerLogicManager.IsInspectionComplete = false;
-
-                // PROVISIONAL
-                player.GetComponent<PlayerMovement>().isPlayerTalking = false;
-                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
-                PlayerEvents.FinishTalkingWithoutClue();
-            }
-            else if(inspectDialogue != null)
-            {
-                inspectDialogue.dialoguePanel.SetActive(false);
-                inspectDialogue.didConversationStart = false;
-                player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
-
-                if(inspectDialogue.didObjectAdvanceStory)
+                if(GetComponent<AdvanceStoryManager>() != null)
                 {
-                    if(GetComponent<AdvanceStoryManager>() != null)
-                    {
-                        GetComponent<AdvanceStoryManager>().AdvanceStoryState();
-                    }
-                    
-                    inspectDialogue.didObjectAdvanceStory = false;
-                }
-
-                if(isClueUnlockTrigger && GetComponent<InspectDialogue>().isClueDialogueFinish)
-                {
-                    GetComponent<CluesDisplayManager>().ShowDiscoveredClue();
-                    GetComponent<InspectDialogue>().isClueDialogueFinish = false;
+                    GetComponent<AdvanceStoryManager>().AdvanceStoryState();
                 }
                 else
                 {
-                    PlayerEvents.FinishTalkingWithoutClue();
-                    GetComponent<InspectDialogue>().isClueDialogueFinish = false;
+                    Debug.LogError("No existe el componente necesario para avanzar la historia.");
+                }
+                
+                inspectDialogue.IsAdvanceStory = false;
+            }
+
+            // Se muestra la pista cuando sea necesario
+            if(inspectDialogue.IsNecesaryShowClue)
+            {
+                if(GetComponent<CluesDisplayManager>() != null)
+                {
+                    PlayerEvents.FinishTalkingWithClue();
+                    GetComponent<CluesDisplayManager>().ShowDiscoveredClue();
+                }
+                else
+                {
+                    Debug.LogError("No existe el componente necesario para mostrar la pista.");
                 }
 
-                // PROVISIONAL
-                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
+                inspectDialogue.IsNecesaryShowClue = false;
             }
             else
             {
-                // PROVISIONAL
-                player.GetComponent<PlayerMovement>().isPlayerTalking = false;
-                player.GetComponent<PlayerMovement>().isPlayerInspecting = false;
                 PlayerEvents.FinishTalkingWithoutClue();
             }
-
-            conversationPhase = ConversationPhase.Ended;
         }
+        else
+        {
+            PlayerEvents.FinishTalkingWithoutClue();
+        }
+
+        conversationPhase = ConversationPhase.Ended;
     }
 
-    private void ShowLineDirectly()
+    // Método para que otros scripts puedan acabar la conversación cuando sea necesario
+    public void EndConversation(ConversationType endConversationType)
     {
+        typingDialogueAudioSource.Stop();        
+
+        currentConversationType = endConversationType;
+        
         StopAllCoroutines();
-        characterNameText.text = characterNameLines[lineIndex];
-        SelectProfileImage();        
-        SelectCharacterName();
-        dialogueText.text = dialogueLines[lineIndex];
+
+        EndDialogue();
     }
 
-    private void SelectCharacterName()
+    // Método para mostrar la imagen de perfil del personaje que está hablando
+    private void ShowProfileImage()
     {
         if(characterNameLines[lineIndex] == "Player")
         {
-            characterNameText.text = player.GetComponent<PlayerLogicManager>().PlayerName;
+            GameLogicManager.Instance.UIManager.DialogueConversationProfile.sprite = 
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerImage;
         }
         else
         {
-            characterNameText.text = characterNameLines[lineIndex];
+            GameLogicManager.Instance.UIManager.DialogueConversationProfile.sprite = characterProfileImage;
         }        
     }
 
-    private void SelectProfileImage()
+    // Método para mostrar el nombre del personaje que está hablando
+    private void ShowCharacterName()
     {
         if(characterNameLines[lineIndex] == "Player")
         {
-            profileImage.sprite = player.GetComponent<PlayerLogicManager>().PlayerImage;
+            GameLogicManager.Instance.UIManager.DialogueConversationName.text = 
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerName;
         }
         else
         {
-            profileImage.sprite = characterImage;
+            GameLogicManager.Instance.UIManager.DialogueConversationName.text = characterNameLines[lineIndex];
         }        
     }
-
+    
+    // Corrutina para mostrar la línea de diálogo de forma progresiva
     private IEnumerator ShowLine() 
     {
-        dialogueText.text = string.Empty;
+        GameLogicManager.Instance.UIManager.DialogueConversationText.text = string.Empty;
         int charIndex = 0;
+
+        // Se llama a la corrutina para detectar si se cumple la condición para mostrar la línea de diálogo directamente
+        isTypingDialogueText = true;
+        StartCoroutine(WaitForSkip());
 
         foreach(char ch in dialogueLines[lineIndex])
         {
-            dialogueText.text += ch;
-            
-            if(charIndex % charsToPlaySound == 0)
-            {
-                typingDialogueAudioSource.Play();
-            }
+            if (!isTypingDialogueText) break;
 
+            GameLogicManager.Instance.UIManager.DialogueConversationText.text += ch;
+            
+            if(charIndex % charsToPlaySound == 0) typingDialogueAudioSource.Play();
             charIndex++;
+
             yield return new WaitForSeconds(typingTime);
         }
+
+        // En caso de que se salte el tipeo, se muestra directamente la línea de diálogo
+        if (GameLogicManager.Instance.UIManager.DialogueConversationText.text.Length < dialogueLines[lineIndex].Length)
+        GameLogicManager.Instance.UIManager.DialogueConversationText.text = dialogueLines[lineIndex];
+
+        isTypingDialogueText = false;
+
+        // Se llama a la corrutina para continuar con el diálogo
+        StartCoroutine(ContinueDialogue());
     }
 
-    // REVISAR ---------------------------------------------------------
-    // Método para que otros scripts puedan comenzar la conversación
-    public void StartConversation()
+    // Corrutina para mostrar la línea de diálogo directamente seá necesario
+    private IEnumerator WaitForSkip() 
     {
-        conversationPhase = ConversationPhase.Started;
+        while (isTypingDialogueText)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+            {
+                isTypingDialogueText = false;
+                yield break;
+            }
+            yield return null;
+        }
+    }   
+
+    // Corrutina para que se pueda continuar con la siguiente línea de diálogo
+    private IEnumerator ContinueDialogue()
+    {       
+        yield return new WaitUntil(() => !isTypingDialogueText);
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0));
+        yield return null;
+
+        lineIndex++;
+        conversationPhase = ConversationPhase.Continued;
+        NextDialogueLine();
     }
 
+    // Método para obtener si el jugador está dentro del rango de un objeto o personaje
+    public bool IsPlayerInRange
+    {
+        get { return isPlayerInRange; }
+    }
+
+    // Métodos para obtener y cambiar la fase en la que se encuentra la conversación
+    public ConversationPhase CurrentConversationPhase
+    {
+        get { return conversationPhase; }
+        set { conversationPhase = value; }
+    }
+
+    // Método para obtener el aviso de diálogo
+    public GameObject DialogueMark
+    {
+        get { return dialogueMark; }
+    }
+
+    // Método que se llama cuando un objeto entra en el área de colisión del trigger
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            if(multipleChoiceDialogue != null || storyPhaseDialogue != null)
-            {
-                dialogueMark.SetActive(true);
-            }
-
-            if(inspectDialogue != null)
-            {
-                player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = true;
-            }
-
-            isPlayerInRange = true;
+            HandleDialogueStart();
         }
     }
 
+    // Método que gestiona la lógica cuando un jugador está en el rango de diálogo
+    public void HandleDialogueStart()
+    {
+        // Se activa el aviso de diálogo cuando sea necesario
+        if(multipleChoiceDialogue != null
+            || (storyPhaseDialogue != null && storyPhaseDialogue.DialogueType == StoryPhaseDialogueType.Conversation)) 
+        dialogueMark.SetActive(true);
+
+        // Se avisa al jugador que hay un objeto a inspeccionar en rango
+        if(inspectDialogue != null) 
+        GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = true;
+
+        // Se llama al método de los scripts auxiliares para que permanezcan atentos a si se inicia la conversación
+        if (dialogueLogic != null) dialogueLogic.WaitForDialogueInput();
+
+        isPlayerInRange = true;
+    }
+
+    // Método que se llama cuando un objeto sale del área de colisión del trigger
     private void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            if(multipleChoiceDialogue != null || storyPhaseDialogue != null)
-            {
-                dialogueMark.SetActive(false);
-            }
+            // Se desactiva el aviso de diálogo cuando sea necesario
+            if(multipleChoiceDialogue != null
+                || (storyPhaseDialogue != null && storyPhaseDialogue.DialogueType == StoryPhaseDialogueType.Conversation))
+            dialogueMark.SetActive(false);
 
+            // Se avisa al jugador que ya no hay un objeto a inspeccionar en rango
             if(inspectDialogue != null)
-            {
-                player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = false;
-            }
+            GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = false;
+
+            // Se llama al método de los scripts auxiliares para que se deje de esperar a iniciar la conversación
+            if (dialogueLogic != null) dialogueLogic.ExitOfDialogueRange();
+
+            StopAllCoroutines();
+
+            conversationPhase = ConversationPhase.None;
 
             isPlayerInRange = false;
-            didConversationStart = false;
         }
     }
 }
