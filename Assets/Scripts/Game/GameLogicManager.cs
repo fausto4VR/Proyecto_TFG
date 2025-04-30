@@ -423,7 +423,7 @@ public class GameLogicManager : MonoBehaviour
     void OnDisable()
     {
         if (this == null || gameObject == null) return;
-        
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
@@ -458,23 +458,25 @@ public class GameLogicManager : MonoBehaviour
         // Se busca el objeto soundtrack que haya en esta escena
         GetComponent<GameUIManager>().FindAudio();
 
-        // REVISAR ---------------------------------------------------------
         // Se activa el NPC correspondiente en función del final del juego
-        /*if (scene.name == GameStateManager.Instance.MainScene)
+        if (scene.name == GameStateManager.Instance.MainScene)
         {
             GameData gameData = SaveManager.LoadGameData();
-            if(gameData != null && gameData.gameStoryPhaseAux >= 200 && gameData.gameStoryPhaseAux < 400)
+            GameObject theEndObject = GameObject.Find("The End Object");
+
+            if(gameData != null && !gameData.gameIsBadEnding 
+                && gameData.gameStoryPhase.ToStoryPhase().phaseName == StoryPhaseOption.Ending)
             {
-                GameObject victim = GameObject.Find("Victim");
+                GameObject victim = theEndObject.transform.Find("Victim").gameObject;
                 victim.transform.GetChild(0).gameObject.SetActive(true);
             }
-            else if(gameData != null && gameData.gameStoryPhaseAux >= 400)
+            else if(gameData != null && gameData.gameIsBadEnding
+                && gameData.gameStoryPhase.ToStoryPhase().phaseName == StoryPhaseOption.Ending)
             {
-                GameObject father = GameObject.Find("Father");
+                GameObject father = theEndObject.transform.Find("Father").gameObject;
                 father.transform.GetChild(0).gameObject.SetActive(true);
             }
-        }*/
-        // -----------------------------------------------------------------
+        }
     }
 
     // Método que se ejecuta cada vez que se descarga una escena

@@ -280,6 +280,181 @@
             ]
         }
     ],
+    "theEndConversations":
+    [
+        {
+            "objectName": "Supporting NPC - Father",
+            "dialogues": 
+            [
+                {
+                    "guilty": "Matthew",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Padre",
+                            "line": "El culpable es Matthew."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Harold",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Padre",
+                            "line": "El culpable es Harold."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Diana",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Padre",
+                            "line": "La culpable es Diana."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Sebastian",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Padre",
+                            "line": "El culpable es Sebastian."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Bobby",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Padre",
+                            "line": "El culpable es Bobby."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Isabella",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Padre",
+                            "line": "La culpable es Isabella."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Jessie",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Padre",
+                            "line": "La culpable es Jessie."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Celeste",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Padre",
+                            "line": "La culpable es Celeste."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "objectName": "Supporting NPC - Victim",
+            "dialogues": 
+            [
+                {
+                    "guilty": "Matthew",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Victima",
+                            "line": "El culpable es Matthew."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Harold",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Victima",
+                            "line": "El culpable es Harold."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Diana",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Victima",
+                            "line": "La culpable es Diana."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Sebastian",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Victima",
+                            "line": "El culpable es Sebastian."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Bobby",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Victima",
+                            "line": "El culpable es Bobby."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Isabella",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Victima",
+                            "line": "La culpable es Isabella."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Jessie",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Victima",
+                            "line": "La culpable es Jessie."
+                        }
+                    ]
+                },
+                {
+                    "guilty": "Celeste",
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Victima",
+                            "line": "La culpable es Celeste."
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
     "tutorialTexts":
     [
         {

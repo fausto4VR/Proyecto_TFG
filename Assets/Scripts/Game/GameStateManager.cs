@@ -252,6 +252,7 @@ public class GameStateManager : MonoBehaviour
         public List<InspectInformation> inspectConversations;
         public List<MultipleChoiceInformation> multipleChoiceConversations;
         public List<StoryPhaseInformation> storyPhaseConversations;
+        public List<EndConversationInformation> theEndConversations;
         public List<TutorialInformation> tutorialTexts;
     }
 
@@ -289,6 +290,22 @@ public class GameStateManager : MonoBehaviour
     {
         public string phase;
         public string subphase;
+        public List<DialogueLine> dialogue;
+    }
+
+    // Estructura de datos que representa un diálogo de uno de los personajes del final del juego
+    [System.Serializable]
+    public class EndConversationInformation
+    {
+        public string objectName;
+        public List<EndDialogue> dialogues;
+    }
+
+    // Estructura de datos que representa un diálogo concreto de uno de los personajes del final del juego
+    [System.Serializable]
+    public class EndDialogue
+    {
+        public string guilty;
         public List<DialogueLine> dialogue;
     }
 

@@ -43,6 +43,23 @@ public static class StoryStateManager
         return firstPhase;
     }
 
+    // Método para devolver la última fase de la historia
+    public static StoryPhase CreateLastPhase()
+    {
+        if (gameStory == null || gameStory.phases == null || gameStory.phases.Count == 0)
+        {
+            Debug.LogError("No se puede crear la última fase: la historia del juego no está inicializada o no tiene fases.");
+            return null;
+        }
+
+        StoryPhaseInformation lastPhaseInfo = gameStory.phases[gameStory.phases.Count - 1];
+        StoryPhaseOption phaseName = ParseStringToPhaseOption(lastPhaseInfo.name);
+        List<StorySubphase> storySubphases = ObtainSubphases(lastPhaseInfo.subphases);
+        StoryPhase lastPhase = new StoryPhase(phaseName, storySubphases);
+
+        return lastPhase;
+    }
+
     // Método para crear la lista de fases y subfases
     public static List<string> CreateSubphasesList()
     {

@@ -13,7 +13,9 @@ public class PlayerMovement : MonoBehaviour
     public bool isPlayerInPause = false;
     // -----------------------------------------------------------------
 
+    private SortingOrderManager sortingOrderManager;
     private Vector2 moveInput;
+    private Vector2 lastPosition;
     private Rigidbody2D playerRb;
     private Animator playerAnimator;
     
@@ -29,6 +31,12 @@ public class PlayerMovement : MonoBehaviour
 
         playerRb = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
+        lastPosition = transform.position;
+
+        sortingOrderManager = GetComponent<SortingOrderManager>();
+
+        if (sortingOrderManager == null) 
+        Debug.LogError("No existe el componente necesario para actualizar el orden de renderizado.");
     }
 
     void Update()
@@ -73,7 +81,14 @@ public class PlayerMovement : MonoBehaviour
         // Sectualiza la posición del jugador de acuerdo con la entrada de movimiento mediante la física del Rigidbody2D
         if(GetComponent<PlayerLogicManager>().PlayerState.CanMove())
         {
-            playerRb.MovePosition(playerRb.position + moveInput * speed * Time.fixedDeltaTime);
+            Vector2 newPosition = playerRb.position + moveInput * speed * Time.fixedDeltaTime;
+
+            if (newPosition != lastPosition)
+            {
+                playerRb.MovePosition(newPosition);
+                sortingOrderManager.UpdateSortingOrder();
+                lastPosition = newPosition;
+            }
         }
     }
 }

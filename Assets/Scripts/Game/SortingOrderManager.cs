@@ -1,25 +1,35 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class SortingOrderManager : MonoBehaviour
 {
-    [SerializeField] private bool hasMark;   
-
-    public int sortingOrderOffset = 0;
+    [Header("Variable Section")]
+    [SerializeField] int sortingOrderOffset = 0;
+    [SerializeField] private bool hasMark;
+    [SerializeField] private bool isNecesaryShowUp;
 
     private SpriteRenderer spriteRenderer;
+
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (isNecesaryShowUp) sortingOrderOffset += 100;
+        
+        UpdateSortingOrder();
     }
 
-    void Update()
+    // Método para actualizar el orden de renderizado del objeto en función de su posición
+    public void UpdateSortingOrder()
     {
-        spriteRenderer.sortingOrder = -(int)(transform.position.y * 100) + sortingOrderOffset;
+        int newOrder = -(int)(transform.position.y * 100) + sortingOrderOffset;
+        spriteRenderer.sortingOrder = newOrder;
 
-        if(hasMark)
+        if (hasMark && transform.childCount > 0)
         {
-            transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sortingOrder = spriteRenderer.sortingOrder + 500;
+            var markRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+            if (markRenderer != null) markRenderer.sortingOrder = newOrder + 500;
         }
     }
 }

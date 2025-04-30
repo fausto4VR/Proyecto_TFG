@@ -142,7 +142,7 @@ public class PuzzleLogicManager : MonoBehaviour
     public void SkipPuzzleLogic()
     {
         puzzlePoints = 1;
-        GameLogicManager.Instance.EndOpportunities = 1;
+        if (GameLogicManager.Instance.EndOpportunities > 0) GameLogicManager.Instance.EndOpportunities = 1;
         CompleteAndFinishPuzzle();
     }
 

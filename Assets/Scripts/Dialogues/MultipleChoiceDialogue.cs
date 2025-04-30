@@ -66,17 +66,17 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
             if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
             {
                 isOptionChosen = true;
-                HandleDialogueOptionSelected(ClueType.FirstClue);
+                HandleDialogueOptionSelected(1);
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
             {
                 isOptionChosen = true;
-                HandleDialogueOptionSelected(ClueType.SecondClue);
+                HandleDialogueOptionSelected(2);
             }
             else if ((Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) && isThirdOptionUnlock)
             {
                 isOptionChosen = true;
-                HandleDialogueOptionSelected(ClueType.ThirdClue);
+                HandleDialogueOptionSelected(3);
             }
 
             yield return null;
@@ -99,7 +99,7 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
             if (!isOptionChosen)
             {
                 isOptionChosen = true;
-                HandleDialogueOptionSelected(ClueType.FirstClue);
+                HandleDialogueOptionSelected(1);
             }
         });
 
@@ -108,7 +108,7 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
             if (!isOptionChosen)
             {
                 isOptionChosen = true;
-                HandleDialogueOptionSelected(ClueType.SecondClue);
+                HandleDialogueOptionSelected(2);
             }
         });
 
@@ -117,7 +117,7 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
             if (isThirdOptionUnlock && !isOptionChosen)
             {
                 isOptionChosen = true;
-                HandleDialogueOptionSelected(ClueType.ThirdClue);
+                HandleDialogueOptionSelected(3);
             }
         });
     }
@@ -136,11 +136,13 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
     }
 
     // Método para manejar cada opción de diálogo 
-    private void HandleDialogueOptionSelected(ClueType clueType)
+    private void HandleDialogueOptionSelected(int optionSelected)
     {
-        GameLogicManager.Instance.KnownSuspects[suspectIndex] = true;
+        bool[] newKnownSuspects = GameLogicManager.Instance.KnownSuspects;
+        newKnownSuspects[suspectIndex] = true;
+        GameLogicManager.Instance.KnownSuspects = newKnownSuspects;
 
-        if (clueType == ClueType.FirstClue)
+        if (optionSelected == 1)
         {
             string[] dialogueLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
                 .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.firstDialogue
@@ -155,7 +157,7 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
             
             restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
         }
-        else if (clueType == ClueType.SecondClue)
+        else if (optionSelected == 2)
         {
             string[] dialogueLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
                 .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.secondDialogue
@@ -170,7 +172,7 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
             
             restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
         }
-        else if (clueType == ClueType.ThirdClue)
+        else if (optionSelected == 3)
         {
             string[] dialogueLines = GameStateManager.Instance.gameConversations.multipleChoiceConversations
                 .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.thirdDialogue

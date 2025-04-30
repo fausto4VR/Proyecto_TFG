@@ -10,7 +10,7 @@ public enum ConversationPhase
 // Enum de los tipos de conversación
 public enum ConversationType
 {
-    InspectDialogue, MultipleChoiceDialogue, StoryPhaseDialogueConversation, StoryPhaseDialogueTrigger, PlayerLogicDialogue
+    InspectDialogue, MultipleChoiceDialogue, StoryPhaseDialogueConversation, StoryPhaseDialogueTrigger, PlayerLogicDialogue, TheEndDialogue
 }
 
 public class DialogueManager : MonoBehaviour
@@ -22,15 +22,17 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Sprite characterProfileImage;  
 
     [Header("Variable Section")]
-    [SerializeField]private float typingTime = 0.05f;
-    [SerializeField]private int charsToPlaySound;
+    [SerializeField] private float typingTime = 0.05f;
+    [SerializeField] private int charsToPlaySound;
     
     private ConversationPhase conversationPhase = ConversationPhase.None;
     private ConversationType currentConversationType;
     private MultipleChoiceDialogue multipleChoiceDialogue;
     private StoryPhaseDialogue storyPhaseDialogue;
+    private TheEndDialogue theEndDialogue;
     private InspectDialogue inspectDialogue;
     private IDialogueLogic dialogueLogic;
+    private Coroutine markCoroutine;
     private string[] dialogueLines;
     private string[] characterNameLines;
     private int lineIndex;
@@ -49,21 +51,9 @@ public class DialogueManager : MonoBehaviour
 
         multipleChoiceDialogue = GetComponent<MultipleChoiceDialogue>();
         storyPhaseDialogue = GetComponent<StoryPhaseDialogue>();
+        theEndDialogue = GetComponent<TheEndDialogue>();
         inspectDialogue = GetComponent<InspectDialogue>();
         dialogueLogic = GetComponent<IDialogueLogic>();
-
-        StartCoroutine(WaitForPlayerInitialization());
-    }
-
-    // Corrutina para esperar que el jugador esté inicializado y comprobar si se está dentro del rango del diálogo
-    private IEnumerator WaitForPlayerInitialization()
-    {
-        while (!GameLogicManager.Instance.IsPlayerInicialized) yield return null;
-
-        Collider2D objectCollider = GetComponent<Collider2D>();
-        Collider2D playerCollider = GameLogicManager.Instance.Player.GetComponent<Collider2D>();
-
-        if (objectCollider.bounds.Intersects(playerCollider.bounds)) HandleDialogueStart();
     }
     
     // Método para comenzar la conversación. Se llama desde otros scripts
@@ -99,7 +89,8 @@ public class DialogueManager : MonoBehaviour
         GameLogicManager.Instance.UIManager.DialogueChoiceSection.SetActive(false);
 
         // Si es un diálogo del tipo de fase de la historia se desactiva el aviso de diálogo
-        if(currentConversationType == ConversationType.StoryPhaseDialogueConversation) 
+        if(currentConversationType == ConversationType.StoryPhaseDialogueConversation
+            || currentConversationType == ConversationType.TheEndDialogue) 
         dialogueMark.SetActive(false);
         
         // Se activa la sección de conversación en el panel de diálogo 
@@ -138,6 +129,7 @@ public class DialogueManager : MonoBehaviour
 
         // Si es un diálogo del tipo de fase de la historia o del tipo de multiples opciones se activa el aviso de diálogo
         if(currentConversationType == ConversationType.StoryPhaseDialogueConversation 
+            || currentConversationType == ConversationType.TheEndDialogue
             || currentConversationType == ConversationType.MultipleChoiceDialogue) 
         dialogueMark.SetActive(true);
 
@@ -309,31 +301,49 @@ public class DialogueManager : MonoBehaviour
         get { return dialogueMark; }
     }
 
+    // Corrutina para activar o desactivar el aviso de diálogo en función de si se está inspeccionando o no 
+    private IEnumerator CheckPlayerStateForMark()
+    {
+        while (true)
+        {
+            var playerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
+
+            if (playerState == PlayerStatePhase.Inspection)
+            {
+                if (dialogueMark.activeSelf)
+                    dialogueMark.SetActive(false);
+            }
+            else
+            {
+                if (!dialogueMark.activeSelf)
+                    dialogueMark.SetActive(true);
+            }
+
+            yield return null; // Espera al siguiente frame
+        }
+    }
+
     // Método que se llama cuando un objeto entra en el área de colisión del trigger
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            HandleDialogueStart();
+            // Se activa el aviso de diálogo cuando sea necesario
+            if(multipleChoiceDialogue != null || theEndDialogue != null
+                || (storyPhaseDialogue != null && storyPhaseDialogue.DialogueType == StoryPhaseDialogueType.Conversation)) 
+            dialogueMark.SetActive(true);
+
+            // Se avisa al jugador que hay un objeto a inspeccionar en rango
+            if(inspectDialogue != null) 
+            GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = true;
+
+            // Se llama al método de los scripts auxiliares para que permanezcan atentos a si se inicia la conversación
+            if (dialogueLogic != null) dialogueLogic.WaitForDialogueInput();
+
+            markCoroutine = StartCoroutine(CheckPlayerStateForMark());
+
+            isPlayerInRange = true;
         }
-    }
-
-    // Método que gestiona la lógica cuando un jugador está en el rango de diálogo
-    public void HandleDialogueStart()
-    {
-        // Se activa el aviso de diálogo cuando sea necesario
-        if(multipleChoiceDialogue != null
-            || (storyPhaseDialogue != null && storyPhaseDialogue.DialogueType == StoryPhaseDialogueType.Conversation)) 
-        dialogueMark.SetActive(true);
-
-        // Se avisa al jugador que hay un objeto a inspeccionar en rango
-        if(inspectDialogue != null) 
-        GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = true;
-
-        // Se llama al método de los scripts auxiliares para que permanezcan atentos a si se inicia la conversación
-        if (dialogueLogic != null) dialogueLogic.WaitForDialogueInput();
-
-        isPlayerInRange = true;
     }
 
     // Método que se llama cuando un objeto sale del área de colisión del trigger
@@ -342,7 +352,7 @@ public class DialogueManager : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             // Se desactiva el aviso de diálogo cuando sea necesario
-            if(multipleChoiceDialogue != null
+            if(multipleChoiceDialogue != null || theEndDialogue != null
                 || (storyPhaseDialogue != null && storyPhaseDialogue.DialogueType == StoryPhaseDialogueType.Conversation))
             dialogueMark.SetActive(false);
 
@@ -356,6 +366,12 @@ public class DialogueManager : MonoBehaviour
             StopAllCoroutines();
 
             conversationPhase = ConversationPhase.None;
+
+            if (markCoroutine != null)
+            {
+                StopCoroutine(markCoroutine);
+                markCoroutine = null;
+            }
 
             isPlayerInRange = false;
         }
