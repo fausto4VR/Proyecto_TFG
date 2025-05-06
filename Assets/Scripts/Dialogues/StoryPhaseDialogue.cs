@@ -18,6 +18,8 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
     private Coroutine waitCoroutine;
     private Coroutine skipCoroutine;
     private Coroutine restartCoroutine;
+    private string advanceStoryPhase;    
+    private bool isAdvanceStory;
     
 
     // Método que se llama cuando se entra en el rango de diálogo de un objeto
@@ -33,7 +35,7 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
     // Corrutina para esperar a que el jugador quiera comenzar el diálogo
     private IEnumerator WaitUntilPlayerStartDialogue()
     {
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         yield return null;
 
         PlayerEvents.StartTalking();
@@ -57,6 +59,8 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
             .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.dialogues
             .FirstOrDefault(chat => $"{chat.phase}.{chat.subphase}" == validSubphase)?.dialogue
             .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
+
+        CheckIsNecesaryAdvanceStory(validSubphase);
         
         GetComponent<DialogueManager>().StartConversation(conversationType, dialogueLines, characterNameLines);
     }
@@ -128,6 +132,16 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
         return isValidOrder;
     }
 
+    // Método para comprobar si es necesario avanzar la historia
+    private void CheckIsNecesaryAdvanceStory(string validSubphase)
+    {
+        isAdvanceStory = GameStateManager.Instance.gameConversations.storyPhaseConversations
+            .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.dialogues
+            .FirstOrDefault(chat => $"{chat.phase}.{chat.subphase}" == validSubphase)?.advanceStory ?? false;
+
+        advanceStoryPhase = GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString();
+    }
+
     // Método para dar comienzo a un diálogo de tipo trigger al entrar en su rango 
     private void StartTriggerDialogue()
     {
@@ -149,7 +163,7 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
     // Corrutina para esperar a que el jugador quiera saltarse el diálogo una vez empezado
     private IEnumerator WaitToSkipDialogue()
     {
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         yield return null;
 
         if (GetComponent<DialogueManager>().CurrentConversationPhase != ConversationPhase.Ended)
@@ -201,5 +215,18 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
     public StoryPhaseDialogueType DialogueType
     {
         get { return dialogueType; }
+    }
+
+    // Método para obtener el nombre de la fase en el que se debe avanzar la historia
+    public string AdvanceStoryPhase
+    {
+        get { return advanceStoryPhase; }
+    }
+
+    // Métodos para obtener y para cambiar si es necesario avanzar la historia
+    public bool IsAdvanceStory
+    {
+        get { return isAdvanceStory; }
+        set { isAdvanceStory = value; }
     }
 }

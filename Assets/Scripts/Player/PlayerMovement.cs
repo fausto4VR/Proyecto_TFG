@@ -5,14 +5,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("Variable Section")]
     [SerializeField] private float speed = 3f;
 
-    // QUITAR ---------------------------------------------------------
-    [Header("QUITAR")]
-    public bool isPlayerTalking = false;
-    public bool isPlayerInspecting = false;
-    public bool isPlayerDoingTutorial = false;
-    public bool isPlayerInPause = false;
-    // -----------------------------------------------------------------
-
     private SortingOrderManager sortingOrderManager;
     private Vector2 moveInput;
     private Vector2 lastPosition;

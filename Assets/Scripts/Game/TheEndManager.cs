@@ -23,7 +23,6 @@ public class TheEndManager : MonoBehaviour
     [SerializeField] private string lastPuzzle = "Puzzle7";
     [SerializeField] private bool showAllOpportunities;
 
-    
     private List<Sprite> suspectSprites = new List<Sprite>();    
     private Coroutine waitCoroutine;
     private Coroutine closePanelCoroutine;
@@ -31,6 +30,7 @@ public class TheEndManager : MonoBehaviour
     private Coroutine sendGuiltyCoroutine;
     private Coroutine sendGuiltySoundCoroutine;
     private Coroutine closeScreenCoroutine;
+    private Coroutine markCoroutine;
     private TMP_Dropdown guiltyDropdownOptions;
     private bool isAnySuspectsKnown;
     
@@ -60,7 +60,7 @@ public class TheEndManager : MonoBehaviour
         if (sendGuiltySoundCoroutine != null) StopCoroutine(sendGuiltySoundCoroutine);
         if (closeScreenCoroutine != null) StopCoroutine(closeScreenCoroutine);
 
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         yield return null;
 
         DisplayTheEndPanel(true);
@@ -69,7 +69,7 @@ public class TheEndManager : MonoBehaviour
     // Corrutina para esperar a que el jugador quiera cerrar el panel del final del juego
     private IEnumerator WaitUntilPlayerClosePanel()
     {
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E) || Input.GetKeyUp(KeyCode.N));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.N));
         yield return null;
         
         DisplayTheEndPanel(false);
@@ -152,7 +152,7 @@ public class TheEndManager : MonoBehaviour
     // Corrutina para esperar a que el jugador quiera mandar al sospechoso seleccionado
     private IEnumerator WaitForSendPlayer()
     {
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Y) && isAnySuspectsKnown);
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Y) && isAnySuspectsKnown);
         yield return null;
 
         SendGuilty();
@@ -295,7 +295,7 @@ public class TheEndManager : MonoBehaviour
     // Corrutina para esperar a que el jugador quiera cerrar la pantalla del final del juego
     private IEnumerator WaitUntilPlayerCloseScreen()
     {
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E) || Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonUp(0));
         yield return null;
 
         GameLogicManager.Instance.UIManager.AnotherTryPanel.SetActive(false);
@@ -328,6 +328,26 @@ public class TheEndManager : MonoBehaviour
         waitCoroutine = StartCoroutine(WaitUntilPlayerStartTheEnd());
     }
 
+    // Corrutina para activar o desactivar la marca del final del juego en función de si se está inspeccionando o no 
+    private IEnumerator CheckPlayerStateForMark()
+    {
+        while (true)
+        {
+            var playerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
+
+            if (playerState == PlayerStatePhase.Inspection)
+            {
+                if (theEndMark.activeSelf) theEndMark.SetActive(false);
+            }
+            else if (playerState == PlayerStatePhase.Idle)
+            {
+                if (!theEndMark.activeSelf) theEndMark.SetActive(true);
+            }
+
+            yield return null;
+        }
+    }
+
     // Método que se llama cuando un objeto entra en el área de colisión del trigger
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -335,6 +355,7 @@ public class TheEndManager : MonoBehaviour
         {            
             theEndMark.SetActive(true);
             waitCoroutine = StartCoroutine(WaitUntilPlayerStartTheEnd());
+            markCoroutine = StartCoroutine(CheckPlayerStateForMark());
         }
     }
 
@@ -352,6 +373,7 @@ public class TheEndManager : MonoBehaviour
             if (sendGuiltyCoroutine != null) sendGuiltyCoroutine = null;
             if (sendGuiltySoundCoroutine != null) sendGuiltySoundCoroutine = null;
             if (closeScreenCoroutine != null) closeScreenCoroutine = null;
+            if (markCoroutine != null) markCoroutine = null;
         }
     }
 }

@@ -37,7 +37,7 @@ public class PlayerLogicManager : MonoBehaviour
         defaultPlayerState = GetStateFromPhase(firstPlayerPhase);
 
         // Se asigna el estado que tenía antes cuando se vuelve de un puzle
-        if(!(GameStateManager.Instance.isNewGame || GameStateManager.Instance.isLoadGame))
+        if(!(GameStateManager.Instance.IsNewGame || GameStateManager.Instance.IsLoadGame))
         {
             playerState = GameLogicManager.Instance.TemporalPlayerState;
             if (playerState == null) InitializeFirstState();
@@ -84,6 +84,7 @@ public class PlayerLogicManager : MonoBehaviour
             Debug.Log("First Clue: " + GameLogicManager.Instance.Clues[0]);
             Debug.Log("Second Clue: " + GameLogicManager.Instance.Clues[1]);
             Debug.Log("Third Clue: " + GameLogicManager.Instance.Clues[2]);
+            Debug.Log("Game Started: " + GameStateManager.Instance.IsGameStarted);
             Debug.Log("Story Phase: " + GameLogicManager.Instance.CurrentStoryPhase.phaseName);
             Debug.Log("Story Subphase: " + GameLogicManager.Instance.CurrentStoryPhase.currentSubphase.subphaseName);
             string LastPuzzle = GameLogicManager.Instance.LastPuzzleComplete;

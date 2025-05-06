@@ -79,7 +79,7 @@ public class TutorialDialogue : MonoBehaviour, IDialogueLogic
     // Corrutina para esperar a que el jugador quiera saltarse el tutorial una vez empezado
     private IEnumerator WaitToSkipTutorial()
     {
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         yield return null;
 
         EndTutorial();

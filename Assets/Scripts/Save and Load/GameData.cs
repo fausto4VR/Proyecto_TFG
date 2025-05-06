@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
+    public bool isGameStarted;
     public string gameScene;
     public string gameGuilty;
     public List<string> gameClues;
@@ -16,10 +17,11 @@ public class GameData
     public bool gameIsBadEnding;
     public int gameEndOpportunities;
 
-    public GameData(string sceneName, string guilty, List<string> clues, StoryPhase storyPhase, bool[] knownClues,
-        bool[] knownSuspects, Dictionary<string, bool> knownTutorials, Dictionary<string, bool> knownDialogues,
-        bool isBadEnding, int endOpportunities)
+    public GameData(bool isGameStarted, string sceneName, string guilty, List<string> clues, StoryPhase storyPhase, 
+        bool[] knownClues, bool[] knownSuspects, Dictionary<string, bool> knownTutorials, 
+        Dictionary<string, bool> knownDialogues, bool isBadEnding, int endOpportunities)
     {
+        this.isGameStarted = isGameStarted;
         gameScene = sceneName;
         gameGuilty = guilty;
         gameClues = new List<string>(clues);
@@ -40,6 +42,7 @@ public class GameData
 
     public GameData()
     {
+        isGameStarted = false;
         gameScene = "SampleScene";
         gameGuilty = "";
         gameClues = new List<string> { "", "", "" };

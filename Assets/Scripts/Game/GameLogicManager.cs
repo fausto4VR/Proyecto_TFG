@@ -28,6 +28,12 @@ public class GameLogicManager : MonoBehaviour
     private float[] temporarilyPlayerPosition = new float[3];
     private float[] temporarilyCameraPosition = new float[3];
     private PlayerState temporarilyPlayerState;
+    private List<string> firstClueGroup1;
+    private List<string> firstClueGroup2;
+    private List<string> secondClueGroup1;
+    private List<string> secondClueGroup2;
+    private List<string> thirdClueGroup1;
+    private List<string> thirdClueGroup2;
     private bool isPuzzleCompleted;
     private bool isPuzzleIncomplete;
     private bool isPlayerInicialized;
@@ -50,6 +56,14 @@ public class GameLogicManager : MonoBehaviour
     {
         guiltyNames = GameStateManager.Instance.gameText.guiltyNames;
         
+        // Se usan lista para las comparaciones entre los sospechosos y las pistas
+        firstClueGroup1 = new List<string> { guiltyNames[0], guiltyNames[1], guiltyNames[6], guiltyNames[7] };
+        firstClueGroup2 = new List<string> { guiltyNames[2], guiltyNames[3], guiltyNames[4], guiltyNames[5] };
+        secondClueGroup1 = new List<string> { guiltyNames[0], guiltyNames[1], guiltyNames[4], guiltyNames[5] };
+        secondClueGroup2 = new List<string> { guiltyNames[2], guiltyNames[3], guiltyNames[6], guiltyNames[7] };
+        thirdClueGroup1 = new List<string> { guiltyNames[0], guiltyNames[2], guiltyNames[4], guiltyNames[6] };
+        thirdClueGroup2 = new List<string> { guiltyNames[1], guiltyNames[3], guiltyNames[5], guiltyNames[7] };
+        
         GameData gameData = SaveManager.LoadGameData();
         FoundGuilty(gameData);
         FoundClues(gameData);
@@ -63,31 +77,22 @@ public class GameLogicManager : MonoBehaviour
         player.GetComponent<PlayerLogicManager>().InitializeFirstState();
         temporarilyPlayerState = player.GetComponent<PlayerLogicManager>().PlayerState;
 
-        // QUITAR ----------------------------------------------------------
-        if(GameStateManager.Instance.isLoadGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
+        if(GameStateManager.Instance.IsNewGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
         {
-            GameStateManager.Instance.LoadData();
-            GameStateManager.Instance.isLoadGame = false; 
+            GameStateManager.Instance.IsGameStarted = true;
+            GameStateManager.Instance.SaveData();
+            GameStateManager.Instance.IsNewGame = false;
         }
 
-        if(GameStateManager.Instance.isNewGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
+        if(GameStateManager.Instance.IsLoadGame)
         {
-            GameStateManager.Instance.SaveData();
-            GameStateManager.Instance.isNewGame = false; 
-        }
-        // -----------------------------------------------------------------      
+            GameStateManager.Instance.LoadData(false);
+            GameStateManager.Instance.IsLoadGame = false; 
+        }   
     }
 
     void Update()
     {
-        // QUITAR ----------------------------------------------------------
-        if(GameStateManager.Instance.isLoadGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
-        {
-            GameStateManager.Instance.LoadData();
-            GameStateManager.Instance.isLoadGame = false; 
-        }
-        // -----------------------------------------------------------------
-
         // QUITAR ----------------------------------------------------------
         if(Input.GetKeyDown(KeyCode.R))
         {
@@ -99,7 +104,7 @@ public class GameLogicManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.C))
         {
-            GameStateManager.Instance.LoadData();
+            GameStateManager.Instance.LoadData(true);
         }
         // -----------------------------------------------------------------
     }
@@ -123,6 +128,42 @@ public class GameLogicManager : MonoBehaviour
     {
         get { return new List<string>(guiltyNames); }
         set { guiltyNames = new List<string>(value); }
+    }
+
+    // Método para obtener el grupo 1 de sospechosos de la primera pista
+    public List<string> FirstClueGroup1
+    {
+        get { return new List<string>(firstClueGroup1); }
+    }
+
+    // Método para obtener el grupo 1 de sospechosos de la primera pista
+    public List<string> FirstClueGroup2
+    {
+        get { return new List<string>(firstClueGroup2); }
+    }
+
+    // Método para obtener el grupo 1 de sospechosos de la segunda pista
+    public List<string> SecondClueGroup1
+    {
+        get { return new List<string>(secondClueGroup1); }
+    }
+
+    // Método para obtener el grupo 2 de sospechosos de la segunda pista
+    public List<string> SecondClueGroup2
+    {
+        get { return new List<string>(secondClueGroup2); }
+    }
+
+    // Método para obtener el grupo 1 de sospechosos de la tercera pista
+    public List<string> ThirdClueGroup1
+    {
+        get { return new List<string>(thirdClueGroup1); }
+    }
+
+    // Método para obtener el grupo 2 de sospechosos de la tercera pista
+    public List<string> ThirdClueGroup2
+    {
+        get { return new List<string>(thirdClueGroup2); }
     }
 
     // Métodos para obtener y para cambiar el culpable
@@ -281,37 +322,29 @@ public class GameLogicManager : MonoBehaviour
         }
         else
         {
-            // Se usan listas para optimizar las comparaciones
-            List<string> group1 = new List<string> { guiltyNames[0], guiltyNames[1], guiltyNames[6], guiltyNames[7] };
-            List<string> group2 = new List<string> { guiltyNames[2], guiltyNames[3], guiltyNames[4], guiltyNames[5] };
-            List<string> group3 = new List<string> { guiltyNames[0], guiltyNames[1], guiltyNames[4], guiltyNames[5] };
-            List<string> group4 = new List<string> { guiltyNames[2], guiltyNames[3], guiltyNames[6], guiltyNames[7] };
-            List<string> group5 = new List<string> { guiltyNames[0], guiltyNames[2], guiltyNames[4], guiltyNames[6] };
-            List<string> group6 = new List<string> { guiltyNames[1], guiltyNames[3], guiltyNames[5], guiltyNames[7] };
-
-            if (group1.Contains(guilty))
+            if (firstClueGroup1.Contains(guilty))
             {
                 clues.Insert(0, "Tiene los ojos marrones");
             }
-            else if (group2.Contains(guilty))
+            else if (firstClueGroup2.Contains(guilty))
             {
                 clues.Insert(0, "Tiene los ojos verdes");
             }
 
-            if (group3.Contains(guilty))
+            if (secondClueGroup1.Contains(guilty))
             {
                 clues.Insert(1, "Mechón de pelo negro");
             }
-            else if (group4.Contains(guilty))
+            else if (secondClueGroup2.Contains(guilty))
             {
                 clues.Insert(1, "Mechón de pelo rubio");
             }
 
-            if (group5.Contains(guilty))
+            if (thirdClueGroup1.Contains(guilty))
             {
                 clues.Insert(2, "Tiene una cicatriz");
             }
-            else if (group6.Contains(guilty))
+            else if (thirdClueGroup2.Contains(guilty))
             {
                 clues.Insert(2, "Tiene un pendiente");
             }

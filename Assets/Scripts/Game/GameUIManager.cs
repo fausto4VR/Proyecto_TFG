@@ -22,6 +22,16 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Sprite suspectSprite6;
     [SerializeField] private Sprite suspectSprite7;
     [SerializeField] private Sprite suspectSprite8;
+    
+    [Header("Default Sprite Section")]
+    [SerializeField] private Sprite defaultSprite;
+
+    [Header("Cursors Textures Section")]
+    [SerializeField] private Texture2D defaultCursor;
+    [SerializeField] private Texture2D interactCursor;
+    
+    [Header("Variable Section")]
+    [SerializeField] private Vector2 hotspot = Vector2.zero;
 
     private GameObject canvas;
 
@@ -61,6 +71,43 @@ public class GameUIManager : MonoBehaviour
     private GameObject goodEndingPanel;
     private  TMP_Text goodEndingText;
     private Image goodEndingSuspectImage;
+
+    private GameObject mapPanel;
+    private GameObject thirdOptionKeyInMap;
+    private GameObject thirdOptionPanelInMap;
+
+    private GameObject briefcaseIconButton;
+    private GameObject pausePanel;
+    private TMP_Text objectiveTextInPause;
+    private GameObject outPanelOptions;
+    private GameObject afterSavePanel;
+    private TMP_Text afterSaveText;
+    private GameObject afterSaveOutPanel;
+    private GameObject exitPanel;   
+    private GameObject cluesPanelInPause;
+    private Image firstClueImage;
+    private Image secondClueImage;
+    private Image thirdClueImage;
+    private TMP_Text firstClueText;
+    private TMP_Text secondClueText;
+    private TMP_Text thirdClueText;
+    private GameObject suspectsPanelInPause;
+    private Image suspectImage1;
+    private Image suspectImage2;
+    private Image suspectImage3;
+    private Image suspectImage4;
+    private Image suspectImage5;
+    private Image suspectImage6;
+    private Image suspectImage7;
+    private Image suspectImage8;
+    private TMP_Text suspectText1;
+    private TMP_Text suspectText2;
+    private TMP_Text suspectText3;
+    private TMP_Text suspectText4;
+    private TMP_Text suspectText5;
+    private TMP_Text suspectText6;
+    private TMP_Text suspectText7;
+    private TMP_Text suspectText8;
 
     private GameObject soundtrack;
 
@@ -147,6 +194,52 @@ public class GameUIManager : MonoBehaviour
         
         goodEndingText = goodEndingPanel.transform.Find("Guilty Text").GetComponent<TMP_Text>();
         goodEndingSuspectImage = goodEndingPanel.transform.Find("Correct Section").transform.GetChild(1).GetComponent<Image>();
+        
+        mapPanel = canvas.transform.Find("Map Panel").gameObject;
+
+        thirdOptionKeyInMap = mapPanel.transform.Find("Third Key Image").gameObject;
+        thirdOptionPanelInMap = mapPanel.transform.Find("Park Panel").gameObject;
+
+        briefcaseIconButton = canvas.transform.Find("Pause Menu").transform.GetChild(0).gameObject;
+        pausePanel = canvas.transform.Find("Pause Menu").transform.GetChild(1).gameObject;
+
+        objectiveTextInPause = pausePanel.transform.GetChild(0).transform.Find("Objective Panel").transform.GetChild(1)
+            .GetComponent<TMP_Text>();
+        
+        outPanelOptions = pausePanel.transform.GetChild(0).transform.Find("Out Panel Options").gameObject;
+        afterSavePanel = pausePanel.transform.GetChild(0).transform.Find("After Save Panel").gameObject;
+        afterSaveOutPanel = pausePanel.transform.GetChild(0).transform.Find("Out Panel Detection Button").gameObject;
+        exitPanel = pausePanel.transform.GetChild(0).transform.Find("Exit Panel").gameObject;
+        cluesPanelInPause = pausePanel.transform.GetChild(0).transform.Find("Clues Board").gameObject;
+        suspectsPanelInPause = pausePanel.transform.GetChild(0).transform.Find("Suspects Board").gameObject;
+
+        afterSaveText = afterSavePanel.transform.GetChild(1).GetComponent<TMP_Text>();
+
+        firstClueImage = cluesPanelInPause.transform.Find("First Clue").transform.Find("Clue Image").GetComponent<Image>();
+        secondClueImage = cluesPanelInPause.transform.Find("Second Clue").transform.Find("Clue Image").GetComponent<Image>();
+        thirdClueImage = cluesPanelInPause.transform.Find("Third Clue").transform.Find("Clue Image").GetComponent<Image>();
+
+        firstClueText = cluesPanelInPause.transform.Find("First Clue").transform.Find("Clue Text").GetComponent<TMP_Text>();
+        secondClueText = cluesPanelInPause.transform.Find("Second Clue").transform.Find("Clue Text").GetComponent<TMP_Text>();
+        thirdClueText = cluesPanelInPause.transform.Find("Third Clue").transform.Find("Clue Text").GetComponent<TMP_Text>();
+
+        suspectImage1 = suspectsPanelInPause.transform.Find("Suspect 1").transform.Find("Suspect Image").GetComponent<Image>();
+        suspectImage2 = suspectsPanelInPause.transform.Find("Suspect 2").transform.Find("Suspect Image").GetComponent<Image>();
+        suspectImage3 = suspectsPanelInPause.transform.Find("Suspect 3").transform.Find("Suspect Image").GetComponent<Image>();
+        suspectImage4 = suspectsPanelInPause.transform.Find("Suspect 4").transform.Find("Suspect Image").GetComponent<Image>();
+        suspectImage5 = suspectsPanelInPause.transform.Find("Suspect 5").transform.Find("Suspect Image").GetComponent<Image>();
+        suspectImage6 = suspectsPanelInPause.transform.Find("Suspect 6").transform.Find("Suspect Image").GetComponent<Image>();
+        suspectImage7 = suspectsPanelInPause.transform.Find("Suspect 7").transform.Find("Suspect Image").GetComponent<Image>();
+        suspectImage8 = suspectsPanelInPause.transform.Find("Suspect 8").transform.Find("Suspect Image").GetComponent<Image>();
+        
+        suspectText1 = suspectsPanelInPause.transform.Find("Suspect 1").transform.Find("Suspect Text").GetComponent<TMP_Text>();
+        suspectText2 = suspectsPanelInPause.transform.Find("Suspect 2").transform.Find("Suspect Text").GetComponent<TMP_Text>();
+        suspectText3 = suspectsPanelInPause.transform.Find("Suspect 3").transform.Find("Suspect Text").GetComponent<TMP_Text>();
+        suspectText4 = suspectsPanelInPause.transform.Find("Suspect 4").transform.Find("Suspect Text").GetComponent<TMP_Text>();
+        suspectText5 = suspectsPanelInPause.transform.Find("Suspect 5").transform.Find("Suspect Text").GetComponent<TMP_Text>();
+        suspectText6 = suspectsPanelInPause.transform.Find("Suspect 6").transform.Find("Suspect Text").GetComponent<TMP_Text>();
+        suspectText7 = suspectsPanelInPause.transform.Find("Suspect 7").transform.Find("Suspect Text").GetComponent<TMP_Text>();
+        suspectText8 = suspectsPanelInPause.transform.Find("Suspect 8").transform.Find("Suspect Text").GetComponent<TMP_Text>();
     }
 
     // Método para obtener todos los elementos del sonido necesarios
@@ -365,6 +458,258 @@ public class GameUIManager : MonoBehaviour
         get { return goodEndingSuspectImage; }
     }
 
+    // Método para obtener el objeto que refleja el panel del mapa
+    public GameObject MapPanel
+    {
+        get { return mapPanel; }
+    }
+
+    // Método para obtener el objeto que refleja la tercera tecla en el panel del mapa
+    public GameObject ThirdOptionKeyInMap
+    {
+        get { return thirdOptionKeyInMap; }
+    }
+
+    // Método para obtener el objeto que refleja el panel de la tercera opción en el mapa
+    public GameObject ThirdOptionPanelInMap
+    {
+        get { return thirdOptionPanelInMap; }
+    }
+
+    // Método para obtener el objeto que refleja el botón del maletín
+    public GameObject BriefcaseIconButton
+    {
+        get { return briefcaseIconButton; }
+    }
+
+    // Método para obtener el objeto que refleja el panel de pausa
+    public GameObject PausePanel
+    {
+        get { return pausePanel; }
+    }
+
+    // Método para obtener el texto del objetivo en el panel de pausa
+    public TMP_Text ObjectiveTextInPause
+    {
+        get { return objectiveTextInPause; }
+    }
+
+    // Método para obtener el panel invisible posterior a abrir alguna opción
+    public GameObject OutPanelOptions
+    {
+        get { return outPanelOptions; }
+    }
+
+    // Método para obtener el panel posterior al guardado
+    public GameObject AfterSavePanel
+    {
+        get { return afterSavePanel; }
+    }
+
+    // Método para obtener el panel de detección posterior al guardado para cerrar el mensaje que salga
+    public GameObject AfterSaveOutPanel
+    {
+        get { return afterSaveOutPanel; }
+    }
+
+    // Método para obtener el objeto que refleja el texto del panel posterior al guardado
+    public TMP_Text AfterSaveText
+    {
+        get { return afterSaveText; }
+    }
+
+    // Método para obtener el objeto que refleja el panel de salida
+    public GameObject ExitPanel
+    {
+        get { return exitPanel; }
+    }
+
+    // Método para obtener el objeto que refleja el panel de pistas en pausa
+    public GameObject CluesPanelInPause
+    {
+        get { return cluesPanelInPause; }
+    }
+
+    // Método para obtener el objeto que refleja la imagen de la primera pista
+    public Image FirstClueImage
+    {
+        get { return firstClueImage; }
+    }
+
+    // Método para obtener el objeto que refleja la imagen de la segunda pista
+    public Image SecondClueImage
+    {
+        get { return secondClueImage; }
+    }
+
+    // Método para obtener el objeto que refleja la imagen de la tercera pista
+    public Image ThirdClueImage
+    {
+        get { return thirdClueImage; }
+    }
+
+    // Método para obtener el objeto que refleja el texto de la primera pista
+    public TMP_Text FirstClueText
+    {
+        get { return firstClueText; }
+    }
+
+    // Método para obtener el objeto que refleja el texto de la segunda pista
+    public TMP_Text SecondClueText
+    {
+        get { return secondClueText; }
+    }
+
+    // Método para obtener el objeto que refleja el texto de la tercera pista
+    public TMP_Text ThirdClueText
+    {
+        get { return thirdClueText; }
+    }
+
+    // Método para obtener el objeto que refleja el panel de sospechosos en pausa
+    public GameObject SuspectsPanelInPause
+    {
+        get { return suspectsPanelInPause; }
+    }
+
+    // Método para obtener el objeto que refleja la imagen del sospechoso 1
+    public Image SuspectImage1 
+    { 
+        get { return suspectImage1; } 
+    }
+
+    // Método para obtener el objeto que refleja la imagen del sospechoso 2
+    public Image SuspectImage2 
+    { 
+        get { return suspectImage2; } 
+    }
+
+    // Método para obtener el objeto que refleja la imagen del sospechoso 3
+    public Image SuspectImage3 
+    { 
+        get { return suspectImage3; } 
+    }
+
+    // Método para obtener el objeto que refleja la imagen del sospechoso 4
+    public Image SuspectImage4 
+    { 
+        get { return suspectImage4; } 
+    }
+
+    // Método para obtener el objeto que refleja la imagen del sospechoso 5
+    public Image SuspectImage5 
+    { 
+        get { return suspectImage5; } 
+    }
+
+    // Método para obtener el objeto que refleja la imagen del sospechoso 6
+    public Image SuspectImage6 
+    { 
+        get { return suspectImage6; } 
+    }
+
+    // Método para obtener el objeto que refleja la imagen del sospechoso 7
+    public Image SuspectImage7 
+    { 
+        get { return suspectImage7; } 
+    }
+
+    // Método para obtener el objeto que refleja la imagen del sospechoso 8
+    public Image SuspectImage8 
+    { 
+        get { return suspectImage8; } 
+    }
+
+    // Método para obtener una lista de los objetos de las imágenes de los sospechosos
+    public List<Image> SuspectImageList
+    {
+        get 
+        {
+            List<Image> suspectImageList = new List<Image>
+            {
+                SuspectImage1,
+                SuspectImage2,
+                SuspectImage3,
+                SuspectImage4,
+                SuspectImage5,
+                SuspectImage6,
+                SuspectImage7,
+                SuspectImage8
+            };
+
+            return suspectImageList; 
+        }
+    }
+
+    // Método para obtener el objeto que refleja el texto del sospechoso 1
+    public TMP_Text SuspectText1 
+    { 
+        get { return suspectText1; } 
+    }
+
+    // Método para obtener el objeto que refleja el texto del sospechoso 2
+    public TMP_Text SuspectText2 
+    { 
+        get { return suspectText2; } 
+    }
+
+    // Método para obtener el objeto que refleja el texto del sospechoso 3
+    public TMP_Text SuspectText3 
+    { 
+        get { return suspectText3; } 
+    }
+
+    // Método para obtener el objeto que refleja el texto del sospechoso 4
+    public TMP_Text SuspectText4 
+    { 
+        get { return suspectText4; } 
+    }
+
+    // Método para obtener el objeto que refleja el texto del sospechoso 5
+    public TMP_Text SuspectText5 
+    { 
+        get { return suspectText5; } 
+    }
+
+    // Método para obtener el objeto que refleja el texto del sospechoso 6
+    public TMP_Text SuspectText6 
+    { 
+        get { return suspectText6; } 
+    }
+
+    // Método para obtener el objeto que refleja el texto del sospechoso 7
+    public TMP_Text SuspectText7 
+    { 
+        get { return suspectText7; } 
+    }
+
+    // Método para obtener el objeto que refleja el texto del sospechoso 8
+    public TMP_Text SuspectText8 
+    { 
+        get { return suspectText8; } 
+    }
+
+    // Método para obtener una lista de los objetos de los textos de los sospechosos
+    public List<TMP_Text> SuspectTextsList
+    {
+        get 
+        {
+            List<TMP_Text> suspectSpritesList = new List<TMP_Text>
+            {
+                SuspectText1,
+                SuspectText2,
+                SuspectText3,
+                SuspectText4,
+                SuspectText5,
+                SuspectText6,
+                SuspectText7,
+                SuspectText8
+            };
+
+            return suspectSpritesList; 
+        }
+    }
+
     // Método para obtener el sprite 1 de la primera pista
     public Sprite FirstClueSprite1
     {
@@ -470,8 +815,33 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    // Método para obtener el objeto que refleja el gestor de audio
-    public GameObject AudioManager
+    // Método para obtener la textura necesaria del cursor por defecto
+    public Texture2D DefaultCursor
+    {
+        get { return defaultCursor; }
+    }
+
+    // Método para obtener la textura necesaria del cursor cuando puede interactuar con un elemento
+    public Texture2D InteractCursor
+    {
+        get { return interactCursor; }
+    }
+
+    // Método que efectua el cambio de cursor
+    public void SetCursor(Texture2D cursorTexture)
+    {
+        if (cursorTexture != null)
+        Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
+    }
+
+    // Método para obtener el sprite por defecto para una imagen que es desconocida
+    public Sprite DefaultSprite
+    {
+        get { return defaultSprite; }
+    }
+
+    // Método para obtener una lista de los sprites de los sospechosos
+     public GameObject AudioManager
     {
         get { return audioManager; }
     }

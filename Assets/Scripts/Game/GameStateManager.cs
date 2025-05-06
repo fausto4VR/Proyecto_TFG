@@ -10,17 +10,15 @@ public class GameStateManager : MonoBehaviour
     [Header("Variable Section")]
     [SerializeField] private string mainScene = "SampleScene";
 
-    // QUITAR ----------------------------------------------------------
-    [Header("QUITAR")]
-    public bool isLoadGame;
-    public bool isNewGame;
-    // -----------------------------------------------------------------
-
     // Contenedor de los textos cargados
     public GameTextDictionary gameText { get; private set; }
 
     // Contenedor de las conversaciones cargadas
     public GameConversationDictionary gameConversations { get; private set; }
+  
+    private bool isLoadGame;
+    private bool isNewGame;
+    private bool isGameStarted;  
 
     
     // En el Awake se define su comportamiento como singleton. Además se genera  la clave de encriptación y se cargan los 
@@ -45,21 +43,31 @@ public class GameStateManager : MonoBehaviour
         StoryStateManager.LoadGameStory();
     }
 
-    // QUITAR ----------------------------------------------------------
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.T))
-        {
-            LoadGameTexts();
-            StoryStateManager.LoadGameStory();
-        }        
-    }
-    // -----------------------------------------------------------------
-
     // Método para consultar la escena principal
     public string MainScene
     {
         get { return mainScene; }
+    }
+    
+    // Métodos para obtener y para cambiar si es una nueva partida
+    public bool IsNewGame
+    {
+        get { return isNewGame; }
+        set { isNewGame = value; }
+    }
+
+    // Métodos para obtener y para cambiar si es una partida cargada
+    public bool IsLoadGame
+    {
+        get { return isLoadGame; }
+        set { isLoadGame = value; }
+    }
+
+    // Métodos para obtener y para cambiar si se ha empezado una partida
+    public bool IsGameStarted
+    {
+        get { return isGameStarted; }
+        set { isGameStarted = value; }
     }
 
     // Método para guardar los datos
@@ -72,20 +80,22 @@ public class GameStateManager : MonoBehaviour
     }
 
     // Método para cargar los datos
-    public void LoadData()
+    public void LoadData(bool isNecesaryLoadScene)
     {
-        LoadGameData();
+        LoadGameData(isNecesaryLoadScene);
         LoadPuzzleData();
 
         // Evento que se dispara cuando la escena está cargada
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        if(isNecesaryLoadScene) SceneManager.sceneLoaded += OnSceneLoaded;
+        else LoadPlayerData();
         
         Debug.Log("Datos cargados");
     }
-    
+
     // Método para reiniciar los datos
     public void ResetData()
     {
+        if (GameLogicManager.Instance != null && GameLogicManager.Instance.Player != null)
         GameLogicManager.Instance.TemporalPlayerState = GameLogicManager.Instance.Player
             .GetComponent<PlayerLogicManager>().DefaultStateInitialized;
         
@@ -121,7 +131,7 @@ public class GameStateManager : MonoBehaviour
         bool isBadEnding = GameLogicManager.Instance.IsBadEnding;
         int endOpportunities = GameLogicManager.Instance.EndOpportunities;
 
-        GameData gameData = new GameData(sceneName, guilty, clues, storyPhase, knownClues, knownSuspects, 
+        GameData gameData = new GameData(isGameStarted, sceneName, guilty, clues, storyPhase, knownClues, knownSuspects, 
             knownTutorials, knownDialogues, isBadEnding, endOpportunities);
 
         SaveManager.SaveGameData(gameData);
@@ -136,7 +146,7 @@ public class GameStateManager : MonoBehaviour
     }
 
     // Método para cargar los datos y obtener los parámatros del juego
-    private void LoadGameData()
+    private void LoadGameData(bool isNecesaryLoadScene)
     {
         GameData gameData = SaveManager.LoadGameData();
 
@@ -150,7 +160,7 @@ public class GameStateManager : MonoBehaviour
         GameLogicManager.Instance.IsBadEnding = gameData.gameIsBadEnding;
         GameLogicManager.Instance.EndOpportunities = gameData.gameEndOpportunities;
 
-        SceneManager.LoadScene(gameData.gameScene);
+        if(isNecesaryLoadScene) SceneManager.LoadScene(gameData.gameScene);
     }
 
     // Método para cargar los datos y obtener los parámatros de los puzles
@@ -164,6 +174,12 @@ public class GameStateManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        LoadPlayerData();        
+    }
+
+    // Método para cargar los datos y obtener los parámatros del jugador
+    private void LoadPlayerData()
+    {
         PlayerData playerData = SaveManager.LoadPlayerData();
         GameObject player = GameLogicManager.Instance.Player;
 
@@ -203,6 +219,7 @@ public class GameStateManager : MonoBehaviour
     public class GameTextDictionary
     {
         public List<string> guiltyNames;
+        public List<ObjectiveInfo> objectivesInMenu;
         public TextPuzzle puzzle1;
         public TextPuzzle puzzle2;        
         public TextPuzzle puzzle3;
@@ -211,6 +228,15 @@ public class GameStateManager : MonoBehaviour
         public TextPuzzle puzzle6;
         public TextPuzzle puzzle7;
         public TextPuzzle puzzle8;
+    }
+
+    // Estructura de datos que representa el texto del objetico actual en el menú de pausa
+    [System.Serializable]
+    public class ObjectiveInfo
+    {
+        public string phase;
+        public string subphase;
+        public string objective;
     }
 
     // Estructura de datos que representa los textos asociados a un "puzzle"
@@ -290,6 +316,7 @@ public class GameStateManager : MonoBehaviour
     {
         public string phase;
         public string subphase;
+        public bool advanceStory;
         public List<DialogueLine> dialogue;
     }
 

@@ -70,7 +70,7 @@ public class PuzzleLogicManager : MonoBehaviour
     {
         // Esperar un frame para que no salte directamente 
         yield return null; 
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonUp(0));
 
         if (isSuccessResult)
         {

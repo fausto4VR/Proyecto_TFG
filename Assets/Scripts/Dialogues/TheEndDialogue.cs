@@ -21,7 +21,7 @@ public class TheEndDialogue : MonoBehaviour, IDialogueLogic
     // Corrutina para esperar a que el jugador quiera comenzar el diálogo
     private IEnumerator WaitUntilPlayerStartDialogue()
     {
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E) 
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E) 
             && GameLogicManager.Instance.CurrentStoryPhase.phaseName == StoryPhaseOption.Ending);
         yield return null;
 
@@ -52,7 +52,7 @@ public class TheEndDialogue : MonoBehaviour, IDialogueLogic
     // Corrutina para esperar a que el jugador quiera saltarse el diálogo una vez empezado
     private IEnumerator WaitToSkipDialogue()
     {
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.E));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         yield return null;
 
         if (GetComponent<DialogueManager>().CurrentConversationPhase != ConversationPhase.Ended)

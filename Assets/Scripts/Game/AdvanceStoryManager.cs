@@ -66,6 +66,8 @@ public class AdvanceStoryManager : MonoBehaviour
     // Método para avanzar el estado de la historia
     public void AdvanceStoryState()
     {
+        if(GetComponent<StoryPhaseDialogue>() != null) selectedSubphase = GetComponent<StoryPhaseDialogue>().AdvanceStoryPhase;
+
         if(GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent)
         {
             if(inspectDialogue != null)

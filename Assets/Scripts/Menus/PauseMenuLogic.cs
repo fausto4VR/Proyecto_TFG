@@ -4,437 +4,478 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Linq;
 
 public class PauseMenuLogic : MonoBehaviour
 {
-    [SerializeField] private GameObject briefcaseIconButton;
-    [SerializeField] private GameObject pauseMenuPanel;
-    [SerializeField] private TMP_Text objectiveBodyText;
-    [SerializeField, TextArea(4,5)] private string[] objectiveTextPhases;
-    [SerializeField] private GameObject afterSavePanel;
-    [SerializeField] private TMP_Text afterSaveText;
-    [SerializeField] private GameObject exitPanel;
-    [SerializeField] private GameObject cluesPanel;
-    [SerializeField] private Image firstClueImage;
-    [SerializeField] private Image secondClueImage;
-    [SerializeField] private Image thirdClueImage;
-    [SerializeField] private Sprite firstClueSprite1;    
-    [SerializeField] private Sprite firstClueSprite2;
-    [SerializeField] private Sprite secondClueSprite1;
-    [SerializeField] private Sprite secondClueSprite2;
-    [SerializeField] private Sprite thirdClueSprite1;
-    [SerializeField] private Sprite thirdClueSprite2;
-    [SerializeField] private Sprite defaultSprite;
-    [SerializeField] private TMP_Text firstClueText;
-    [SerializeField] private TMP_Text secondClueText;
-    [SerializeField] private TMP_Text thirdClueText;
-    [SerializeField] private GameObject suspectsPanel;
-    [SerializeField] private Image suspectImage1;
-    [SerializeField] private Sprite suspectSprite1;
-    [SerializeField] private TMP_Text suspectText1;
-    [SerializeField] private Image suspectImage2;
-    [SerializeField] private Sprite suspectSprite2;
-    [SerializeField] private TMP_Text suspectText2;
-    [SerializeField] private Image suspectImage3;
-    [SerializeField] private Sprite suspectSprite3;
-    [SerializeField] private TMP_Text suspectText3;
-    [SerializeField] private Image suspectImage4;
-    [SerializeField] private Sprite suspectSprite4;
-    [SerializeField] private TMP_Text suspectText4;
-    [SerializeField] private Image suspectImage5;
-    [SerializeField] private Sprite suspectSprite5;
-    [SerializeField] private TMP_Text suspectText5;
-    [SerializeField] private Image suspectImage6;
-    [SerializeField] private Sprite suspectSprite6;
-    [SerializeField] private TMP_Text suspectText6;
-    [SerializeField] private Image suspectImage7;
-    [SerializeField] private Sprite suspectSprite7;
-    [SerializeField] private TMP_Text suspectText7;
-    [SerializeField] private Image suspectImage8;
-    [SerializeField] private Sprite suspectSprite8;
-    [SerializeField] private TMP_Text suspectText8;
-    [SerializeField] private GameObject audioSourcesManager;
+    [Header("Variable Section")]
+    [SerializeField] private string menuSceneName = "MenuScene";
 
-    private bool isPanelShown;
-    private int lastStoryPhase;
-    private bool isAfterSavePanelShown;
-    private bool isExitPanelShown;
-    private bool isCluesPanelShown;
-    private bool isSuspectsPanelShown;
     private List<Image> suspectImages = new List<Image>();
     private List<Sprite> suspectSprites = new List<Sprite>();
     private List<TMP_Text> suspectTexts = new List<TMP_Text>();
-    private AudioSource pauseAudioSource;
+    private Coroutine selectCoroutine;
+    private Coroutine selectSoundCoroutine;
+    private Coroutine closePanelCoroutine;
+    private Coroutine closePanelSoundCoroutine;
+    private Coroutine closeOptionPanelCoroutine;
+    private Coroutine closeOptionSoundCoroutine;
+    private bool isOptionPanelShown;
+    private bool isSelectCoroutineRunning;
+    private bool isNecesaryGoToMainMenu;
+    
+    // REVISAR AUDIO
     private AudioSource buttonsAudioSource;
+    private AudioSource pauseAudioSource;
+
 
     void Start() 
-    {        
+    {
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;        
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
-        pauseAudioSource = audioSources[6];
         buttonsAudioSource = audioSources[1];
-
-        //lastStoryPhase = GameLogicManager.Instance.StoryPhaseAux; // QUITAR
-
-        suspectImages.Add(suspectImage1);
-        suspectImages.Add(suspectImage2);
-        suspectImages.Add(suspectImage3);
-        suspectImages.Add(suspectImage4);
-        suspectImages.Add(suspectImage5);
-        suspectImages.Add(suspectImage6);
-        suspectImages.Add(suspectImage7);
-        suspectImages.Add(suspectImage8);
-
-        suspectSprites.Add(suspectSprite1);
-        suspectSprites.Add(suspectSprite2);
-        suspectSprites.Add(suspectSprite3);
-        suspectSprites.Add(suspectSprite4);
-        suspectSprites.Add(suspectSprite5);
-        suspectSprites.Add(suspectSprite6);
-        suspectSprites.Add(suspectSprite7);
-        suspectSprites.Add(suspectSprite8);
-
-        suspectTexts.Add(suspectText1);
-        suspectTexts.Add(suspectText2);
-        suspectTexts.Add(suspectText3);
-        suspectTexts.Add(suspectText4);
-        suspectTexts.Add(suspectText5);
-        suspectTexts.Add(suspectText6);
-        suspectTexts.Add(suspectText7);
-        suspectTexts.Add(suspectText8);
+        pauseAudioSource = audioSources[6];
+        
+        suspectSprites = GameLogicManager.Instance.UIManager.SuspectSpritesList;
+        suspectImages = GameLogicManager.Instance.UIManager.SuspectImageList;
+        suspectTexts = GameLogicManager.Instance.UIManager.SuspectTextsList;
     }
 
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.I))
         {
-            DisplayMenuPanel();
-        }
-
-        // QUITAR AUX
-        // if(lastStoryPhase + 1 == GameLogicManager.Instance.StoryPhaseAux)
-        if(lastStoryPhase + 1 == 100)
-        {
-            if(lastStoryPhase < objectiveTextPhases.Length)
+            if (GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is IdleState)
             {
-                objectiveBodyText.text = objectiveTextPhases[lastStoryPhase];
-                lastStoryPhase++;
-            }
-        }
-
-        if(isPanelShown && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)))
-        {
-            DisplayCluesBoard();
-        }
-
-        if(isPanelShown && (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)))
-        {
-            DisplaySuspectsBoard();
-        }
-
-        if(isPanelShown && (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)))
-        {
-            SaveGame();
-        }
-
-        if(isPanelShown && (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)))
-        {
-            GoToMainMenuPanel();
-        }
-
-        if(isAfterSavePanelShown && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
-        {
-            buttonsAudioSource.Play();
-            afterSavePanel.SetActive(false);
-            isAfterSavePanelShown = false;
-        }
-
-        if(isExitPanelShown && Input.GetKeyDown(KeyCode.Y))
-        {
-            GoToMainMenu();
-        }
-
-        if(isExitPanelShown && Input.GetKeyDown(KeyCode.N))
-        {
-            GoBackFromExitPanel();
-        }
-
-        if(isCluesPanelShown && Input.GetKeyDown(KeyCode.Space))
-        {
-            GoBackFromCluesPanel();
-        }
-
-        if(isSuspectsPanelShown && Input.GetKeyDown(KeyCode.Space))
-        {
-            GoBackFromSuspectsPanel();
-        }
-    }
-
-    public void DisplayMenuPanel()
-    {
-        if(pauseMenuPanel.activeInHierarchy == true && isPanelShown)
-        {
-            pauseAudioSource.Play();
-
-            pauseMenuPanel.SetActive(false);
-            briefcaseIconButton.SetActive(true);
-            isPanelShown = false;
-            GetComponent<PlayerMovement>().isPlayerInPause = false;
-
-            afterSavePanel.SetActive(false);
-            isAfterSavePanelShown = false;
-
-            exitPanel.SetActive(false);
-            isExitPanelShown = false;
-            
-            cluesPanel.SetActive(false);
-            isCluesPanelShown = false;
-
-            suspectsPanel.SetActive(false);
-            isSuspectsPanelShown = false;
-        }
-        else if(pauseMenuPanel.activeInHierarchy == false && !isPanelShown)
-        {
-            if(!GetComponent<PlayerMovement>().isPlayerTalking && !GetComponent<PlayerMovement>().isPlayerInspecting 
-                && !GetComponent<PlayerMovement>().isPlayerDoingTutorial)
-            {
-                pauseAudioSource.Play();
-                
-                pauseMenuPanel.SetActive(true);
-                briefcaseIconButton.SetActive(false);
-                isPanelShown = true;                
-                GetComponent<PlayerMovement>().isPlayerInPause = true;
+                DisplayMenuPanel(true);
             }
         }
     }
 
-    public void SaveGame()
+    // Método para mostrar el panel de pausa donde se puede seleccionar entre diferentes opciones
+    public void DisplayMenuPanel(bool showPanel)
     {
-        if(isPanelShown && !isAfterSavePanelShown && !isExitPanelShown && !isCluesPanelShown && !isSuspectsPanelShown)
+        pauseAudioSource.Play();
+
+        if (showPanel)
+        {
+            PlayerEvents.StartShowingInformation();
+
+            UpdateObjectiveText();
+            GameLogicManager.Instance.UIManager.BriefcaseIconButton.SetActive(false);
+            GameLogicManager.Instance.UIManager.PausePanel.SetActive(true);
+
+            closePanelCoroutine = StartCoroutine(WaitUntilPlayerClosePanel());
+            selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
+        }
+        else
+        {
+            closePanelSoundCoroutine = StartCoroutine(WaitForSoundAndClosePanel());
+        }
+    }
+
+    // Método para actualizar el texto de objetivos en el menú de pausa
+    private void UpdateObjectiveText()
+    {
+        string validSubphase = GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString();
+
+        GameLogicManager.Instance.UIManager.ObjectiveTextInPause.text = GameStateManager.Instance.gameText.objectivesInMenu
+            .FirstOrDefault(text => $"{text.phase}.{text.subphase}" == validSubphase)?.objective 
+            ?? GameStateManager.Instance.gameText.objectivesInMenu
+            .FirstOrDefault(text => $"{text.phase}.{text.subphase}" == "Default.Default")?.objective;
+    }
+
+    // Corrutina para esperar a que el jugador quiera cerrar el panel de pausa
+    private IEnumerator WaitUntilPlayerClosePanel()
+    {
+        yield return null;
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.I));
+        yield return null;
+        
+        DisplayMenuPanel(false);
+    }
+
+    // Corrutina para esperar a que el jugador elija una de las opciones disponibles
+    private IEnumerator WaitUntilPlayerSelectOption()
+    {
+        isSelectCoroutineRunning = true;
+        bool isOptionChosen = false;
+
+        while (!isOptionChosen)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                isOptionChosen = true;
+                isSelectCoroutineRunning = false;
+                HandleOptionSelected(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                isOptionChosen = true;
+                isSelectCoroutineRunning = false;
+                HandleOptionSelected(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+            {
+                isOptionChosen = true;
+                isSelectCoroutineRunning = false;
+                HandleOptionSelected(3);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+            {
+                isOptionChosen = true;
+                isSelectCoroutineRunning = false;
+                HandleOptionSelected(4);
+            }
+
+            yield return null;
+        }
+    }
+
+    // Método para seleccionar la opción del menú de pausa por parte del jugador
+    public void HandleOptionSelected(int option)
+    {
+        if (!isOptionPanelShown)
         {
             buttonsAudioSource.Play();
-            isAfterSavePanelShown = true;
+
+            if (selectCoroutine != null) StopCoroutine(selectCoroutine);
+
+            selectSoundCoroutine = StartCoroutine(WaitForSoundAndSelectOption(option));            
+        }
+        else
+        {
+            if (!isSelectCoroutineRunning)
+            {
+                selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
+            }
+        }      
+    }    
+
+    // Corrutina para esperar que suene el sonido del botón y se selecciona la opción elejida
+    private IEnumerator WaitForSoundAndSelectOption(int option)
+    {
+        // Por si se quisiera esperar a que suene el audio del botón entero
+        // yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        yield return null;
+
+        isOptionPanelShown = true;
+
+        if (option == 1) DisplayCluesBoard(true);
+        else if (option == 2) DisplaySuspectsBoard(true);
+        else if (option == 3) SaveGame(true);
+        else if (option == 4) DisplayGoToMainMenuPanel(true);
+        else Debug.LogError("Ha habido un error al elegir una de las opciones en el menú de pausa.");
+    }
+
+    // Método para mostrar el panel de pistas
+    private void DisplayCluesBoard(bool showPanel)
+    {
+        if (showPanel)
+        {
+            UnlockClues();
+            GameLogicManager.Instance.UIManager.OutPanelOptions.SetActive(true);
+            GameLogicManager.Instance.UIManager.CluesPanelInPause.SetActive(true);
+            closeOptionPanelCoroutine = StartCoroutine(WaitUntilPlayerCloseOptionPanel(1));
+        }
+        else
+        {
+            GameLogicManager.Instance.UIManager.OutPanelOptions.SetActive(false);
+            GameLogicManager.Instance.UIManager.CluesPanelInPause.SetActive(false);
+            isOptionPanelShown = false;
+            selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
+        }
+    }
+
+    // Método para desbloquear las pistas que se pueden mostrar
+    private void UnlockClues()
+    {
+        if (GameLogicManager.Instance.KnownClues[0])
+        {
+            GameLogicManager.Instance.UIManager.FirstClueText.text = GameLogicManager.Instance.Clues[0];
+
+            if (GameLogicManager.Instance.FirstClueGroup1.Contains(GameLogicManager.Instance.Guilty))
+            {
+                GameLogicManager.Instance.UIManager.FirstClueImage.sprite = GameLogicManager.Instance.UIManager.FirstClueSprite1;
+            }
+            else if (GameLogicManager.Instance.FirstClueGroup2.Contains(GameLogicManager.Instance.Guilty))
+            {
+                GameLogicManager.Instance.UIManager.FirstClueImage.sprite = GameLogicManager.Instance.UIManager.FirstClueSprite2;
+            }
+        }
+        else
+        {
+            GameLogicManager.Instance.UIManager.FirstClueText.text = "Desconocido";
+            GameLogicManager.Instance.UIManager.FirstClueImage.sprite = GameLogicManager.Instance.UIManager.DefaultSprite;
+        }
+
+        if (GameLogicManager.Instance.KnownClues[1])
+        {
+            GameLogicManager.Instance.UIManager.SecondClueText.text = GameLogicManager.Instance.Clues[1];
+
+            if (GameLogicManager.Instance.SecondClueGroup1.Contains(GameLogicManager.Instance.Guilty))
+            {
+                GameLogicManager.Instance.UIManager.SecondClueImage.sprite = GameLogicManager.Instance.UIManager.SecondClueSprite1;
+            }
+            else if (GameLogicManager.Instance.SecondClueGroup2.Contains(GameLogicManager.Instance.Guilty))
+            {
+                GameLogicManager.Instance.UIManager.SecondClueImage.sprite = GameLogicManager.Instance.UIManager.SecondClueSprite2;
+            }
+        }
+        else
+        {
+            GameLogicManager.Instance.UIManager.SecondClueText.text = "Desconocido";
+            GameLogicManager.Instance.UIManager.SecondClueImage.sprite = GameLogicManager.Instance.UIManager.DefaultSprite;
+        }
+
+        if (GameLogicManager.Instance.KnownClues[2])
+        {
+            GameLogicManager.Instance.UIManager.ThirdClueText.text = GameLogicManager.Instance.Clues[2];
+
+            if (GameLogicManager.Instance.ThirdClueGroup1.Contains(GameLogicManager.Instance.Guilty))
+            {
+                GameLogicManager.Instance.UIManager.ThirdClueImage.sprite = GameLogicManager.Instance.UIManager.ThirdClueSprite1;
+            }
+            else if (GameLogicManager.Instance.ThirdClueGroup2.Contains(GameLogicManager.Instance.Guilty))
+            {
+                GameLogicManager.Instance.UIManager.ThirdClueImage.sprite = GameLogicManager.Instance.UIManager.ThirdClueSprite2;
+            }
+        }
+        else
+        {
+            GameLogicManager.Instance.UIManager.ThirdClueText.text = "Desconocido";
+            GameLogicManager.Instance.UIManager.ThirdClueImage.sprite = GameLogicManager.Instance.UIManager.DefaultSprite;
+        }
+    }
+
+    // Método para mostrar el panel de sospechosos
+    private void DisplaySuspectsBoard(bool showPanel)
+    {
+        if (showPanel)
+        {
+            UnlockSuspects();
+            GameLogicManager.Instance.UIManager.OutPanelOptions.SetActive(true);
+            GameLogicManager.Instance.UIManager.SuspectsPanelInPause.SetActive(true);
+            closeOptionPanelCoroutine = StartCoroutine(WaitUntilPlayerCloseOptionPanel(2));
+        }
+        else
+        {
+            GameLogicManager.Instance.UIManager.OutPanelOptions.SetActive(false);
+            GameLogicManager.Instance.UIManager.SuspectsPanelInPause.SetActive(false);
+            isOptionPanelShown = false;
+            selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
+        }
+    }
+
+    // Método para desbloquear los sospechosos que se pueden mostrar
+    private void UnlockSuspects()
+    {
+        for (int i = 0; i < GameLogicManager.Instance.GuiltyNames.Count(); i++)
+        {
+            if (GameLogicManager.Instance.KnownSuspects[i])
+            {
+                suspectTexts[i].text = GameLogicManager.Instance.GuiltyNames[i];
+                suspectImages[i].sprite = suspectSprites[i];
+            }
+            else
+            {
+                suspectTexts[i].text = "Desconocido";
+                suspectImages[i].sprite = GameLogicManager.Instance.UIManager.DefaultSprite;
+            }
+        }
+    }
+
+    // Método para guardar la partida
+    private void SaveGame(bool showPanel)
+    {
+        if (showPanel)
+        {
             GameStateManager.Instance.SaveData();
-            afterSavePanel.SetActive(true);
             GameData gameData = SaveManager.LoadGameData();
 
-            if(gameData != null)
-            {
-                // QUITAR AUX
-                // if(GameLogicManager.Instance.StoryPhaseAux == gameData.gameStoryPhaseAux)
-                if(GameLogicManager.Instance.CurrentStoryPhase == gameData.gameStoryPhase.ToStoryPhase())
-                {
-                    afterSaveText.text = "La partida se ha guardado correctamente.";
-                }
-                else
-                {
-                    afterSaveText.text = "Ha habido un error al guardar la partida. Inténtalo otra vez.";
-                }
-            }
+            Debug.Log(GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString());
+            Debug.Log(gameData.gameStoryPhase.ToStoryPhase().GetPhaseToString());
+
+            if(gameData != null && GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString() 
+                == gameData.gameStoryPhase.ToStoryPhase().GetPhaseToString())
+            GameLogicManager.Instance.UIManager.AfterSaveText.text = "La partida se ha guardado correctamente.";
+
             else
-            {
-                afterSaveText.text = "Ha habido un error al guardar la partida. Inténtalo otra vez.";
-            }
-        }
-        else if(isAfterSavePanelShown)
-        {
-            buttonsAudioSource.Play();
-            afterSavePanel.SetActive(false);
-            isAfterSavePanelShown = false;
-        }
-    }
-
-    public void GoToMainMenuPanel()
-    {
-        if(isPanelShown && !isAfterSavePanelShown && !isExitPanelShown && !isCluesPanelShown && !isSuspectsPanelShown)
-        {
-            buttonsAudioSource.Play();
-            isExitPanelShown = true;            
-            exitPanel.SetActive(true);
-        }
-        else if(isExitPanelShown)
-        {
-            GoBackFromExitPanel();
-        }
-    }
-
-    public void GoToMainMenu()
-    {        
-        buttonsAudioSource.Play();        
-        StartCoroutine(WaitForSoundAndGoMenu()); 
-    }
-
-    public void GoBackFromExitPanel()
-    {        
-        buttonsAudioSource.Play();
-        isExitPanelShown = false;            
-        exitPanel.SetActive(false);
-    }
-
-    public void DisplayCluesBoard()
-    {
-        if(isPanelShown && !isAfterSavePanelShown && !isExitPanelShown && !isCluesPanelShown && !isSuspectsPanelShown)
-        {
+            GameLogicManager.Instance.UIManager.AfterSaveText.text = "Ha habido un error al guardar la partida. Inténtalo otra vez.";
             
+            GameLogicManager.Instance.UIManager.AfterSavePanel.SetActive(true);
+            GameLogicManager.Instance.UIManager.AfterSaveOutPanel.SetActive(true);
+            closeOptionPanelCoroutine = StartCoroutine(WaitUntilPlayerCloseOptionPanel(3));
+        }
+        else
+        {
+            GameLogicManager.Instance.UIManager.AfterSavePanel.SetActive(false);
+            GameLogicManager.Instance.UIManager.AfterSaveOutPanel.SetActive(false);
+            isOptionPanelShown = false;
+            selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
+        }
+    }
+
+    // Método para mostrar el panel de ir al menú principal
+    private void DisplayGoToMainMenuPanel(bool showPanel)
+    {
+        if (showPanel)
+        {
+            GameLogicManager.Instance.UIManager.OutPanelOptions.SetActive(true);
+            GameLogicManager.Instance.UIManager.ExitPanel.SetActive(true);
+            closeOptionPanelCoroutine = StartCoroutine(WaitUntilPlayerCloseOptionPanel(4));
+        }
+        else
+        {
+            GameLogicManager.Instance.UIManager.OutPanelOptions.SetActive(false);
+            GameLogicManager.Instance.UIManager.ExitPanel.SetActive(false);
+            isOptionPanelShown = false;
+            selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
+        }
+    }
+
+    // Corrutina para esperar a que el jugador quiera cerrar el panel de opciones correspondiente
+    private IEnumerator WaitUntilPlayerCloseOptionPanel(int option)
+    {
+        bool isOptionChosen = false;
+
+        while (!isOptionChosen)
+        {
+            if (option == 1 && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1) 
+                || Input.GetKeyDown(KeyCode.Space)))
+            {
+                isOptionChosen = true;
+                HandleOptionReturn(1);
+            }
+            else if (option == 2 && (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2) 
+                || Input.GetKeyDown(KeyCode.Space)))
+            {
+                isOptionChosen = true;
+                HandleOptionReturn(2);
+            }
+            else if (option == 3 && (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3) 
+                || Input.GetKeyDown(KeyCode.Space)))
+            {
+                isOptionChosen = true;
+                HandleOptionReturn(3);
+            }
+            else if (option == 4 && (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4) 
+                || Input.GetKeyDown(KeyCode.N)))
+            {
+                isOptionChosen = true;
+                HandleOptionReturn(4);
+            }
+            else if (option == 4 && Input.GetKeyDown(KeyCode.Y))
+            {
+                isOptionChosen = true;
+                HandleOptionReturn(5);
+            }
+
+            yield return null;
+        }
+    }
+
+    // Método para volver al panel del menú desde la opción elejida anteriormente
+    public void HandleOptionReturn(int option)
+    {
+        if (isOptionPanelShown)
+        {
             buttonsAudioSource.Play();
-            isCluesPanelShown = true;            
-            cluesPanel.SetActive(true);
-            UnlockFirstClue();
-            UnlockSecondClue();
-            UnlockThirdClue();
-        }
-        else if(isCluesPanelShown)
-        {
-            GoBackFromCluesPanel();
-        }
-    }
 
-    public void GoBackFromCluesPanel()
-    {        
-        buttonsAudioSource.Play();
-        isCluesPanelShown = false;            
-        cluesPanel.SetActive(false);
-    }
+            if (closeOptionPanelCoroutine != null) StopCoroutine(closeOptionPanelCoroutine);
 
-    private void UnlockFirstClue()
-    {
-        if(!string.IsNullOrEmpty(GameLogicManager.Instance.Clues[0]))
-        {
-            if(GameLogicManager.Instance.Clues[0] == "Tiene los ojos marrones")
-            {
-                firstClueImage.sprite = firstClueSprite1;
-                firstClueText.text = "Tiene los ojos marrones";
-            }
-            else if(GameLogicManager.Instance.Clues[0] == "Tiene los ojos verdes")
-            {
-                firstClueImage.sprite = firstClueSprite2;
-                firstClueText.text = "Tiene los ojos verdes";
-            }
-            else
-            {
-                firstClueImage.sprite = defaultSprite;
-                firstClueText.text = "Desconocido";
-            }
+            closeOptionSoundCoroutine = StartCoroutine(WaitForSoundAndReturnOption(option)); 
         }
         else
         {
-            firstClueImage.sprite = defaultSprite;
-            firstClueText.text = "Desconocido";
+            Debug.LogError("Ha habido un error al intentar cerrar un panel de opción.");
+
+            if (!isSelectCoroutineRunning)
+            {
+                selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
+            }
         }
     }
 
-    private void UnlockSecondClue()
+    // Corrutina para esperar que suene el sonido del botón y se selecciona la opción elejida
+    private IEnumerator WaitForSoundAndReturnOption(int option)
     {
-        if(!string.IsNullOrEmpty(GameLogicManager.Instance.Clues[1]))
-        {
-            if(GameLogicManager.Instance.Clues[1] == "Mechón de pelo negro")
-            {
-                secondClueImage.sprite = secondClueSprite1;
-                secondClueText.text = "Mechón de pelo negro";
-            }
-            else if(GameLogicManager.Instance.Clues[1] == "Mechón de pelo rubio")
-            {
-                secondClueImage.sprite = secondClueSprite2;
-                secondClueText.text = "Mechón de pelo rubio";
-            }
-            else
-            {
-                secondClueImage.sprite = defaultSprite;
-                secondClueText.text = "Desconocido";
-            }
-        }
-        else
-        {
-            secondClueImage.sprite = defaultSprite;
-            secondClueText.text = "Desconocido";
-        }
+        // Por si se quisiera esperar a que suene el audio del botón entero
+        // yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+        yield return null;
+
+        if (option == 1) DisplayCluesBoard(false);
+        else if (option == 2) DisplaySuspectsBoard(false);
+        else if (option == 3) SaveGame(false);
+        else if (option == 4) DisplayGoToMainMenuPanel(false);        
+        else if (option == 5) GoToMainMenu();
+        else Debug.LogError("Ha habido un error a la hora de cerrar un panel de las opciones en el menú de pausa.");
     }
 
-    private void UnlockThirdClue()
+    // Método para indicar que hay que ir al menú principal
+    private void GoToMainMenu()
     {
-        if(!string.IsNullOrEmpty(GameLogicManager.Instance.Clues[2]))
-        {
-            if(GameLogicManager.Instance.Clues[2] == "Tiene una cicatriz")
-            {
-                thirdClueImage.sprite = thirdClueSprite1;
-                thirdClueText.text = "Tiene una cicatriz";
-            }
-            else if(GameLogicManager.Instance.Clues[2] == "Tiene un pendiente")
-            {
-                thirdClueImage.sprite = thirdClueSprite2;
-                thirdClueText.text = "Tiene un pendiente";
-            }
-            else
-            {
-                thirdClueImage.sprite = defaultSprite;
-                thirdClueText.text = "Desconocido";
-            }
-        }
-        else
-        {
-            thirdClueImage.sprite = defaultSprite;
-            thirdClueText.text = "Desconocido";
-        }
+        isNecesaryGoToMainMenu = true;
+        closePanelSoundCoroutine = StartCoroutine(WaitForSoundAndClosePanel());
     }
 
-    public void DisplaySuspectsBoard()
+    // Corrutina para esperar que suene el sonido del botón y se cierre el panel de pausa
+    private IEnumerator WaitForSoundAndClosePanel()
     {
-        if(isPanelShown && !isAfterSavePanelShown && !isExitPanelShown && !isCluesPanelShown && !isSuspectsPanelShown)
-        {            
-            buttonsAudioSource.Play();
-            isSuspectsPanelShown = true;            
-            suspectsPanel.SetActive(true);
-            UnlockSuspect();
-        }
-        else if(isSuspectsPanelShown)
+        // Por si se quisiera esperar a que suene el audio del menú de pausa entero
+        // yield return new WaitForSeconds(pauseAudioSource.clip.length);
+        yield return null;
+
+        GameLogicManager.Instance.UIManager.OutPanelOptions.SetActive(false);
+        GameLogicManager.Instance.UIManager.CluesPanelInPause.SetActive(false);
+        GameLogicManager.Instance.UIManager.SuspectsPanelInPause.SetActive(false);
+        GameLogicManager.Instance.UIManager.AfterSavePanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.AfterSaveOutPanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.ExitPanel.SetActive(false);
+
+        GameLogicManager.Instance.UIManager.PausePanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.BriefcaseIconButton.SetActive(true);
+
+        PlayerEvents.FinishShowingInformation();
+
+        isOptionPanelShown = false;
+
+        if (selectCoroutine != null)
         {
-            GoBackFromSuspectsPanel();
+            StopCoroutine(selectCoroutine);
+            selectCoroutine = null;
         }
-    }
 
-    public void GoBackFromSuspectsPanel()
-    {        
-        buttonsAudioSource.Play();
-        isSuspectsPanelShown = false;            
-        suspectsPanel.SetActive(false);
-    }
-
-    public void UnlockSuspect()
-    {
-        for(int i=0; i<GameLogicManager.Instance.GuiltyNames.Count; i++)
+        if (selectSoundCoroutine != null)
         {
-            if(GameLogicManager.Instance.KnownSuspects[i])
-            {
-                suspectImages[i].sprite = suspectSprites[i];
-                suspectTexts[i].text = GameLogicManager.Instance.GuiltyNames[i];
-            }
-            else
-            {
-                suspectImages[i].sprite = defaultSprite;
-                suspectTexts[i].text = "Desconocido";
-            }
+            StopCoroutine(selectSoundCoroutine);
+            selectSoundCoroutine = null;
         }
-    }
-    private IEnumerator WaitForSoundAndGoMenu()
-    {
-        yield return new WaitForSeconds(buttonsAudioSource.clip.length);
-        
-        pauseMenuPanel.SetActive(false);
-        briefcaseIconButton.SetActive(true);
-        isPanelShown = false;
-        GetComponent<PlayerMovement>().isPlayerInPause = false;
 
-        afterSavePanel.SetActive(false);
-        isAfterSavePanelShown = false;
+        if (closePanelCoroutine != null)
+        {
+            StopCoroutine(closePanelCoroutine);
+            closePanelCoroutine = null;
+        }
 
-        exitPanel.SetActive(false);
-        isExitPanelShown = false;
-            
-        cluesPanel.SetActive(false);
-        isCluesPanelShown = false;
+        if (closePanelSoundCoroutine != null)
+        {
+            StopCoroutine(closePanelSoundCoroutine);
+            closePanelSoundCoroutine = null;
+        }
 
-        suspectsPanel.SetActive(false);
-        isSuspectsPanelShown = false;
-              
-        SceneManager.LoadScene("MenuScene");
+        if (closeOptionPanelCoroutine != null)
+        {
+            StopCoroutine(closeOptionPanelCoroutine);
+            closeOptionPanelCoroutine = null;
+        }
+
+        if (closeOptionSoundCoroutine != null)
+        {
+            StopCoroutine(closeOptionSoundCoroutine);
+            closeOptionSoundCoroutine = null;
+        }
+
+        if (isNecesaryGoToMainMenu) SceneManager.LoadScene(menuSceneName);
     }
 }

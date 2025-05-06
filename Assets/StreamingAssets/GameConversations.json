@@ -217,6 +217,7 @@
                 {
                     "phase": "Prologue",
                     "subphase": "Prologue Beginning",
+                    "advanceStory": true,
                     "dialogue":
                     [
                         {
@@ -234,8 +235,25 @@
                     ]
                 },
                 {
+                    "phase": "Puzzle1",
+                    "subphase": "Puzzle1 Beginning",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Claudia",
+                            "line": "Ya te dije mi nombre antes. No habrás vuelto para preguntármelo otra vez, ¿no?"
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Para nada."
+                        }
+                    ]
+                },
+                {
                     "phase": "Ending",
                     "subphase": "Ending Beginning",
+                    "advanceStory": false,
                     "dialogue":
                     [
                         {
@@ -265,6 +283,7 @@
                 {
                     "phase": "Ending",
                     "subphase": "Ending Beginning",
+                    "advanceStory": false,
                     "dialogue":
                     [
                         {

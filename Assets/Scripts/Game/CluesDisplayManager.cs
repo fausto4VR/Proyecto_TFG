@@ -68,12 +68,12 @@ public class CluesDisplayManager : MonoBehaviour
         string clueTextString = "Has desbloqueado la primera pista: \n";
         clueTextString += GameLogicManager.Instance.Clues[0];
 
-        if(clueTextString.Contains("Tiene los ojos marrones"))
+        if (GameLogicManager.Instance.FirstClueGroup1.Contains(GameLogicManager.Instance.Guilty))
         {
             GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.FirstClueSprite1;
 
         }
-        else if(clueTextString.Contains("Tiene los ojos verdes"))
+        else if (GameLogicManager.Instance.FirstClueGroup2.Contains(GameLogicManager.Instance.Guilty))
         {
             GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.FirstClueSprite2;
 
@@ -88,16 +88,13 @@ public class CluesDisplayManager : MonoBehaviour
         string clueTextString = "Has desbloqueado la segunda pista: \n";
         clueTextString += GameLogicManager.Instance.Clues[1];
 
-        if(clueTextString.Contains("Mechón de pelo negro"))
+        if (GameLogicManager.Instance.SecondClueGroup1.Contains(GameLogicManager.Instance.Guilty))
         {
             GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.SecondClueSprite1;
-;
-
         }
-        else if(clueTextString.Contains("Mechón de pelo rubio"))
+        else if (GameLogicManager.Instance.SecondClueGroup2.Contains(GameLogicManager.Instance.Guilty))
         {
             GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.SecondClueSprite2;
-;
         }
 
         GameLogicManager.Instance.UIManager.ClueText.text = clueTextString;
@@ -109,12 +106,12 @@ public class CluesDisplayManager : MonoBehaviour
         string clueTextString = "Has desbloqueado la tercera pista: \n";
         clueTextString += GameLogicManager.Instance.Clues[2];
 
-        if(clueTextString.Contains("Tiene una cicatriz"))
+        if (GameLogicManager.Instance.ThirdClueGroup1.Contains(GameLogicManager.Instance.Guilty))
         {
             GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.ThirdClueSprite1;
 
         }
-        else if(clueTextString.Contains("Tiene un pendiente"))
+        else if (GameLogicManager.Instance.ThirdClueGroup2.Contains(GameLogicManager.Instance.Guilty))
         {
             GameLogicManager.Instance.UIManager.ClueImage.sprite = GameLogicManager.Instance.UIManager.ThirdClueSprite2;
         }
@@ -126,7 +123,7 @@ public class CluesDisplayManager : MonoBehaviour
     private IEnumerator WaitForInputToClosePanel()
     {        
         yield return new WaitForSeconds(waitingTimeToClose);
-        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.E));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonUp(0) || Input.GetKeyDown(KeyCode.E));
         PlayerEvents.FinishShowingInformation();
         GameLogicManager.Instance.UIManager.CluePanel.SetActive(false);
     }

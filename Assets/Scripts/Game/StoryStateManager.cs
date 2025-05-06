@@ -219,6 +219,13 @@ public class StoryPhase
         subphaseObjectNames = new List<string>();
     }
 
+    // Método para obtener un string de la fase en formato [fase].[subfase]
+    public string GetPhaseToString()
+    {
+        string phaseString = $"{phaseName}.{currentSubphase.subphaseName}";
+        return phaseString;
+    }
+
     // Método para avanzar a la siguiente subfase dentro de esta fase
     public void NextStorySubphase(string objectName)
     {

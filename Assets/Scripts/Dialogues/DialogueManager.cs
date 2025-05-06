@@ -138,8 +138,29 @@ public class DialogueManager : MonoBehaviour
             || currentConversationType == ConversationType.InspectDialogue)
         GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
 
+        // Si es un diálogo del tipo fase de la historia se comprueba si se hace falta avanzar la historia
+        if(currentConversationType == ConversationType.StoryPhaseDialogueConversation || 
+            currentConversationType == ConversationType.StoryPhaseDialogueTrigger)
+        {
+            // Se hace avanzar la historia cuando sea necesario
+            if(storyPhaseDialogue.IsAdvanceStory)
+            {
+                if(GetComponent<AdvanceStoryManager>() != null)
+                {
+                    GetComponent<AdvanceStoryManager>().AdvanceStoryState();
+                }
+                else
+                {
+                    Debug.LogError("No existe el componente necesario para avanzar la historia.");
+                }
+                
+                storyPhaseDialogue.IsAdvanceStory = false;
+            }
+
+            PlayerEvents.FinishTalkingWithoutClue();
+        }
         // Si es un diálogo del tipo inspección se comprueba si se hace falta avanzar la historia o mostrar la pista
-        if(currentConversationType == ConversationType.InspectDialogue)
+        else if(currentConversationType == ConversationType.InspectDialogue)
         {
             // Se hace avanzar la historia cuando sea necesario
             if(inspectDialogue.IsAdvanceStory)
@@ -310,16 +331,14 @@ public class DialogueManager : MonoBehaviour
 
             if (playerState == PlayerStatePhase.Inspection)
             {
-                if (dialogueMark.activeSelf)
-                    dialogueMark.SetActive(false);
+                if (dialogueMark.activeSelf) dialogueMark.SetActive(false);
             }
-            else
+            else if (playerState == PlayerStatePhase.Idle)
             {
-                if (!dialogueMark.activeSelf)
-                    dialogueMark.SetActive(true);
+                if (!dialogueMark.activeSelf) dialogueMark.SetActive(true);
             }
 
-            yield return null; // Espera al siguiente frame
+            yield return null;
         }
     }
 
