@@ -37,16 +37,6 @@ public class PuzzleLogicManager : MonoBehaviour
         SelectPuzzleData();
     }
 
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            string supportsContent = string.Join(", ", puzzleSupports);
-            Debug.Log("Puzzle Supports: " + supportsContent);
-            Debug.Log("Puzzle Points: " + puzzlePoints);
-        }
-    }
-
     // Método para consultar la lista de ayudas
     public bool[] PuzzleSupports
     {

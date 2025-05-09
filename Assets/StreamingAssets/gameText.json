@@ -13,6 +13,13 @@
             "objective": "Acabas de empezar."
         }
     ],
+    "puzzle0": 
+    {
+        "puzzleStatementText": "",
+        "firstSupportText": "",
+        "secondSupportText": "",
+        "thirdSupportText": ""
+    },
     "puzzle1": 
     {
         "puzzleStatementText": "Parece que en la nota hecha por la víctima no se puede ver ni el principio ni el final de lo que había escrito. Lo único que se distingue es una palabra. Por lo visto, ha probado varios términos hasta que ha conseguido encontrar lo que quería escribir.\n\nHe descubierto que hay un patrón claro entre todos los intentos que ha hecho, pero aún así no logro ver la palabra que estaba buscando. ¿Cuál podrá ser?\n\nEl patrón que he pensado me dice que una letra del abecedario puede aparecer o no en la palabra final. En función de esto, cada letra se presenta de manera diferente: \n\n- Si la letra sale tachada no está presente en la palabra final.\n- Si la letra sale rodeada por un círculo está presente en la palabra final pero no en su posición correcta.\n- Si la letra aparece sin nada está presente en la palabra final y en su posición.\n\nAdemás, en algunas letras no se han dibujado bien al hacer la transcripción y puede que falte una o dos líneas. Aún así, debería ser capaz de encontrar la palabra que quería escribir la víctima.",
@@ -22,45 +29,45 @@
     },
     "puzzle2": 
     {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
+        "puzzleStatementText": "Se ve justo encima del péndulo una placa que dice:\n\n“El reloj presenta tres manecillas para marcar la hora, los minutos y los segundos. Estas son el horario, el minutero y el segundero, respectivamente. Además, tenga en cuenta que para un correcto mantenimiento del reloj, el mecanismo de seguridad solo permite su apertura una vez al día, cuando las manecillas están en una posición concreta que cumple las siguientes condiciones:\n\n1) El horario y el minutero deben señalar dos números, que, combinados, contengan mínimo los tres dígitos romanos: I, V y X.\n2) El minutero siempre se encuentra debajo del horario.\n3) La suma de los números romanos que indican el horario y el minutero debe dar como resultado un número impar.\n4) Las manecillas del horario y el minutero forman siempre un ángulo mayor a 90 grados.\n5) Los números romanos señalados por las tres manecillas deben tener una cantidad diferente de dígitos cada uno.\n6) El segundero se encuentra en el ángulo más pequeño que forman el horario y el minutero.\n7) El segundero no tiene ninguna otra manecilla señalando los números adyacentes al suyo.”\n\n¿A qué hora puedo abrir ya el reloj?",
+        "firstSupportText": "Intenta averiguar primero a dónde señala el horario y el minutero. Una vez tengas esto, colocar el segundero se hace directamente siguiendo las dos últimas condiciones.",
+        "secondSupportText": "Si lo piensas detenidamente no existe en un reloj ningún número que tenga los dígitos romanos X y V a la vez. Con esta información, la primera indicación cobra especial relevancia. Sumado a la segunda, deberías ser capaz de ver que solo hay unos pocos números en los que se puede encontrar el horario y el minutero. ",
+        "thirdSupportText": "Para que una suma sea impar, tiene que darse que uno de los sumandos sea par y el otro no. A partir de aquí, probando todas las combinaciones posibles, según la tercera y cuarta condición, solo hay una que cumpla lo que dice la quinta."
     },
     "puzzle3": 
     {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
+        "puzzleStatementText": "Viendo el diario de viaje de la víctima hay una página que me llama especialmente la atención. En ella aparece un mapa de Europa con varias anotaciones hechas. A lo mejor me sirve de ayuda leer lo que tiene escrito para saber dónde tengo que pulsar:\n\n“Cansado del ritmo de vida que llevaba hasta entonces decidí hacer un viaje que a la postre acabaría siendo el mejor que he hecho en mi vida. \n\nPara empezar, me puse el objetivo de no ir nunca en avión, solo me movería haciendo uso de coches o barcos. Por ello, mi única opción era viajar entre ciudades que estuvieran directamente conectadas por uno de estos medios. Además, también me propuse pasar por todos los sitios que siempre quise visitar sin repetir ninguno.\n\nFue un viaje muy largo, y por momentos complicado. Pero sin duda alguna fue una experiencia que me cambió la vida.”\n\nLeyendo esto, mi intuición me dice que para seguir adelante tengo que pulsar los países en el mismo orden por los que pasó la víctima en su viaje. Para ello, tengo que llegar desde el comienzo del viaje (el punto A) hasta el final (el punto S) pasando por cada lugar solo una vez.",
+        "firstSupportText": "Parece un poco obvio, pero no tienes que pasar por todas las conexiones que hay entre las diferentes regiones. Solo debes asegurarte de visitar todas las localizaciones que hay sin repetir ninguna. Simplemente probando, debería ser fácil llegar a la solución.",
+        "secondSupportText": "Si conocieras a la víctima sabrías que lo primero que hizo nada más salir del punto A es ir lo más al este posible.",
+        "thirdSupportText": "En el último tramo del viaje, antes de llegar al punto S, la víctima tuvo que hacer el recorrido en barco y después en coche."
     },
     "puzzle4": 
     {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
+        "puzzleStatementText": "He metido cada llave en su propia cerradura, pero aún así sigue sin abrirse el cajón del escritorio. Buscando cómo solucionar esto me he fijado que hay tres filas de símbolos encima del cierre, formando cada una un patrón concreto. Además, justo al lado de cada sucesión de cuadros hay uno vacío, que parece que funciona como panel donde se puede poner algo.\n\nDespués de darle un par de vueltas, tengo claro que para poder mirar lo que hay dentro del cajón, tengo que encontrar el siguiente símbolo en cada una de las tres sucesiones.\n\n¿Cómo sigue cada patrón?",
+        "firstSupportText": "Para descifrar el patrón de la primera secuencia simplemente fíjate en cómo va moviendo la “T” de un cuadro al siguiente.",
+        "secondSupportText": "Parece que el segundo patrón tiene que ver más que nada con la simetría. Por lo tanto, para poder resolverlo, simplemente preguntaté qué pasa cuándo se introduce un nuevo cuadrado.",
+        "thirdSupportText": "La tercera sucesión de símbolos es un poco diferente a las anteriores. Mientras que en las otras había que mirar solo el cuadro previo de la misma fila, aquí hay que tener una visión más global. Simplemente digamos que es el único patrón en el que hay que mirar también a los demás. "
     },
     "puzzle5": 
     {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
+        "puzzleStatementText": "Como sabrás, en ajedrez, la reina puede moverse por el tablero en cualquier dirección y recorrer cualquier distancia.\n\nEn este puzle tienes tres reinas ya colocadas en un tablero de 8x8. Coloca las cinco reinas que faltan en el tablero de manera que ninguna se intergonga en el camino de las demás.",
+        "firstSupportText": "En este puzzle ayuda mucho dibujar por tu cuenta el tablero con las tres reinas que ya están colocadas. Si además empiezas a quitar todas las filas, columnas y diagonales que ya están cogidas, te darás cuenta de que no existen tantas opciones como creías.",
+        "secondSupportText": "Algo que te puede servir de ayuda es conocer que no hay reinas en ninguna de las cuatro esquinas.",
+        "thirdSupportText": "Si has seguido las indicaciones de las pistas 1 y 2, ya sabrás qué casillas están libres para colocar las 5 reinas que faltan. En este caso, hay tanto una columna como una fila que tienen 3 opciones disponibles. Donde intersecten va una reina. A partir de ahí, sacar el resto es coser y cantar."
     },
     "puzzle6": 
     {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
+        "puzzleStatementText": "Un día, en clase, una profesora les pidió a sus alumnos que cerraran los ojos y les puso a todos una gorra en la cabeza. Cuando abrieron los ojos, dijo:\n\n\"A ver, niños, observad bien las gorras de vuestros compañeros. Los que vean cuatro o más gorras rojas se llevan un globo rojo, y los que no, se llevan un globo azul.\"\n\nSi tenemos en cuenta que hay un total de diez niños y que solo algunos se llevaron un globo rojo, ¿cuántos globos rojos repartió la profesora?",
+        "firstSupportText": "Para resolver este acertijo, lo más importante es determinar primero cuántos niños llevaban una gorra roja. Para ayudarte a comenzar, puede ser útil saber que, si la profesora ha repartido globos rojos, también ha distribuido gorras de este color. Por lo tanto, el número que buscas es mayor que 0.",
+        "secondSupportText": "Dado que no todos los niños se han llevado un globo rojo, esto implica que el número de gorras rojas es menor que el máximo posible, que en este caso es 20.",
+        "thirdSupportText": "La clave para resolver este puzle está en la palabra \"algunos\". Simplemente prueba diferentes números de gorras repartidas y observa el resultado. Notarás que la solución siempre se reduce a dos valores que ya has descartado, excepto en un caso. Con esto, podrás deducir el número correcto de gorras, y a partir de ahí, el de globos."
     },
     "puzzle7": 
     {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
+        "puzzleStatementText": "Hay que colocar en orden los 4 ases y el Joker:\n\n- El as de tréboles debe ir al lado del as de picas.\n- El joker debe estar en la segunda posición.\n- El as de corazones debe ir a la izquierda del as de diamantes, pero no sabes exactamente dónde.\n- El as de picas debe ir dos sitios a la derecha del as de diamantes.",
+        "firstSupportText": "Cuando se indica que el as de picas debe ir dos posiciones a la derecha del as de diamantes, esto puede parecer simple, pero en realidad te proporciona más información de la que parece. Hay solo tres posiciones posibles donde puedes colocar el as de diamantes para que esto se cumpla. Además, sabes que el as de picas aparecerá necesariamente después de este. Con esta información, ya deberías tener una idea más clara de dónde pueden ir cada uno de los dos ases.",
+        "secondSupportText": "Recuerda que el as de corazones siempre debe estar a la izquierda del as de diamantes, que es el otro as de su mismo color. Considerando la primera pista, esto restringe las opciones y deja solo dos posiciones posibles para el as de corazones y otras dos para el as de diamantes. Recuerda también seguir el orden de aparición de los ases: primero el as de corazones, luego el as de diamantes y, finalmente, el as de picas.",
+        "thirdSupportText": "Con todo lo que sabes hasta ahora por las pistas, también debes considerar que ni el Joker ni el as de tréboles pueden estar al inicio o al final de la secuencia. Por lo tanto, ya deberías saber cuál es la primera y la última carta entre las otras tres que quedan. Sumando la última indicación que te da el problema, solo existe una posibilidad que cumpla con todos los criterios."
     },
     "puzzle8": 
     {

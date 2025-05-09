@@ -1,15 +1,11 @@
 using UnityEngine;
 using TMPro;
-using System.Text;
-using System.Text.RegularExpressions; 
 
-public class Puzzle2Logic : MonoBehaviour
+public class Puzzle2Logic : MonoBehaviour, IPuzzleLogic
 {   
-    [SerializeField, TextArea(6,12)] private string firstSupportText;    
-    [SerializeField, TextArea(6,12)] private string secondSupportText;    
-    [SerializeField, TextArea(6,12)] private string thirdSupportText; 
+    [Header("Solution Section")]
+    [SerializeField] private TMP_InputField inputField;
 
-    public GameObject inputField;
 
     void Start()
     {
@@ -18,65 +14,39 @@ public class Puzzle2Logic : MonoBehaviour
         GetComponent<PuzzleUIManager>().ThirdSupportText = GameStateManager.Instance.gameText.puzzle2.thirdSupportText;
 
         GetComponent<PuzzleLogicManager>().ShowStatement(GameStateManager.Instance.gameText.puzzle2.puzzleStatementText);
+
+        // Agrega el método FilterInput como listener para detectar cambios en el InputField
+        inputField.onValueChanged.AddListener(FilterInput);
     }
 
-    void Update()
+    // Método para limpiar los inputs de la solución en caso de fallo - Implementación de la interfaz
+    public void ResetSolutionInputs()
     {
-        if(GetComponent<PuzzleUIManager>().isCheckTrigger)
-        {
-            GetComponent<PuzzleUIManager>().isCheckTrigger = false;
-            CheckResult();
-        }
-
-        if(GetComponent<PuzzleUIManager>().isNecesaryResetInputs)
-        {
-            inputField.GetComponent<TMP_InputField>().text = "";
-            GetComponent<PuzzleUIManager>().isNecesaryResetInputs = false;
-        }
+        inputField.GetComponent<TMP_InputField>().text = "";
     }
 
+    // Método para comprobar si el resultado proporcionado es acertado o no - Implementación de la interfaz
     public void CheckResult()
     {
+        
         string solutionString = inputField.GetComponent<TMP_InputField>().text;
         solutionString = solutionString.Replace(" ", "");
+        solutionString = PuzzleUtils.RemoveNonClockSymbols(solutionString);
         solutionString = solutionString.ToUpper();
-        solutionString = RemovePunctuation(solutionString); 
-        solutionString = RemoveAccents(solutionString);
 
-        if(solutionString == "")
+        if(solutionString == "12:25:10" || solutionString == "XII:V:II")
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Empty;
+            GetComponent<PuzzleUIManager>().ShowSuccessPanel();
         }
-        else if(solutionString == "12:25:10" || solutionString == "XII:V:II")
+        else if (!(solutionString == "12:25:10" || solutionString == "XII:V:II" || solutionString == ""))
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Success;
-        }
-        else
-        {
-            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Failure;
+            GetComponent<PuzzleUIManager>().ShowFailurePanel();
         }
     }
 
-    private string RemoveAccents(string input)
+    // Método para filtrar caracteres no apropiados para un reloj en el InputField
+    private void FilterInput(string textToCheck)
     {
-        string normalizedString = input.Normalize(NormalizationForm.FormD);
-        StringBuilder stringBuilder = new StringBuilder();
-
-        foreach (char c in normalizedString)
-        {
-            var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-
-            if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
-            {
-                stringBuilder.Append(c);
-            }
-        }
-
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-    }
-
-    public string RemovePunctuation(string input)
-    {
-        return Regex.Replace(input, @"[^\w\s:]", "");
+        inputField.text = PuzzleUtils.RemoveNonClockSymbols(textToCheck); 
     }
 }

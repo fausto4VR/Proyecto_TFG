@@ -31,17 +31,15 @@ public class PuzzleUIManager : MonoBehaviour
     
     [Header("Detection Section")]
     [SerializeField] private GameObject outStatementDetectionButton;
-    [SerializeField] private GameObject outPanelDetectionButton;
+    [SerializeField] private GameObject outPanelDetectionButton;    
+
+    [Header("Cursors Textures Section")]
+    [SerializeField] private Texture2D defaultCursor;
+    [SerializeField] private Texture2D interactCursor;
     
     [Header("Variable Section")]
-    private float transparentSupportButtonColor = 0.63f;
-    
-    // QUITAR ----------------------------------------------------------
-    [Header("QUITAR")]   
-    public ResultType isCorrectResult;
-    public bool isCheckTrigger;
-    public bool isNecesaryResetInputs;
-    // -----------------------------------------------------------------
+    [SerializeField] private float transparentSupportButtonColor = 0.63f;
+    [SerializeField] private Vector2 hotspot = Vector2.zero;
     
     private Color unlockSupportButtonColor;
     private Image firstSupportImage;
@@ -133,6 +131,25 @@ public class PuzzleUIManager : MonoBehaviour
     public string ThirdSupportText
     {
         set { thirdSupportText = value; }
+    }
+
+    // Método para obtener la textura necesaria del cursor por defecto
+    public Texture2D DefaultCursor
+    {
+        get { return defaultCursor; }
+    }
+
+    // Método para obtener la textura necesaria del cursor cuando puede interactuar con un elemento
+    public Texture2D InteractCursor
+    {
+        get { return interactCursor; }
+    }
+
+    // Método que efectua el cambio de cursor
+    public void SetCursor(Texture2D cursorTexture)
+    {
+        if (cursorTexture != null)
+        Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
     }
 
     // Método para mostrar el panel de éxito despúes de acertar la solución de un puzle

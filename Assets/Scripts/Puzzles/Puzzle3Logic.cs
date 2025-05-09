@@ -2,13 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class Puzzle3Logic : MonoBehaviour
+public class Puzzle3Logic : MonoBehaviour, IPuzzleLogic
 {   
-    [SerializeField, TextArea(6,12)] private string firstSupportText;    
-    [SerializeField, TextArea(6,12)] private string secondSupportText;    
-    [SerializeField, TextArea(6,12)] private string thirdSupportText; 
-
     private List<string> activePaths = new List<string>();
+
 
     void Start()
     {
@@ -19,89 +16,38 @@ public class Puzzle3Logic : MonoBehaviour
         GetComponent<PuzzleLogicManager>().ShowStatement(GameStateManager.Instance.gameText.puzzle3.puzzleStatementText);
     }
 
-    void Update()
+    // Método para limpiar los inputs de la solución en caso de fallo - Implementación de la interfaz
+    public void ResetSolutionInputs()
     {
-        if(GetComponent<PuzzleUIManager>().isCheckTrigger)
-        {
-            GetComponent<PuzzleUIManager>().isCheckTrigger = false;
-            CheckResult();
-        }
-
-        if(GetComponent<PuzzleUIManager>().isNecesaryResetInputs)
-        {
-            // Los caminos se quedan igual
-            GetComponent<PuzzleUIManager>().isNecesaryResetInputs = false;
-        }
+        // Los caminos se quedan igual, por lo que no hace falta reiniciar nada
     }
 
+    // Método para comprobar si el resultado proporcionado es acertado o no - Implementación de la interfaz
     public void CheckResult()
     {
-        // ADKJCGBFNHIONEMPQRLS
-
-        if (activePaths.Count == 0)
+        if(CheckSolution())
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Empty;
+            GetComponent<PuzzleUIManager>().ShowSuccessPanel();
         }
-        else if (CheckSolution())
+        else if (!(CheckSolution() || activePaths.Count == 0))
         {
-            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Success;
-        }
-        else
-        {
-            GetComponent<PuzzleUIManager>().isCorrectResult = ResultType.Failure;
+            GetComponent<PuzzleUIManager>().ShowFailurePanel();
         }
     }
 
+    // Método auxiliar para actualizar la lista de caminos (y activar cada uno)
     public void DisplayPath(Toggle toggle)
     {
-        if (toggle.isOn)
-        {
-            if (!activePaths.Contains(toggle.name))
-            {
-                activePaths.Add(toggle.name);
-            }
-        }
-        else
-        {
-            if (activePaths.Contains(toggle.name))
-            {
-                activePaths.Remove(toggle.name);
-            }
-        }
+        PuzzleUtils.UpdateToggleList(toggle, activePaths);
     }
 
+    // Método que implementa la lógica para comprobar si la solución dada es correcta o no
     private bool CheckSolution()
     {
         // Camino: ADKJCGBFÑHIONEMPQRLS
         List<string> requiredPath = new List<string> {"AD", "DK", "JK", "CJ", "CG", "BG", "BF", "FÑ", "HÑ", "HI", "IO", "NO", 
             "EN", "EM", "MP", "PQ", "QR", "LR", "LS"};
 
-        if(activePaths.Count == requiredPath.Count)
-        {
-            foreach (string path in activePaths)
-            {
-                bool found = false;
-
-                foreach (string required in requiredPath)
-                {
-                    if (path.ToUpper().Contains(required.ToUpper()))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return PuzzleUtils.ValidateDisplaySolution(activePaths, requiredPath);
     }
 }

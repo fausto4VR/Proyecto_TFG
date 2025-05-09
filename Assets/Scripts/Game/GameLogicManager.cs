@@ -74,8 +74,11 @@ public class GameLogicManager : MonoBehaviour
         PuzzleData puzzleData = SaveManager.LoadPuzzleData();
         FoundPuzzles(puzzleData);
 
-        player.GetComponent<PlayerLogicManager>().InitializeFirstState();
-        temporarilyPlayerState = player.GetComponent<PlayerLogicManager>().PlayerState;
+        if (player != null)
+        {    
+            player.GetComponent<PlayerLogicManager>().InitializeFirstState();
+            temporarilyPlayerState = player.GetComponent<PlayerLogicManager>().PlayerState;
+        }
 
         if(GameStateManager.Instance.IsNewGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
         {

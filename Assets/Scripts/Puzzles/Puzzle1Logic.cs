@@ -3,9 +3,9 @@ using TMPro;
 
 public class Puzzle1Logic : MonoBehaviour, IPuzzleLogic
 {
-
     [Header("Solution Section")]
     [SerializeField] private TMP_InputField inputField;
+
 
     void Start()
     {
@@ -29,9 +29,9 @@ public class Puzzle1Logic : MonoBehaviour, IPuzzleLogic
     public void CheckResult()
     {
         string solutionString = inputField.GetComponent<TMP_InputField>().text;
-        solutionString = solutionString.Replace(" ", "");
-        solutionString = PuzzleUtils.RemoveNonAlphanumeric(solutionString); 
-        solutionString = PuzzleUtils.RemoveAccents(solutionString);        
+        solutionString = solutionString.Replace(" ", ""); 
+        solutionString = PuzzleUtils.RemoveAccents(solutionString);
+        solutionString = PuzzleUtils.RemoveNonAlphanumeric(solutionString);        
         solutionString = solutionString.ToUpper();
 
         if(solutionString == "TIEMPO")
