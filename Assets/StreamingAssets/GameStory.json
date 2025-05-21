@@ -1,0 +1,201 @@
+{
+    "phases": 
+    [
+        {
+            "name": "Prologue",
+            "subphases": 
+            [
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Father (Phone)",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Toaster",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Puzzle1",
+            "subphases": 
+            [
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Inspector 1",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Backpack",
+                    "actions": 1
+                },
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Inspector 2",
+                    "actions": 1
+                },
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Physio 1",
+                    "actions": 1
+                },
+                {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 1",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Puzzle2",
+            "subphases": 
+            [
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Physio 2",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Skeleton",
+                    "actions": 1
+                },
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Physio 3",
+                    "actions": 1
+                },
+                {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 2",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Puzzle3",
+            "subphases": 
+            [
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Bookcase",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Hall Mirror",
+                    "actions": 1
+                },
+                {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 3",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Puzzle4",
+            "subphases": 
+            [
+                
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Physio 4",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Coffe Maker",
+                    "actions": 1
+                },
+                {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 4",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Puzzle5",
+            "subphases": 
+            [
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Signboard",
+                    "actions": 1
+                },
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Park Manager 1",
+                    "actions": 1
+                },
+                {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 5",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Puzzle6",
+            "subphases": 
+            [
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Binoculars",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Painting",
+                    "actions": 1
+                },
+                {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 6",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Puzzle7",
+            "subphases": 
+            [
+                
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Park Manager 2",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Sandbox",
+                    "actions": 1
+                },
+                {
+                    "type": "ReadyForPuzzle",
+                    "name": "Ready for Puzzle 7",
+                    "actions": 1
+                }
+            ]
+        },
+        {
+            "name": "Ending",
+            "subphases": 
+            [
+                {
+                    "type": "Ending",
+                    "name": "Ending Beginning",
+                    "actions": 1
+                },
+                {
+                    "type": "Ending",
+                    "name": "Post End",
+                    "actions": 1
+                }
+            ]
+        }
+    ]
+}
