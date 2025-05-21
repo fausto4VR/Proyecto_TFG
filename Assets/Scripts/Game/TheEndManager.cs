@@ -259,6 +259,7 @@ public class TheEndManager : MonoBehaviour
             
             GameLogicManager.Instance.EndOpportunities = 0;
             GameLogicManager.Instance.IsBadEnding = true;
+
             ShowFinalNPC();
         }
         else if (endScreenType == EndScreenType.GoodEnding)
@@ -273,6 +274,7 @@ public class TheEndManager : MonoBehaviour
             
             GameLogicManager.Instance.EndOpportunities = 0;
             GameLogicManager.Instance.IsBadEnding = false;
+
             ShowFinalNPC();
         }
         else

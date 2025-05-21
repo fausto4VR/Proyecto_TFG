@@ -9,6 +9,11 @@ public class GameLogicManager : MonoBehaviour
     
     [Header("Variable Section")]
     [SerializeField] private string sceneToDestroy = "MenuScene";
+    // [SerializeField] private Vector3 newGameStartPosition = new Vector3(-25.5f, 12f, 0f);
+    [SerializeField] private Vector3 newGameStartPosition = new Vector3(0f, 0f, 0f);
+    [SerializeField] private int firstClueSubphaseIndex = 3;
+    [SerializeField] private int secondClueSubphaseIndex = 16;
+    [SerializeField] private int thirdClueSubphaseIndex = 25;
 
     private GameObject player;
     private GameObject virtualCamera;
@@ -82,8 +87,15 @@ public class GameLogicManager : MonoBehaviour
 
         if(GameStateManager.Instance.IsNewGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
         {
+            Debug.Log("Se ha comenzado una nueva partida.");
+
             GameStateManager.Instance.IsGameStarted = true;
             GameStateManager.Instance.SaveData();
+
+            // Para empezar en un juego nuevo al lado de la cama
+            if (player != null) player.transform.position = newGameStartPosition;
+            else Debug.LogError("No se ha podido situar al jugador en la posición inicial al comenzar una nueva partida.");
+
             GameStateManager.Instance.IsNewGame = false;
         }
 
@@ -91,12 +103,14 @@ public class GameLogicManager : MonoBehaviour
         {
             GameStateManager.Instance.LoadData(false);
             GameStateManager.Instance.IsLoadGame = false; 
-        }   
+        }
+
+        UpdateKnownClues();
     }
 
+    /*
     void Update()
     {
-        // QUITAR ----------------------------------------------------------
         if(Input.GetKeyDown(KeyCode.R))
         {
             GameStateManager.Instance.ResetData();
@@ -109,8 +123,8 @@ public class GameLogicManager : MonoBehaviour
         {
             GameStateManager.Instance.LoadData(true);
         }
-        // -----------------------------------------------------------------
     }
+    */
 
     // Métodos para obtener y para cambiar el objeto player, es decir, el avatar del jugador
     public GameObject Player
@@ -406,6 +420,18 @@ public class GameLogicManager : MonoBehaviour
         {
             knownDialogues = new Dictionary<string, bool>();
         }
+    }    
+
+    // Método para asegurarse de que las pistas van en consonancia con la fase de la historia
+    public void UpdateKnownClues()
+    {
+        List<string> subphaseseList = StoryStateManager.CreateSubphasesList();
+        int subphaseIndex = subphaseseList.IndexOf(storyPhase.GetPhaseToString());
+
+        if (subphaseIndex == -1) Debug.LogError("Ha habido un error al encontrar la fase actual en la lista de subfases.");
+        else if (subphaseIndex > thirdClueSubphaseIndex) knownClues = new bool[] {true, true, true};
+        else if (subphaseIndex > secondClueSubphaseIndex) knownClues = new bool[] {true, true, false};
+        else if (subphaseIndex > firstClueSubphaseIndex) knownClues = new bool[] {true, false, false};
     }
 
     // Método para cargar la información del final o asignar los valores por defecto en caso contrario
@@ -500,13 +526,13 @@ public class GameLogicManager : MonoBehaviour
             GameData gameData = SaveManager.LoadGameData();
             GameObject theEndObject = GameObject.Find("The End Object");
 
-            if(gameData != null && !gameData.gameIsBadEnding 
+            if(gameData != null && !gameData.gameIsBadEnding && gameData.gameEndOpportunities == 0
                 && gameData.gameStoryPhase.ToStoryPhase().phaseName == StoryPhaseOption.Ending)
             {
                 GameObject victim = theEndObject.transform.Find("Victim").gameObject;
                 victim.transform.GetChild(0).gameObject.SetActive(true);
             }
-            else if(gameData != null && gameData.gameIsBadEnding
+            else if(gameData != null && gameData.gameIsBadEnding && gameData.gameEndOpportunities == 0
                 && gameData.gameStoryPhase.ToStoryPhase().phaseName == StoryPhaseOption.Ending)
             {
                 GameObject father = theEndObject.transform.Find("Father").gameObject;

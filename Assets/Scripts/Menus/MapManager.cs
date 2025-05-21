@@ -55,9 +55,9 @@ public class MapManager : MonoBehaviour
 
     // Método para mostrar el panel del mapa donde se puede seleccionar el lugar al que quiere ir el jugador
     public void DisplayTheMapPanel(bool showPanel)
-    {
+    {          
         mapAudioSource.Play();
-        
+            
         if(showPanel)
         {
             PlayerEvents.StartShowingInformation();
@@ -72,7 +72,7 @@ public class MapManager : MonoBehaviour
         {            
             ClosePanel();
             waitCoroutine = StartCoroutine(WaitUntilPlayerOpenMap());
-        }       
+        }
     }
 
     // Método para establecer si se puede mostrar la tercera opción del mapa
@@ -133,6 +133,8 @@ public class MapManager : MonoBehaviour
         {
             yield return new WaitForSeconds(buttonsAudioSource.clip.length);
             
+            GameLogicManager.Instance.TemporalPlayerState = 
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
             ClosePanel();
             yield return null;
 
@@ -142,6 +144,8 @@ public class MapManager : MonoBehaviour
         {           
             yield return new WaitForSeconds(buttonsAudioSource.clip.length);
             
+            GameLogicManager.Instance.TemporalPlayerState = 
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
             ClosePanel();
             yield return null;
 
@@ -151,6 +155,8 @@ public class MapManager : MonoBehaviour
         {
             yield return new WaitForSeconds(buttonsAudioSource.clip.length);
 
+            GameLogicManager.Instance.TemporalPlayerState = 
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
             ClosePanel();
             yield return null;
 
@@ -199,10 +205,13 @@ public class MapManager : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            if(mapMark != null) mapMark.SetActive(true);
-            
-            waitCoroutine = StartCoroutine(WaitUntilPlayerOpenMap());
-            markCoroutine = StartCoroutine(CheckPlayerStateForMark());
+            if (GameLogicManager.Instance.CurrentStoryPhase.phaseName != StoryPhaseOption.Prologue)
+            {
+                if(mapMark != null) mapMark.SetActive(true);
+                
+                waitCoroutine = StartCoroutine(WaitUntilPlayerOpenMap());
+                markCoroutine = StartCoroutine(CheckPlayerStateForMark());                
+            }
         }
     }
 
@@ -211,15 +220,18 @@ public class MapManager : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            if(mapMark != null) mapMark.SetActive(false);
-            isThirdOptionUnlock = false;            
-            StopAllCoroutines();
+            if (GameLogicManager.Instance.CurrentStoryPhase.phaseName != StoryPhaseOption.Prologue)
+            {
+                if(mapMark != null) mapMark.SetActive(false);
+                isThirdOptionUnlock = false;            
+                StopAllCoroutines();
 
-            if (waitCoroutine != null) waitCoroutine = null;
-            if (closeCoroutine != null) closeCoroutine = null;
-            if (selectCoroutine != null) selectCoroutine = null;
-            if (selectSoundCoroutine != null) selectSoundCoroutine = null;
-            if (markCoroutine != null) markCoroutine = null;
+                if (waitCoroutine != null) waitCoroutine = null;
+                if (closeCoroutine != null) closeCoroutine = null;
+                if (selectCoroutine != null) selectCoroutine = null;
+                if (selectSoundCoroutine != null) selectSoundCoroutine = null;
+                if (markCoroutine != null) markCoroutine = null;            
+            }
         }
     }
 }

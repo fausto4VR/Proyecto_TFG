@@ -12,12 +12,14 @@ public class AdvanceStoryManager : MonoBehaviour
 
     private InspectDialogue inspectDialogue;
     private StoryPhaseDialogue storyPhaseDialogue;
+    private TheEndManager theEndManager;
 
 
     void Start()
     {
         inspectDialogue = GetComponent<InspectDialogue>();
         storyPhaseDialogue = GetComponent<StoryPhaseDialogue>();
+        theEndManager = GetComponent<TheEndManager>();
         StartCoroutine(RestoreStateAfterFrame());
 
         if(GetComponent<InspectDialogue>() != null) selectedSubphase = GetComponent<InspectDialogue>().SelectedSubphase;
@@ -85,7 +87,7 @@ public class AdvanceStoryManager : MonoBehaviour
                 }
             }
 
-            if(storyPhaseDialogue != null)
+            if(storyPhaseDialogue != null || theEndManager != null)
             {
                 GameLogicManager.Instance.CurrentStoryPhase = StoryStateManager.AdvanceStory(
                     GameLogicManager.Instance.CurrentStoryPhase, GetPath(transform));

@@ -244,5 +244,9 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
             StopCoroutine(restartCoroutine);
             restartCoroutine = null;
         }
+        
+        isThirdOptionUnlock = false;
+        GameLogicManager.Instance.UIManager.ThirdOptionKeyInChoice.SetActive(false);
+        GameLogicManager.Instance.UIManager.ThirdOptionButtonInChoice.SetActive(false);
     }
 }

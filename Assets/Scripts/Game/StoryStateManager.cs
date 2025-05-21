@@ -13,7 +13,7 @@ public enum StoryPhaseOption
 // Enum de los tipos de subfases
 public enum StorySubphaseType
 {
-    Beginning, Trigger, Investigation, Dialogue, ReadyForPuzzle, Error 
+    Ending, Trigger, Investigation, Dialogue, ReadyForPuzzle, Error 
 }
 
 // Enum de la relación tempral entre las subfases
@@ -56,6 +56,7 @@ public static class StoryStateManager
         StoryPhaseOption phaseName = ParseStringToPhaseOption(lastPhaseInfo.name);
         List<StorySubphase> storySubphases = ObtainSubphases(lastPhaseInfo.subphases);
         StoryPhase lastPhase = new StoryPhase(phaseName, storySubphases);
+        lastPhase.currentSubphase = lastPhase.storySubphases[lastPhase.storySubphases.Count - 1];
 
         return lastPhase;
     }
@@ -64,10 +65,7 @@ public static class StoryStateManager
     public static List<string> CreateSubphasesList()
     {
         List<string> subphases = gameStory.phases
-        .SelectMany(phase => 
-            new[] { $"{phase.name}.{phase.name} Beginning" }
-            .Concat(phase.subphases.Select(subphase => $"{phase.name}.{subphase.name}"))
-        ).ToList();
+        .SelectMany(phase => phase.subphases.Select(subphase => $"{phase.name}.{subphase.name}")).ToList();
 
         return subphases;
     }
@@ -101,7 +99,7 @@ public static class StoryStateManager
         }
 
         if (currentSubphaseIndex == currentStoryPhase.storySubphases.Count - 1)
-        {          
+        {        
             return NextStoryPhase(currentStoryPhase, currentPhaseIndex);
         }
 
@@ -213,9 +211,10 @@ public class StoryPhase
     {
         phaseName = name;
         storySubphases = new List<StorySubphase>(subphases);
-        StorySubphase beginningSubPhase = new StorySubphase(StorySubphaseType.Beginning, name.ToString() + " Beginning");
-        storySubphases.Insert(0, beginningSubPhase);
-        currentSubphase = beginningSubPhase;
+
+        if (storySubphases.Count > 0) currentSubphase = storySubphases[0];
+        else Debug.LogError($"La fase '{phaseName}' no tiene ninguna subfase.");
+
         subphaseObjectNames = new List<string>();
     }
 

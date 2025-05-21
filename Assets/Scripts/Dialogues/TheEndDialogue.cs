@@ -45,7 +45,7 @@ public class TheEndDialogue : MonoBehaviour, IDialogueLogic
             .FirstOrDefault(chat => chat.guilty == GameLogicManager.Instance.Guilty)?.dialogue
             .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
         
-        GetComponent<DialogueManager>().StartConversation(ConversationType.StoryPhaseDialogueConversation, 
+        GetComponent<DialogueManager>().StartConversation(ConversationType.TheEndDialogue, 
             dialogueLines, characterNameLines);
     }
 

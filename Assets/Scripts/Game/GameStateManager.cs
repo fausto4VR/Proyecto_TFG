@@ -8,7 +8,7 @@ public class GameStateManager : MonoBehaviour
     public static GameStateManager Instance { get; private set; }
 
     [Header("Variable Section")]
-    [SerializeField] private string mainScene = "SampleScene";
+    [SerializeField] private string mainScene = "HomeScene";
 
     // Contenedor de los textos cargados
     public GameTextDictionary gameText { get; private set; }
@@ -24,7 +24,7 @@ public class GameStateManager : MonoBehaviour
     // En el Awake se define su comportamiento como singleton. Además se genera  la clave de encriptación y se cargan los 
     // textos del juego, las conversaciones y las fases de la historia   
     void Awake()
-    {        
+    {     
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -159,6 +159,9 @@ public class GameStateManager : MonoBehaviour
         GameLogicManager.Instance.KnownDialogues = gameData.GetKnownDialogues();        
         GameLogicManager.Instance.IsBadEnding = gameData.gameIsBadEnding;
         GameLogicManager.Instance.EndOpportunities = gameData.gameEndOpportunities;
+
+        // Para asegurarse de que las pistas van en consonancia con la fase de la historia
+        GameLogicManager.Instance.UpdateKnownClues();
 
         if(isNecesaryLoadScene) SceneManager.LoadScene(gameData.gameScene);
     }

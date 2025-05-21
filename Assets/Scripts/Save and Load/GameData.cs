@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 [System.Serializable]
 public class GameData
@@ -43,7 +42,7 @@ public class GameData
     public GameData()
     {
         isGameStarted = false;
-        gameScene = "SampleScene";
+        gameScene = "HomeScene";
         gameGuilty = "";
         gameClues = new List<string> { "", "", "" };
         gameStoryPhase = new SerializableStoryPhase(StoryStateManager.CreateFirstPhase());
@@ -91,9 +90,8 @@ public class SerializableStoryPhase
     public StoryPhase ToStoryPhase()
     {
         var realSubphases = storySubphases.Select(s => s.ToStorySubphase()).ToList();
-        var subphasesWithoutBeginning = realSubphases.Where(s => s.subphaseType != StorySubphaseType.Beginning).ToList();
 
-        var newPhase = new StoryPhase(phaseName, subphasesWithoutBeginning)
+        var newPhase = new StoryPhase(phaseName, realSubphases)
         {
             subphaseObjectNames = new List<string>(subphaseObjectNames)
         };

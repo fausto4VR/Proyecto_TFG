@@ -35,7 +35,7 @@ public class MainMenuLogic : MonoBehaviour
         buttonsAudioSource = audioSources[0];
     }
 
-    // QUITAR ----------------------------------------------------------
+    /*
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.R))
@@ -43,7 +43,7 @@ public class MainMenuLogic : MonoBehaviour
             GameStateManager.Instance.ResetData();
         }
     }
-    // -----------------------------------------------------------------    
+    */  
 
     // Método para obtener la textura necesaria del cursor por defecto
     public Texture2D DefaultCursor

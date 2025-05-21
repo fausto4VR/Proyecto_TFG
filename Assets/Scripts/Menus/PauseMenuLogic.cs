@@ -20,6 +20,7 @@ public class PauseMenuLogic : MonoBehaviour
     private Coroutine closePanelSoundCoroutine;
     private Coroutine closeOptionPanelCoroutine;
     private Coroutine closeOptionSoundCoroutine;
+    private bool isPauseMenuOpen;
     private bool isOptionPanelShown;
     private bool isSelectCoroutineRunning;
     private bool isNecesaryGoToMainMenu;
@@ -45,32 +46,33 @@ public class PauseMenuLogic : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.I))
         {
-            if (GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is IdleState)
-            {
-                DisplayMenuPanel(true);
-            }
+            DisplayMenuPanel(true);
         }
     }
 
     // Método para mostrar el panel de pausa donde se puede seleccionar entre diferentes opciones
     public void DisplayMenuPanel(bool showPanel)
     {
-        pauseAudioSource.Play();
+        if (GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is IdleState || isPauseMenuOpen)
+        {            
+            pauseAudioSource.Play();
 
-        if (showPanel)
-        {
-            PlayerEvents.StartShowingInformation();
+            if (showPanel)
+            {
+                PlayerEvents.StartShowingInformation();
 
-            UpdateObjectiveText();
-            GameLogicManager.Instance.UIManager.BriefcaseIconButton.SetActive(false);
-            GameLogicManager.Instance.UIManager.PausePanel.SetActive(true);
+                UpdateObjectiveText();
+                GameLogicManager.Instance.UIManager.BriefcaseIconButton.SetActive(false);
+                GameLogicManager.Instance.UIManager.PausePanel.SetActive(true);
+                isPauseMenuOpen = true;
 
-            closePanelCoroutine = StartCoroutine(WaitUntilPlayerClosePanel());
-            selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
-        }
-        else
-        {
-            closePanelSoundCoroutine = StartCoroutine(WaitForSoundAndClosePanel());
+                closePanelCoroutine = StartCoroutine(WaitUntilPlayerClosePanel());
+                selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
+            }
+            else
+            {
+                closePanelSoundCoroutine = StartCoroutine(WaitForSoundAndClosePanel());
+            }
         }
     }
 
@@ -475,6 +477,8 @@ public class PauseMenuLogic : MonoBehaviour
             StopCoroutine(closeOptionSoundCoroutine);
             closeOptionSoundCoroutine = null;
         }
+
+        isPauseMenuOpen = false;
 
         if (isNecesaryGoToMainMenu) SceneManager.LoadScene(menuSceneName);
     }

@@ -5,12 +5,152 @@
         {
             "phase": "Default",
             "subphase": "Default",
-            "objective": "Simplemente sigue con la investigación."
+            "objective": "Simplemente debo seguir con la investigación"
         },
         {
             "phase": "Prologue",
-            "subphase": "Prologue Beginning",
-            "objective": "Acabas de empezar."
+            "subphase": "Talk to Father (Phone)",
+            "objective": "Me han dejado a cargo de la casa, así que debería comprobar que todo sigue en su sitio"
+        },
+        {
+            "phase": "Prologue",
+            "subphase": "Inspect the Toaster",
+            "objective": "Tengo hambre, debería ponerle remedio a eso"
+        },
+        {
+            "phase": "Puzzle1",
+            "subphase": "Talk to Inspector 1",
+            "objective": "Debo salir de casa para investigar lo sucedido"
+        },
+        {
+            "phase": "Puzzle1",
+            "subphase": "Inspect the Backpack",
+            "objective": "El inspector Montgomery me ha pedido ayuda para buscar su mochila"
+        },
+        {
+            "phase": "Puzzle1",
+            "subphase": "Talk to Inspector 2",
+            "objective": "Ya sé dónde está la mochila, debería hacérselo saber al inspector"
+        },
+        {
+            "phase": "Puzzle1",
+            "subphase": "Talk to Physio 1",
+            "objective": "Debería ver cómo está de ánimos Sarah"
+        },
+        {
+            "phase": "Puzzle1",
+            "subphase": "Ready for Puzzle 1",
+            "objective": "Sarah me ha dicho que ayer el señor Martin rompió una hoja de papel y la tiró. Debo encontrarla"
+        },
+        {
+            "phase": "Puzzle2",
+            "subphase": "Talk to Physio 2",
+            "objective": "Debo decirle a Sarah lo que he descubierto"
+        },
+        {
+            "phase": "Puzzle2",
+            "subphase": "Inspect the Skeleton",
+            "objective": "¿A qué se referirá el señor Martin con que hay un 'hombre' más viejo que él en la entrada de la mansión?"
+        },
+        {
+            "phase": "Puzzle2",
+            "subphase": "Talk to Physio 3",
+            "objective": "Aunque haya sido decepcionante no encontrar nada, debería contarle las novedades a Sarah"
+        },
+        {
+            "phase": "Puzzle2",
+            "subphase": "Ready for Puzzle 2",
+            "objective": "Debo encontrar un objeto relacionado con el 'TIEMPO'"
+        },
+        {
+            "phase": "Puzzle3",
+            "subphase": "Inspect the Bookcase",
+            "objective": "El libro que he encontrado debe ir en un sitio adecuado que esté más al este"
+        },
+        {
+            "phase": "Puzzle3",
+            "subphase": "Inspect the Hall Mirror",
+            "objective": "Debe haber algo en esta mansión para ver la frase que escribí en mi diario del revés, es decir, para verla reflejada"
+        },
+        {
+            "phase": "Puzzle3",
+            "subphase": "Ready for Puzzle 3",
+            "objective": "Tengo que resolver el acertijo que dice 'una esfera con la que ver el mundo completo'"
+        },
+        {
+            "phase": "Puzzle3",
+            "subphase": "Talk to Physio 4",
+            "objective": "Una vez he encontrado la llave misteriosa solo se me ocurre que me pueda ayudar Sarah"
+        },
+        {
+            "phase": "Puzzle4",
+            "subphase": "Inspect the Coffe Maker",
+            "objective": "Como me ha dicho Sarah, debo encontrar algo para mojar la llave en cafeína"
+        },
+        {
+            "phase": "Puzzle4",
+            "subphase": "Ready for Puzzle 4",
+            "objective": "Ya tengo la llave lista para abrir el cajón del escritorio"
+        },
+        {
+            "phase": "Puzzle5",
+            "subphase": "Inspect the Signboard",
+            "objective": "Con esta nueva información, mi siguiente paso es ir al parque, seguramente en la entrada haya algún cartel que ayude a seguir"
+        },
+        {
+            "phase": "Puzzle5",
+            "subphase": "Talk to Park Manager 1",
+            "objective": "Debo encontrar a la directora del parque en el puesto de limonada"
+        },
+        {
+            "phase": "Puzzle5",
+            "subphase": "Ready for Puzzle 5",
+            "objective": "El señor Martin ha perdido un tablero de ajedrez, a lo mejor encontrarlo me da pistas de cómo seguir"
+        },
+        {
+            "phase": "Puzzle6",
+            "subphase": "Inspect the Binoculars",
+            "objective": "En este parque debe haber algo que cumpla la condición de 'verás más si me pones en tus ojos'"
+        },
+        {
+            "phase": "Puzzle6",
+            "subphase": "Inspect the Painting",
+            "objective": "Debo encontrar el objeto que, al mirar con los prismáticos directamente al norte, intercede en mi visión"
+        },
+        {
+            "phase": "Puzzle6",
+            "subphase": "Ready for Puzzle 6",
+            "objective": "En la pintura que miré antes había un globo rojo, tiene que significar algo"
+        },
+        {
+            "phase": "Puzzle7",
+            "subphase": "Talk to Park Manager 2",
+            "objective": "He encontrado una carta de una baraja de póker, no sé lo que significa pero Grace a lo mejor sí"
+        },
+        {
+            "phase": "Puzzle7",
+            "subphase": "Inspect the Sandbox",
+            "objective": "Grace me ha dicho que necesito una moneda especial, la última vez fue vista con un niño revoltoso y lleno de arena"
+        },
+        {
+            "phase": "Puzzle7",
+            "subphase": "Ready for Puzzle 7",
+            "objective": "Simplemente debo dirigirme a la cabaña caribeña que hay en el lago"
+        },
+        {
+            "phase": "Ending",
+            "subphase": "Ending Beginning",
+            "objective": "Tengo todos los elementos para resolver el caso"
+        },
+        {
+            "phase": "Ending",
+            "subphase": "Ending Beginning",
+            "objective": "Tengo todos los elementos para resolver el caso"
+        },
+        {
+            "phase": "Ending",
+            "subphase": "Post End",
+            "objective": "El caso ya está cerrado. Lo único que puedo hacer ahora es repasar la investigación en mi ordenador"
         }
     ],
     "puzzle0": 
@@ -43,30 +183,30 @@
     },
     "puzzle4": 
     {
-        "puzzleStatementText": "He metido cada llave en su propia cerradura, pero aún así sigue sin abrirse el cajón del escritorio. Buscando cómo solucionar esto me he fijado que hay tres filas de símbolos encima del cierre, formando cada una un patrón concreto. Además, justo al lado de cada sucesión de cuadros hay uno vacío, que parece que funciona como panel donde se puede poner algo.\n\nDespués de darle un par de vueltas, tengo claro que para poder mirar lo que hay dentro del cajón, tengo que encontrar el siguiente símbolo en cada una de las tres sucesiones.\n\n¿Cómo sigue cada patrón?",
+        "puzzleStatementText": "He metido la llave en la cerradura, pero aún así sigue sin abrirse el cajón del escritorio. Buscando cómo solucionar esto me he fijado que hay tres filas de símbolos encima del cierre, formando cada una un patrón concreto. Además, justo al lado de cada sucesión de cuadros hay uno vacío, que parece que funciona como panel donde se puede poner algo.\n\nDespués de darle un par de vueltas, tengo claro que para poder mirar lo que hay dentro del cajón, tengo que encontrar el siguiente símbolo en cada una de las tres sucesiones.\n\n¿Cómo sigue cada patrón?",
         "firstSupportText": "Para descifrar el patrón de la primera secuencia simplemente fíjate en cómo va moviendo la “T” de un cuadro al siguiente.",
         "secondSupportText": "Parece que el segundo patrón tiene que ver más que nada con la simetría. Por lo tanto, para poder resolverlo, simplemente preguntaté qué pasa cuándo se introduce un nuevo cuadrado.",
         "thirdSupportText": "La tercera sucesión de símbolos es un poco diferente a las anteriores. Mientras que en las otras había que mirar solo el cuadro previo de la misma fila, aquí hay que tener una visión más global. Simplemente digamos que es el único patrón en el que hay que mirar también a los demás. "
     },
     "puzzle5": 
     {
-        "puzzleStatementText": "Como sabrás, en ajedrez, la reina puede moverse por el tablero en cualquier dirección y recorrer cualquier distancia.\n\nEn este puzle tienes tres reinas ya colocadas en un tablero de 8x8. Coloca las cinco reinas que faltan en el tablero de manera que ninguna se intergonga en el camino de las demás.",
+        "puzzleStatementText": "Parece que este es un tablero de ajedrez un poco más especial de lo habitual. Hay tres reinas colocadas, cada una en su respectiva casilla, y haga lo que haga, me resulta imposible moverlas de su sitio. Además, justo en uno de los laterales hay un compartimento donde se encuentran otras cinco.\n\nPor mis años jugando al ajedrez, sé que la reina es una figura que puede moverse en cualquier dirección y recorrer cualquier distancia sobre el tablero. Por eso me sorprende que las tres que ya están colocadas no interfieran entre sí de ninguna forma.\n\nMi instinto me dice que debo colocar las cinco reinas restantes de manera que ninguna se interponga en el camino de las demás.",
         "firstSupportText": "En este puzzle ayuda mucho dibujar por tu cuenta el tablero con las tres reinas que ya están colocadas. Si además empiezas a quitar todas las filas, columnas y diagonales que ya están cogidas, te darás cuenta de que no existen tantas opciones como creías.",
         "secondSupportText": "Algo que te puede servir de ayuda es conocer que no hay reinas en ninguna de las cuatro esquinas.",
         "thirdSupportText": "Si has seguido las indicaciones de las pistas 1 y 2, ya sabrás qué casillas están libres para colocar las 5 reinas que faltan. En este caso, hay tanto una columna como una fila que tienen 3 opciones disponibles. Donde intersecten va una reina. A partir de ahí, sacar el resto es coser y cantar."
     },
     "puzzle6": 
     {
-        "puzzleStatementText": "Un día, en clase, una profesora les pidió a sus alumnos que cerraran los ojos y les puso a todos una gorra en la cabeza. Cuando abrieron los ojos, dijo:\n\n\"A ver, niños, observad bien las gorras de vuestros compañeros. Los que vean cuatro o más gorras rojas se llevan un globo rojo, y los que no, se llevan un globo azul.\"\n\nSi tenemos en cuenta que hay un total de diez niños y que solo algunos se llevaron un globo rojo, ¿cuántos globos rojos repartió la profesora?",
+        "puzzleStatementText": "En la nota que he recogido pone que, para saber la combinación del candado, solo debo averiguar el número que da solución al siguiente acertijo:\n\n\"Un día, en clase, una profesora les pidió a sus alumnos que cerraran los ojos y les colocó a todos una gorra en la cabeza. Cuando los niños los abrieron, dijo: A ver, niños, observad bien las gorras de vuestros compañeros. Los que vean seis o más gorras rojas se llevarán un globo rojo; el resto, un globo azul.\n\nSi tenemos en cuenta que hay un total de veinte niños, y que solo algunos recibieron un globo rojo, ¿cuántos globos rojos repartió la profesora?\"\n\nResolver este rompecabezas me dará el número que tanto busco.",
         "firstSupportText": "Para resolver este acertijo, lo más importante es determinar primero cuántos niños llevaban una gorra roja. Para ayudarte a comenzar, puede ser útil saber que, si la profesora ha repartido globos rojos, también ha distribuido gorras de este color. Por lo tanto, el número que buscas es mayor que 0.",
         "secondSupportText": "Dado que no todos los niños se han llevado un globo rojo, esto implica que el número de gorras rojas es menor que el máximo posible, que en este caso es 20.",
         "thirdSupportText": "La clave para resolver este puzle está en la palabra \"algunos\". Simplemente prueba diferentes números de gorras repartidas y observa el resultado. Notarás que la solución siempre se reduce a dos valores que ya has descartado, excepto en un caso. Con esto, podrás deducir el número correcto de gorras, y a partir de ahí, el de globos."
     },
     "puzzle7": 
     {
-        "puzzleStatementText": "Hay que colocar en orden los 4 ases y el Joker:\n\n- El as de tréboles debe ir al lado del as de picas.\n- El joker debe estar en la segunda posición.\n- El as de corazones debe ir a la izquierda del as de diamantes, pero no sabes exactamente dónde.\n- El as de picas debe ir dos sitios a la derecha del as de diamantes.",
+        "puzzleStatementText": "Sobre la mesa se extiende un panel con cinco huecos para colocar las cartas. Justo encima se distinguen unas instrucciones que indican cómo lograr la victoria en este reto:\n\n\"Para ganar, deberás ordenar correctamente los cuatro ases y el Joker, siguiendo estas condiciones:\n\n- El as de corazones debe estar siempre a la izquierda del otro as de su mismo color, aunque no sepas su posición exacta.  \n- Ni el Joker ni el as de tréboles pueden ocupar la primera ni la última posición.  \n- El as de picas debe situarse dos lugares a la derecha del as de diamantes.  \n- Solo hay un par de cartas del mismo color que están juntas.\"\n\nDebo encontrar la disposición correcta si quiero hacerme con la victoria en este reto.",
         "firstSupportText": "Cuando se indica que el as de picas debe ir dos posiciones a la derecha del as de diamantes, esto puede parecer simple, pero en realidad te proporciona más información de la que parece. Hay solo tres posiciones posibles donde puedes colocar el as de diamantes para que esto se cumpla. Además, sabes que el as de picas aparecerá necesariamente después de este. Con esta información, ya deberías tener una idea más clara de dónde pueden ir cada uno de los dos ases.",
-        "secondSupportText": "Recuerda que el as de corazones siempre debe estar a la izquierda del as de diamantes, que es el otro as de su mismo color. Considerando la primera pista, esto restringe las opciones y deja solo dos posiciones posibles para el as de corazones y otras dos para el as de diamantes. Recuerda también seguir el orden de aparición de los ases: primero el as de corazones, luego el as de diamantes y, finalmente, el as de picas.",
+        "secondSupportText": "Recuerda que el as de corazones siempre debe estar a la izquierda del as de diamantes, que es el otro as de su mismo color. Considerando la primera pista, esto restringe las opciones y deja solo dos posiciones posibles para el as de corazones y otras dos para el as de diamantes. Recuerda también seguir el orden de los ases: primero el as de corazones, luego el as de diamantes y, finalmente, el as de picas.",
         "thirdSupportText": "Con todo lo que sabes hasta ahora por las pistas, también debes considerar que ni el Joker ni el as de tréboles pueden estar al inicio o al final de la secuencia. Por lo tanto, ya deberías saber cuál es la primera y la última carta entre las otras tres que quedan. Sumando la última indicación que te da el problema, solo existe una posibilidad que cumpla con todos los criterios."
     },
     "puzzle8": 

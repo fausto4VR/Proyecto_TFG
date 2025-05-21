@@ -42,7 +42,7 @@ public class PlayerLogicManager : MonoBehaviour
             playerState = GameLogicManager.Instance.TemporalPlayerState;
             if (playerState == null) InitializeFirstState();
             playerState.OnEnter();
-        } 
+        }
     }
 
     // Métdodo para convertir una opción del enum PlayerStatePhase en un tipo de estado del jugador
@@ -107,6 +107,13 @@ public class PlayerLogicManager : MonoBehaviour
             Debug.Log("Camera Position: (" + GameLogicManager.Instance.VirtualCamera.transform.position.x + ", " 
                 + GameLogicManager.Instance.VirtualCamera.transform.position.y + ", " 
                 + GameLogicManager.Instance.VirtualCamera.transform.position.z + ")");
+        }
+
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log("Current Phase: " + GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString());
+            string gameStoryString = string.Join(", ", StoryStateManager.CreateSubphasesList());
+            Debug.Log("Game Story: " + gameStoryString);
         }
     }
 
