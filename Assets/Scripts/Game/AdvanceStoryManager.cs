@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 public class AdvanceStoryManager : MonoBehaviour
 {
     [Header("Variable Section")]
-    [SerializeField] private float transitionTime = 0.5f;
-
     [SubphaseSelector]
     [SerializeField] private string selectedSubphase;
 
@@ -20,6 +18,11 @@ public class AdvanceStoryManager : MonoBehaviour
         inspectDialogue = GetComponent<InspectDialogue>();
         storyPhaseDialogue = GetComponent<StoryPhaseDialogue>();
         theEndManager = GetComponent<TheEndManager>();
+
+        if (GameLogicManager.Instance.TemporalPuzzleObject == gameObject.name &&
+            (GameLogicManager.Instance.IsPuzzleCompleted || GameLogicManager.Instance.IsPuzzleIncomplete))
+        GameLogicManager.Instance.LoadTemporarilyPosition();
+
         StartCoroutine(RestoreStateAfterFrame());
 
         if(GetComponent<InspectDialogue>() != null) selectedSubphase = GetComponent<InspectDialogue>().SelectedSubphase;
@@ -41,26 +44,24 @@ public class AdvanceStoryManager : MonoBehaviour
     // Método para cargar la posición del jugador al volver de un puzle y avanzar la historia
     private void AdvanceStoryAfterPuzzle()
     {
-        if(inspectDialogue != null)
+        if (inspectDialogue != null && GameLogicManager.Instance.TemporalPuzzleObject == gameObject.name)
         {
-            if(GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent 
+            if (GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent
                 && inspectDialogue.IsPuzzleTriggerObject && GameLogicManager.Instance.IsPuzzleCompleted
                 && inspectDialogue.PuzzleAssociated == GameLogicManager.Instance.LastPuzzleComplete)
             {
                 GameLogicManager.Instance.IsPuzzleCompleted = false;
-                GameLogicManager.Instance.LoadTemporarilyPosition();
-                
+
                 GameLogicManager.Instance.CurrentStoryPhase = StoryStateManager.AdvanceStory(
                     GameLogicManager.Instance.CurrentStoryPhase, GetPath(transform));
 
                 GameStateManager.Instance.SaveData();
                 inspectDialogue.ShowAfterPuzzleDialogue();
             }
-            else if (GameLogicManager.Instance.IsPuzzleIncomplete)
+            else if (inspectDialogue.IsPuzzleTriggerObject && GameLogicManager.Instance.IsPuzzleIncomplete)
             {
                 PlayerEvents.FinishTalkingWithoutClue();
                 GameLogicManager.Instance.IsPuzzleIncomplete = false;
-                GameLogicManager.Instance.LoadTemporarilyPosition();
             }
         }
     }
@@ -82,7 +83,7 @@ public class AdvanceStoryManager : MonoBehaviour
                 }
                 else
                 {
-                    GameLogicManager.Instance.SaveTemporarilyPosition();
+                    GameLogicManager.Instance.SaveTemporarilyPosition(gameObject.name);
                     StartCoroutine(WaitAndLoadScene());
                 }
             }
@@ -99,10 +100,14 @@ public class AdvanceStoryManager : MonoBehaviour
     private IEnumerator WaitAndLoadScene()
     {
         GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.OnExit();
-        yield return new WaitForSeconds(transitionTime);
+        GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(true);
+
+        GameStateManager.Instance.TransitionManager.StartOutTransition(TransitionType.Fade);
+        yield return new WaitForSeconds(GameStateManager.Instance.TransitionDuration);
         
         if (Application.CanStreamedLevelBeLoaded(inspectDialogue.PuzzleScene))
         {
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(false);
             SceneManager.LoadScene(inspectDialogue.PuzzleScene);
         }
         else

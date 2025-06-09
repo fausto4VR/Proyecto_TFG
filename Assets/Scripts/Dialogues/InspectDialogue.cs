@@ -17,6 +17,7 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
     private Coroutine skipCoroutine;
     private bool isAdvanceStory;    
     private bool isNecesaryShowClue;
+    private bool isDefaultMessage;
 
     // REVISAR AUDIO
     private AudioSource inspectionSuccess;
@@ -35,6 +36,12 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
         waitCoroutine = StartCoroutine(WaitUntilInspectionComplete());
     }
 
+    // Método para iniciar la conversación al hacer clic con el cursor sobre el personaje
+    public void TryStartDialogueOnClick()
+    {
+        // Se deja vacío porque este tipo de diálogo no se activa por clic
+    }
+    
     // Corrutina para esperar que se complete la inspección del objeto 
     private IEnumerator WaitUntilInspectionComplete()
     {
@@ -43,13 +50,13 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
 
         SelectDialogue();
         skipCoroutine = StartCoroutine(WaitToSkipDialogue());
-        WaitForDialogueInput();      
+        WaitForDialogueInput();
     }
 
     // Método para seleccionar el diálogo correspondiente en función de cuando se inspeccionó el objeto
     private void SelectDialogue()
     {
-        if(GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent)
+        if (GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsCurrent)
         {
             string[] dialogueLines = GameStateManager.Instance.gameConversations.inspectConversations
                 .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.currentDialogue
@@ -59,10 +66,11 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
                 .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.currentDialogue
                 .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
 
-            if(isAdvanceStoryTrigger) isAdvanceStory = true;
-            if(isClueUnlockTrigger) isNecesaryShowClue = true;
+            if (isAdvanceStoryTrigger) isAdvanceStory = true;
+            if (isClueUnlockTrigger) isNecesaryShowClue = true;
             inspectionSuccess.Play();
             GetComponent<DialogueManager>().StartConversation(ConversationType.InspectDialogue, dialogueLines, characterNameLines);
+            isDefaultMessage = false;
         }
         else if (GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsRecentBefore)
         {
@@ -75,6 +83,7 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
                 .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
 
             GetComponent<DialogueManager>().StartConversation(ConversationType.InspectDialogue, dialogueLines, characterNameLines);
+            isDefaultMessage = false;
         }
         else if (GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsDistantBefore)
         {
@@ -87,10 +96,12 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
                 .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
 
             GetComponent<DialogueManager>().StartConversation(ConversationType.InspectDialogue, dialogueLines, characterNameLines);
+            isDefaultMessage = false;
         }
         else
         {
             GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().ShowDefaultMessage();
+            isDefaultMessage = true;
         }
 
         GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
@@ -105,7 +116,9 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
         if (GetComponent<DialogueManager>().CurrentConversationPhase != ConversationPhase.Ended)
         {
             inspectionSuccess.Stop();
-            GetComponent<DialogueManager>().EndConversation(ConversationType.InspectDialogue);
+
+            if (isDefaultMessage) GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().StopDefaultMessage();
+            else GetComponent<DialogueManager>().EndConversation(ConversationType.InspectDialogue);
         }
 
     }
@@ -113,23 +126,16 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
     // Método que se llama cuando se sale del rango de diálogo de un objeto
     public void ExitOfDialogueRange()
     {
-        if (waitCoroutine != null)
-        {
-            StopCoroutine(waitCoroutine);
-            waitCoroutine = null;
-        }
-
-        if (skipCoroutine != null)
-        {
-            StopCoroutine(skipCoroutine);
-            skipCoroutine = null;
-        }
+        StopAllCoroutines();
+        
+        if (waitCoroutine != null) waitCoroutine = null;
+        if (skipCoroutine != null) skipCoroutine = null;
     }
 
     // Método para mostrar el diálogo al jugador después de completar un puzle
     public void ShowAfterPuzzleDialogue()
     {
-        if(isClueUnlockTrigger) isNecesaryShowClue = true;
+        if (isClueUnlockTrigger) isNecesaryShowClue = true;
 
         string[] dialogueLines = GameStateManager.Instance.gameConversations.inspectConversations
             .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.afterRecentDialogue
@@ -141,6 +147,7 @@ public class InspectDialogue : MonoBehaviour, IDialogueLogic
 
         skipCoroutine = StartCoroutine(WaitToSkipDialogue());
         GetComponent<DialogueManager>().StartConversation(ConversationType.InspectDialogue, dialogueLines, characterNameLines);
+        isDefaultMessage = false;
     }
 
     // Métodos para obtener y para cambiar si es necesario avanzar la historia

@@ -31,7 +31,8 @@ public class CluesDisplayManager : MonoBehaviour
     {
         if(GameLogicManager.Instance.CurrentStoryPhase.ComparePhase(selectedSubphase) == SubphaseTemporaryOrder.IsRecentBefore)
         {
-            GameLogicManager.Instance.UIManager.CluePanel.SetActive(true);
+            GameLogicManager.Instance.UIManager.CluePanel.SetActive(true);            
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(true);
             cluesAudioSource.Play();
 
             bool[] clues = GameLogicManager.Instance.KnownClues;
@@ -121,10 +122,11 @@ public class CluesDisplayManager : MonoBehaviour
 
     // Corrutina para cerrar el panel que muestra la pista
     private IEnumerator WaitForInputToClosePanel()
-    {        
+    {
         yield return new WaitForSeconds(waitingTimeToClose);
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonUp(0) || Input.GetKeyDown(KeyCode.E));
         PlayerEvents.FinishShowingInformation();
-        GameLogicManager.Instance.UIManager.CluePanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.CluePanel.SetActive(false);        
+        GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(false);
     }
 }

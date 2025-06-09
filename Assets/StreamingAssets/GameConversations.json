@@ -14,7 +14,7 @@
             [
                 {
                     "speaker": "Player",
-                    "line": "Qué hambre, por Dios. Con lo bueno que está un pan calentito a esta hora de la maña..."
+                    "line": "Qué hambre, por Dios. Con lo buena que está una tostada a esta hora de la maña..."
                 },
                 {
                     "speaker": "Player",
@@ -73,7 +73,7 @@
             ]
         },
         {
-            "objectName": "Clue Object - Backpack",
+            "objectName": "Puzzle Display - Backpack",
             "currentDialogue": 
             [
                 {
@@ -83,6 +83,13 @@
                 {
                     "speaker": "Player",
                     "line": "Aunque antes podría echar un vistazo... (Se escucha una cremallera abrirse)"
+                }
+            ],
+            "afterRecentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "He conseguido abrir la mochila. A ver qué hay..."
                 },
                 {
                     "speaker": "Player",
@@ -111,17 +118,6 @@
                 {
                     "speaker": "Player",
                     "line": "Gracias, vieja maniática. Ahora sé el color de los ojos del culpable."
-                }
-            ],
-            "afterRecentDialogue": 
-            [
-                {
-                    "speaker": "Player",
-                    "line": "Tengo que decirle al inspector Montgomery que he encontrado su mochila."
-                },
-                {
-                    "speaker": "Player",
-                    "line": "Lo de que he visto la prueba me lo puedo ahorrar."
                 }
             ],
             "afterDistantDialogue": 
@@ -2160,7 +2156,11 @@
                         },
                         {
                             "speaker": "Player",
-                            "line": "Vale, papá. Yo también te tengo que dejar, que aún no he desayunado. Adiós."
+                            "line": "Vale, papá. Yo también te tengo que dejar, que aún no he desayunado y no soy persona hasta que me tome mi pan calentito."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Adiós."
                         },
                         {
                             "speaker": "Papá",
@@ -2177,6 +2177,10 @@
                         {
                             "speaker": "Player",
                             "line": "No creo que deba volver a llamarlo hasta que termine de desayunar."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Y mi rebanada de pan no se va a terminar de hacer sola..."
                         }
                     ]
                 },
@@ -4789,11 +4793,15 @@
             [
                 {
                     "speaker": "***",
-                    "line": "Esto es un tutorial. Cuando quieras continuar, pulsa la barra espaciadora para mostrar la siguiente parte."
+                    "line": "Esto es un tutorial. Para avanzar o retroceder entre sus distintas fases, utiliza las flechas izquierda y derecha del teclado o pulsa los botones naranjas."
                 },
                 {
                     "speaker": "***",
-                    "line": "Al final del tutorial, pulsa la barra espaciadora para cerrarlo. También puedes pulsar la tecla E en cualquier momento para salir inmediatamente."
+                    "line": "Como ya habrás notado, puedes desplazarte por el mundo usando las flechas de dirección o las teclas WASD."
+                },
+                {
+                    "speaker": "***",
+                    "line": "Cuando quieras terminar el tutorial, presiona la tecla E en la última fase."
                 }
             ]
         },
@@ -4807,19 +4815,19 @@
                 },
                 {
                     "speaker": "***",
-                    "line": "Para lograrlo, deberás avanzar en la investigación, hablar con tus vecinos, reunir pistas y conocer a los distintos sospechosos."
+                    "line": "Para lograrlo, deberás avanzar en la investigación hablando con tus vecinos, reuniendo pistas y preguntando a los distintos sospechosos."
                 },
                 {
                     "speaker": "***",
-                    "line": "Cualquiera puede ser culpable, así que presta atención a cada pista que descubras."
+                    "line": "Cualquiera de los sospechosos puede ser culpable, así que presta atención a cada pista que descubras."
                 },
                 {
                     "speaker": "***",
-                    "line": "En cualquier momento puedes decirle a la policía quién crees que es el culpable desde el ordenador de tu casa. Simplemente acercate y presiona la tecla E."
+                    "line": "En cualquier momento puedes decirle a la policía quién crees que es el culpable. Simplemente acércate al ordenador de tu casa y presiona la tecla E."
                 },
                 {
                     "speaker": "***",
-                    "line": "Pero ten cuidado, solo tienes un intento. Si fallas, obtendrás el final malo."
+                    "line": "Pero ten cuidado: solo tienes un intento. Si fallas, obtendrás el peor final posible."
                 },
                 {
                     "speaker": "***",
@@ -4827,7 +4835,7 @@
                 },
                 {
                     "speaker": "***",
-                    "line": "Si aciertas, obtendrás el final bueno. Ese debería ser tu objetivo."
+                    "line": "Si aciertas, obtendrás el final feliz que buscas para tu aventura. Intenta ver si eres capaz de conseguirlo."
                 }
             ]
         },
@@ -4837,15 +4845,15 @@
             [
                 {
                     "speaker": "***",
-                    "line": "Durante el juego podrás conversar con distintos personajes. Para iniciar el diálogo, pulsa la tecla E."
+                    "line": "Durante el juego podrás conversar con distintos personajes. Para iniciar el diálogo, acercate a uno y pulsa la tecla E."
                 },
                 {
                     "speaker": "***",
-                    "line": "Si pulsas la barra espaciadora mientras se escribe el texto, este se completará al instante. Si la vuelves a pulsar, continuarás con la charla."
+                    "line": "Si presionas la barra espaciadora mientras se escribe el texto, este se completará al instante. Si la vuelves a oprimir, continuarás con la charla."
                 },
                 {
                     "speaker": "***",
-                    "line": "Al final del diálogo, pulsa la barra espaciadora para cerrarla. También puedes pulsar E en cualquier momento para terminarla."
+                    "line": "Al final del diálogo, pulsa la barra espaciadora para cerrarlo. También puedes pulsar E en cualquier momento y terminará al instante."
                 },
                 {
                     "speaker": "***",
@@ -4863,11 +4871,15 @@
             [
                 {
                     "speaker": "***",
-                    "line": "En algunos momentos de la historia tendrás que inspeccionar un objeto, ya sea para seguir investigando o para activar un puzle."
+                    "line": "En algunos momentos de tu aventura tendrás que inspeccionar un objeto, ya sea para avanzar en la historia o para activar un puzle."
                 },
                 {
                     "speaker": "***",
-                    "line": "Para hacerlo, acércate a lo que quieras inspeccionar y mantén pulsada la tecla Q. Luego verás si has dado con el correcto o no."
+                    "line": "Para hacerlo, acércate a lo que quieras inspeccionar y mantén pulsada la tecla Q. Luego verás si has dado con el elemento correcto o no."
+                },
+                {
+                    "speaker": "***",
+                    "line": "Ten en cuenta que esta es tu única forma de interactuar con los objetos del mundo."
                 }
             ]
         },
@@ -4877,19 +4889,19 @@
             [
                 {
                     "speaker": "***",
-                    "line": "Puedes abrir o cerrar el menú de pausa en cualquier momento pulsando el maletín en la esquina superior izquierda o presionando la tecla I."
+                    "line": "Puedes abrir o cerrar el menú de pausa en cualquier momento, ya sea haciendo clic en el maletín de la esquina superior izquierda o presionando la tecla I."
                 },
                 {
                     "speaker": "***",
-                    "line": "En el menú encontrarás la lista de pistas que has descubierto y los sospechosos que conoces. Esto te será muy útil para descubrir al culpable."
+                    "line": "En este menú encontrarás una lista de las pistas que has descubierto y otra con los sospechosos que conoces. Te será muy útil para identificar al culpable."
                 },
                 {
                     "speaker": "***",
-                    "line": "Aquí también podrás guardar la partida o salir al menú principal. Incluso verás una ayuda con lo que debes hacer en ese momento."
+                    "line": "También tendrás la opción de guardar la partida o salir al menú principal. Incluso se mostrará una ayuda sobre el objetivo a seguir en ese momento."
                 },
                 {
                     "speaker": "***",
-                    "line": "Además del menú de pausa, podrás usar el mapa en ciertas zonas presionando la tecla M cuando veas el icono sobre ti."
+                    "line": "Además del menú de pausa, podrás usar el mapa en ciertas zonas al presionar la tecla M cuando salga el icono sobre tu personaje."
                 },
                 {
                     "speaker": "***",

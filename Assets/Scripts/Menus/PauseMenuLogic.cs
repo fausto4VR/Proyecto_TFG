@@ -24,19 +24,19 @@ public class PauseMenuLogic : MonoBehaviour
     private bool isOptionPanelShown;
     private bool isSelectCoroutineRunning;
     private bool isNecesaryGoToMainMenu;
-    
+
     // REVISAR AUDIO
     private AudioSource buttonsAudioSource;
     private AudioSource pauseAudioSource;
 
 
-    void Start() 
+    void Start()
     {
-        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;        
+        GameObject audioSourcesManager = GameLogicManager.Instance.UIManager.AudioManager;
         AudioSource[] audioSources = audioSourcesManager.GetComponents<AudioSource>();
         buttonsAudioSource = audioSources[1];
         pauseAudioSource = audioSources[6];
-        
+
         suspectSprites = GameLogicManager.Instance.UIManager.SuspectSpritesList;
         suspectImages = GameLogicManager.Instance.UIManager.SuspectImageList;
         suspectTexts = GameLogicManager.Instance.UIManager.SuspectTextsList;
@@ -44,7 +44,7 @@ public class PauseMenuLogic : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I))
         {
             DisplayMenuPanel(true);
         }
@@ -54,7 +54,7 @@ public class PauseMenuLogic : MonoBehaviour
     public void DisplayMenuPanel(bool showPanel)
     {
         if (GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is IdleState || isPauseMenuOpen)
-        {            
+        {
             pauseAudioSource.Play();
 
             if (showPanel)
@@ -62,6 +62,7 @@ public class PauseMenuLogic : MonoBehaviour
                 PlayerEvents.StartShowingInformation();
 
                 UpdateObjectiveText();
+                UpdatePointsText();
                 GameLogicManager.Instance.UIManager.BriefcaseIconButton.SetActive(false);
                 GameLogicManager.Instance.UIManager.PausePanel.SetActive(true);
                 isPauseMenuOpen = true;
@@ -82,9 +83,16 @@ public class PauseMenuLogic : MonoBehaviour
         string validSubphase = GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString();
 
         GameLogicManager.Instance.UIManager.ObjectiveTextInPause.text = GameStateManager.Instance.gameText.objectivesInMenu
-            .FirstOrDefault(text => $"{text.phase}.{text.subphase}" == validSubphase)?.objective 
+            .FirstOrDefault(text => $"{text.phase}.{text.subphase}" == validSubphase)?.objective
             ?? GameStateManager.Instance.gameText.objectivesInMenu
             .FirstOrDefault(text => $"{text.phase}.{text.subphase}" == "Default.Default")?.objective;
+    }
+
+    // Método para actualizar el texto de los puntos obtenidos en el menú de pausa
+    private void UpdatePointsText()
+    {
+        GameLogicManager.Instance.UIManager.PointsTextInPause.text =
+            $"{GameLogicManager.Instance.TotalPuzzlePoints}/{GameLogicManager.Instance.MaxPuzzlePoints}";
     }
 
     // Corrutina para esperar a que el jugador quiera cerrar el panel de pausa
@@ -93,7 +101,7 @@ public class PauseMenuLogic : MonoBehaviour
         yield return null;
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.I));
         yield return null;
-        
+
         DisplayMenuPanel(false);
     }
 
@@ -143,7 +151,7 @@ public class PauseMenuLogic : MonoBehaviour
 
             if (selectCoroutine != null) StopCoroutine(selectCoroutine);
 
-            selectSoundCoroutine = StartCoroutine(WaitForSoundAndSelectOption(option));            
+            selectSoundCoroutine = StartCoroutine(WaitForSoundAndSelectOption(option));
         }
         else
         {
@@ -151,8 +159,8 @@ public class PauseMenuLogic : MonoBehaviour
             {
                 selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
             }
-        }      
-    }    
+        }
+    }
 
     // Corrutina para esperar que suene el sonido del botón y se selecciona la opción elejida
     private IEnumerator WaitForSoundAndSelectOption(int option)
@@ -295,16 +303,13 @@ public class PauseMenuLogic : MonoBehaviour
             GameStateManager.Instance.SaveData();
             GameData gameData = SaveManager.LoadGameData();
 
-            Debug.Log(GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString());
-            Debug.Log(gameData.gameStoryPhase.ToStoryPhase().GetPhaseToString());
-
-            if(gameData != null && GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString() 
+            if (gameData != null && GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString()
                 == gameData.gameStoryPhase.ToStoryPhase().GetPhaseToString())
-            GameLogicManager.Instance.UIManager.AfterSaveText.text = "La partida se ha guardado correctamente.";
+                GameLogicManager.Instance.UIManager.AfterSaveText.text = "La partida se ha guardado correctamente.";
 
             else
-            GameLogicManager.Instance.UIManager.AfterSaveText.text = "Ha habido un error al guardar la partida. Inténtalo otra vez.";
-            
+                GameLogicManager.Instance.UIManager.AfterSaveText.text = "Ha habido un error al guardar la partida. Inténtalo otra vez.";
+
             GameLogicManager.Instance.UIManager.AfterSavePanel.SetActive(true);
             GameLogicManager.Instance.UIManager.AfterSaveOutPanel.SetActive(true);
             closeOptionPanelCoroutine = StartCoroutine(WaitUntilPlayerCloseOptionPanel(3));
@@ -343,25 +348,25 @@ public class PauseMenuLogic : MonoBehaviour
 
         while (!isOptionChosen)
         {
-            if (option == 1 && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1) 
+            if (option == 1 && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)
                 || Input.GetKeyDown(KeyCode.Space)))
             {
                 isOptionChosen = true;
                 HandleOptionReturn(1);
             }
-            else if (option == 2 && (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2) 
+            else if (option == 2 && (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)
                 || Input.GetKeyDown(KeyCode.Space)))
             {
                 isOptionChosen = true;
                 HandleOptionReturn(2);
             }
-            else if (option == 3 && (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3) 
+            else if (option == 3 && (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)
                 || Input.GetKeyDown(KeyCode.Space)))
             {
                 isOptionChosen = true;
                 HandleOptionReturn(3);
             }
-            else if (option == 4 && (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4) 
+            else if (option == 4 && (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)
                 || Input.GetKeyDown(KeyCode.N)))
             {
                 isOptionChosen = true;
@@ -386,7 +391,7 @@ public class PauseMenuLogic : MonoBehaviour
 
             if (closeOptionPanelCoroutine != null) StopCoroutine(closeOptionPanelCoroutine);
 
-            closeOptionSoundCoroutine = StartCoroutine(WaitForSoundAndReturnOption(option)); 
+            closeOptionSoundCoroutine = StartCoroutine(WaitForSoundAndReturnOption(option));
         }
         else
         {
@@ -409,7 +414,7 @@ public class PauseMenuLogic : MonoBehaviour
         if (option == 1) DisplayCluesBoard(false);
         else if (option == 2) DisplaySuspectsBoard(false);
         else if (option == 3) SaveGame(false);
-        else if (option == 4) DisplayGoToMainMenuPanel(false);        
+        else if (option == 4) DisplayGoToMainMenuPanel(false);
         else if (option == 5) GoToMainMenu();
         else Debug.LogError("Ha habido un error a la hora de cerrar un panel de las opciones en el menú de pausa.");
     }
@@ -421,13 +426,27 @@ public class PauseMenuLogic : MonoBehaviour
         closePanelSoundCoroutine = StartCoroutine(WaitForSoundAndClosePanel());
     }
 
-    // Corrutina para esperar que suene el sonido del botón y se cierre el panel de pausa
+    // Corrutina para esperar que suene el sonido del botón (que tarda menos que la transición) y se cierre el panel de pausa
     private IEnumerator WaitForSoundAndClosePanel()
     {
-        // Por si se quisiera esperar a que suene el audio del menú de pausa entero
-        // yield return new WaitForSeconds(pauseAudioSource.clip.length);
-        yield return null;
+        if (isNecesaryGoToMainMenu)
+        {
+            GameStateManager.Instance.TransitionManager.StartOutTransition(TransitionType.Circle);
+            yield return new WaitForSeconds(GameStateManager.Instance.TransitionDuration);
+        }
+        else
+        { 
+            // Por si se quisiera esperar a que suene el audio del menú de pausa entero
+            // yield return new WaitForSeconds(pauseAudioSource.clip.length);
+            yield return null;
+        }
 
+        ClosePausePanel();
+    }
+
+    // Método para cerrar el panel de pausa
+    private void ClosePausePanel()
+    {
         GameLogicManager.Instance.UIManager.OutPanelOptions.SetActive(false);
         GameLogicManager.Instance.UIManager.CluesPanelInPause.SetActive(false);
         GameLogicManager.Instance.UIManager.SuspectsPanelInPause.SetActive(false);
@@ -441,44 +460,17 @@ public class PauseMenuLogic : MonoBehaviour
         PlayerEvents.FinishShowingInformation();
 
         isOptionPanelShown = false;
-
-        if (selectCoroutine != null)
-        {
-            StopCoroutine(selectCoroutine);
-            selectCoroutine = null;
-        }
-
-        if (selectSoundCoroutine != null)
-        {
-            StopCoroutine(selectSoundCoroutine);
-            selectSoundCoroutine = null;
-        }
-
-        if (closePanelCoroutine != null)
-        {
-            StopCoroutine(closePanelCoroutine);
-            closePanelCoroutine = null;
-        }
-
-        if (closePanelSoundCoroutine != null)
-        {
-            StopCoroutine(closePanelSoundCoroutine);
-            closePanelSoundCoroutine = null;
-        }
-
-        if (closeOptionPanelCoroutine != null)
-        {
-            StopCoroutine(closeOptionPanelCoroutine);
-            closeOptionPanelCoroutine = null;
-        }
-
-        if (closeOptionSoundCoroutine != null)
-        {
-            StopCoroutine(closeOptionSoundCoroutine);
-            closeOptionSoundCoroutine = null;
-        }
-
         isPauseMenuOpen = false;
+
+        StopAllCoroutines();
+
+        if (selectCoroutine != null) selectCoroutine = null;
+        if (selectSoundCoroutine != null) selectSoundCoroutine = null;
+        if (closePanelCoroutine != null) closePanelCoroutine = null;
+        if (closePanelSoundCoroutine != null) closePanelSoundCoroutine = null;
+        if (closeOptionPanelCoroutine != null) closeOptionPanelCoroutine = null;
+        if (closeOptionSoundCoroutine != null) closeOptionSoundCoroutine = null;
+        if (closePanelSoundCoroutine != null) closePanelSoundCoroutine = null;        
 
         if (isNecesaryGoToMainMenu) SceneManager.LoadScene(menuSceneName);
     }

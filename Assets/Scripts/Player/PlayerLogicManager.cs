@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System.Collections;
 
 public class PlayerLogicManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class PlayerLogicManager : MonoBehaviour
 
     private PlayerState playerState;
     private PlayerState defaultPlayerState;
+    private Coroutine skipCoroutine;
+    private Coroutine finishCoroutine;
     private float holdInspectKeyDuration;
     private bool isInspectionComplete;
     private bool isInspectObjectInRange;
@@ -36,8 +39,8 @@ public class PlayerLogicManager : MonoBehaviour
 
         defaultPlayerState = GetStateFromPhase(firstPlayerPhase);
 
-        // Se asigna el estado que tenía antes cuando se vuelve de un puzle
-        if(!(GameStateManager.Instance.IsNewGame || GameStateManager.Instance.IsLoadGame))
+        // Se asigna el estado que tenía antes cuando se vuelve de un puzle o se cambia de escenario con el mapa
+        if (!(GameStateManager.Instance.IsNewGame || GameStateManager.Instance.IsLoadGame))
         {
             playerState = GameLogicManager.Instance.TemporalPlayerState;
             if (playerState == null) InitializeFirstState();
@@ -61,59 +64,22 @@ public class PlayerLogicManager : MonoBehaviour
             default:
                 return new IdleState();
         }
-    } 
+    }
 
     void Update()
     {
         playerState = playerState.HandleInput();
 
-        if(Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             InspectCheck();
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(true);
         }
-        else if (Input.GetKeyUp(KeyCode.Q))
+        else if (Input.GetKeyUp(KeyCode.Q) && playerState is InspectionState)
         {
             ResetProgress();
             PlayerEvents.AbortInspection();
-        }
-
-        // Se obtiene información relevante para el desarrollador pulsando V
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            Debug.Log("Guilty: " + GameLogicManager.Instance.Guilty);
-            Debug.Log("First Clue: " + GameLogicManager.Instance.Clues[0]);
-            Debug.Log("Second Clue: " + GameLogicManager.Instance.Clues[1]);
-            Debug.Log("Third Clue: " + GameLogicManager.Instance.Clues[2]);
-            Debug.Log("Game Started: " + GameStateManager.Instance.IsGameStarted);
-            Debug.Log("Story Phase: " + GameLogicManager.Instance.CurrentStoryPhase.phaseName);
-            Debug.Log("Story Subphase: " + GameLogicManager.Instance.CurrentStoryPhase.currentSubphase.subphaseName);
-            string LastPuzzle = GameLogicManager.Instance.LastPuzzleComplete;
-            Debug.Log((LastPuzzle == null || LastPuzzle == "") ? "Last Puzzle Complete: None" : "Last Puzzle Complete: " + LastPuzzle);
-            string cluesContent = string.Join(", ", GameLogicManager.Instance.KnownClues);
-            Debug.Log("Known Clues: " + cluesContent);
-            string suspectsContent = string.Join(", ", GameLogicManager.Instance.KnownSuspects);
-            Debug.Log("Known Suspects: " + suspectsContent);
-            string tutorialsContent = string.Join(", ", GameLogicManager.Instance.KnownTutorials);
-            Debug.Log("Known Tutorials: " + tutorialsContent);
-            string dialoguesContent = string.Join(", ", GameLogicManager.Instance.KnownDialogues);
-            Debug.Log("Known Dialogues: " + dialoguesContent);            
-            Debug.Log("Is Bad Ending: " + GameLogicManager.Instance.IsBadEnding);       
-            Debug.Log("End Opportunities: " + GameLogicManager.Instance.EndOpportunities);
-            Debug.Log("Player State: " + playerState.StateName);            
-            Debug.Log("Player Temporarily State: " + GameLogicManager.Instance.TemporalPlayerState.StateName);
-            Debug.Log("Player Position: (" + GameLogicManager.Instance.Player.transform.position.x + ", " 
-                + GameLogicManager.Instance.Player.transform.position.y + ", " 
-                + GameLogicManager.Instance.Player.transform.position.z + ")");
-            Debug.Log("Camera Position: (" + GameLogicManager.Instance.VirtualCamera.transform.position.x + ", " 
-                + GameLogicManager.Instance.VirtualCamera.transform.position.y + ", " 
-                + GameLogicManager.Instance.VirtualCamera.transform.position.z + ")");
-        }
-
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log("Current Phase: " + GameLogicManager.Instance.CurrentStoryPhase.GetPhaseToString());
-            string gameStoryString = string.Join(", ", StoryStateManager.CreateSubphasesList());
-            Debug.Log("Game Story: " + gameStoryString);
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(false);
         }
     }
 
@@ -147,7 +113,9 @@ public class PlayerLogicManager : MonoBehaviour
                     CompleteInspection();
                 }
                 else
-                { 
+                {
+                    skipCoroutine = StartCoroutine(WaitToSkipDialogue()); 
+                    finishCoroutine = StartCoroutine(WaitToFinishDialogue()); 
                     ShowDefaultMessage();
                 }
             }
@@ -163,14 +131,50 @@ public class PlayerLogicManager : MonoBehaviour
 
     // Método para mostrar un mensaje por defecto cuando se inspecciona un objeto que no tiene nada relevante
     public void ShowDefaultMessage()
-    {       
+    {
         string[] dialogueLines = GameStateManager.Instance.gameConversations.defaultInspectConversation
             .Select(dialogue => dialogue.line).ToArray();
         string[] characterNameLines = GameStateManager.Instance.gameConversations.defaultInspectConversation
             .Select(dialogue => dialogue.speaker).ToArray();
 
         ResetProgress();
-        GetComponent<DialogueManager>().StartConversation(ConversationType.PlayerLogicDialogue, dialogueLines, characterNameLines);
+        GetComponent<DialogueManager>().StartConversation(ConversationType.PlayerLogicDialogue, dialogueLines, characterNameLines);   
+    }
+
+    // Corrutina para esperar a que el jugador quiera saltarse el diálogo una vez empezado
+    private IEnumerator WaitToSkipDialogue()
+    {
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        yield return null;
+
+        if (GetComponent<DialogueManager>().CurrentConversationPhase != ConversationPhase.Ended)
+        StopDefaultMessage();
+    }
+
+    // Método para detener el mensaje por defecto cuando se inspecciona un objeto que no tiene nada relevante
+    public void StopDefaultMessage()
+    {
+        GetComponent<DialogueManager>().EndConversation(ConversationType.PlayerLogicDialogue);        
+        FinishInspection();
+    }
+
+    // Corrutina para esperar a que termine el mensaje por defecto cuando se inspecciona un objeto que no tiene nada relevante
+    private IEnumerator WaitToFinishDialogue()
+    {
+        yield return new WaitUntil(() => GetComponent<DialogueManager>().CurrentConversationPhase == ConversationPhase.Ended);
+        yield return null;
+
+        FinishInspection();
+    }
+
+    // Método para gestionar el final de la conversación del mensaje por defecto cuando se inspecciona un objeto que no tiene nada relevante
+    private void FinishInspection()
+    {
+        StopAllCoroutines();
+        if (skipCoroutine != null) skipCoroutine = null;
+        if (finishCoroutine != null) finishCoroutine = null;
+
+        GetComponent<DialogueManager>().CurrentConversationPhase = ConversationPhase.None;
     }
 
     // Método para reiniciar el progreso mientras transcurre la inspección del objeto

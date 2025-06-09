@@ -148,7 +148,7 @@ public static class SaveManager
     // Método para cargar los datos de los puzles
     public static PuzzleData LoadPuzzleData()
     {
-        string puzzleDataPath = Application.persistentDataPath + "/game.sav";
+        string puzzleDataPath = Application.persistentDataPath + "/puzzle.sav";
 
         try
         {

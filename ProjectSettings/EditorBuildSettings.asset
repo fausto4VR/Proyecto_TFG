@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ParkScene.unity
     guid: 74fdba50a8947c140959735120053342
   - enabled: 1
+    path: Assets/Scenes/Puzzle0Scene.unity
+    guid: d48766568d457ed46b85f51f0d3b7d8c
+  - enabled: 1
     path: Assets/Scenes/Puzzle1Scene.unity
     guid: 08acc912be9bcb64baa7f41710dd03ac
   - enabled: 1

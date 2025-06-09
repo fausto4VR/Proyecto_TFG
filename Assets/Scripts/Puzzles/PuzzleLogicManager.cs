@@ -43,6 +43,12 @@ public class PuzzleLogicManager : MonoBehaviour
         get { return (bool[])puzzleSupports.Clone(); }
     }
 
+    // Método para consultar la puntuación máxima del puzle
+    public int MaxPunctuation
+    {
+        get { return maxPunctuation; }
+    }
+
     // Método para cambiar un valor de la lista de ayudas
     public void SetPuzzleSupportsByIndex(int position, bool value)
     {
@@ -163,7 +169,7 @@ public class PuzzleLogicManager : MonoBehaviour
     {
         UpdatePuzzleData(false);
         GameLogicManager.Instance.IsPuzzleIncomplete = true;
-        SceneManager.LoadScene(sceneToReturn);
+        StartCoroutine(WaitShowTransition());
     }
 
     // Método para dar por finalizado el puzle y volver al mundo después de que el jugador haya acertado la solución
@@ -171,7 +177,18 @@ public class PuzzleLogicManager : MonoBehaviour
     {
         UpdatePuzzleData(true);
         GameLogicManager.Instance.LastPuzzleComplete = puzzleName;
+        GameLogicManager.Instance.TotalPuzzlePoints += puzzlePoints;
+        GameLogicManager.Instance.MaxPuzzlePoints += maxPunctuation;
         GameLogicManager.Instance.IsPuzzleCompleted = true;
+        StartCoroutine(WaitShowTransition());
+    }
+
+    // Corrutina para esperar a que se muestre la transición y cambiar de escene
+    private IEnumerator WaitShowTransition()
+    {
+        GameStateManager.Instance.TransitionManager.StartOutTransition(TransitionType.Fade);
+        yield return new WaitForSeconds(GameStateManager.Instance.TransitionDuration);
+
         SceneManager.LoadScene(sceneToReturn);
     }
 

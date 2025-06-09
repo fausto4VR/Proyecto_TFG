@@ -4,15 +4,21 @@ using System.Collections.Generic;
 public class PuzzleData
 {
     public List<PuzzleState> gamePuzzleStates;
+    public int gameTotalPuzzlePoints;
+    public int gameMaxPuzzlePoints;
 
-    public PuzzleData(List<PuzzleState> puzzleStates)
+    public PuzzleData(List<PuzzleState> puzzleStates, int totalPuzzlePoints, int maxPuzzlePoints)
     {
         gamePuzzleStates = new List<PuzzleState>(puzzleStates);
+        gameTotalPuzzlePoints = totalPuzzlePoints;
+        gameMaxPuzzlePoints = maxPuzzlePoints;
     }
 
     public PuzzleData()
     {
         gamePuzzleStates = new List<PuzzleState>();
+        gameTotalPuzzlePoints = 0;
+        gameMaxPuzzlePoints = 0;
     }
 }
 

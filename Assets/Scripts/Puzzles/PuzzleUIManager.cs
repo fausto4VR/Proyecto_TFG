@@ -159,7 +159,7 @@ public class PuzzleUIManager : MonoBehaviour
         successSolutionAudioSource.Play();
         successsPanel.SetActive(true);
         int points = GetComponent<PuzzleLogicManager>().UpdatePoints(true);
-        pointsSuccessText.text = points + "/50";
+        pointsSuccessText.text = $"{points}/{GetComponent<PuzzleLogicManager>().MaxPunctuation}";
         GetComponent<PuzzleLogicManager>().DetectToClosePanel(true);
     }
 
@@ -170,7 +170,7 @@ public class PuzzleUIManager : MonoBehaviour
         failureSolutionAudioSource.Play();
         failurePanel.SetActive(true);
         int points = GetComponent<PuzzleLogicManager>().UpdatePoints(false);
-        pointsFailureText.text = points + "/50";
+        pointsFailureText.text = $"{points}/{GetComponent<PuzzleLogicManager>().MaxPunctuation}";
         GetComponent<PuzzleLogicManager>().DetectToClosePanel(false);
     }
 

@@ -38,7 +38,8 @@ public static class PuzzleUtils
     // Método estático para eliminar caracteres no alfanuméricos de una cadena
     public static string RemoveNonClockSymbols(string textToRemoveCharacters)
     {
-        textToRemoveCharacters = Regex.Replace(textToRemoveCharacters, @"[^0-9IVX:]", "");
+        textToRemoveCharacters = Regex.Replace(textToRemoveCharacters, @"[^0-9IVXivx:]", "");
+        textToRemoveCharacters = textToRemoveCharacters.ToUpper();
         return textToRemoveCharacters;
     }
 

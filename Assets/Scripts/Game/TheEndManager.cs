@@ -60,7 +60,8 @@ public class TheEndManager : MonoBehaviour
         if (sendGuiltySoundCoroutine != null) StopCoroutine(sendGuiltySoundCoroutine);
         if (closeScreenCoroutine != null) StopCoroutine(closeScreenCoroutine);
 
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E)
+            && GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is IdleState);
         yield return null;
 
         DisplayTheEndPanel(true);
@@ -105,6 +106,7 @@ public class TheEndManager : MonoBehaviour
             UploadDropdown();
             GameLogicManager.Instance.UIManager.TheEndPanel.SetActive(true);
             GameLogicManager.Instance.UIManager.TheEndSection.SetActive(true);
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(true);
             
             closePanelCoroutine = StartCoroutine(WaitUntilPlayerClosePanel());
             sendGuiltyCoroutine = StartCoroutine(WaitForSendPlayer());
@@ -211,52 +213,52 @@ public class TheEndManager : MonoBehaviour
         GameLogicManager.Instance.UIManager.TheEndPanel.SetActive(false);
 
         if (endScreenType == EndScreenType.ShowEnding)
-        {            
-            if(GameLogicManager.Instance.IsBadEnding)
+        {
+            if (GameLogicManager.Instance.IsBadEnding)
             {
-                GameLogicManager.Instance.UIManager.BadEndingText.text = 
+                GameLogicManager.Instance.UIManager.BadEndingText.text =
                     "El culpable era " + GameLogicManager.Instance.Guilty + " y no lo has elegido.";
 
-                GameLogicManager.Instance.UIManager.BadEndingCorrectSuspectImage.sprite = 
+                GameLogicManager.Instance.UIManager.BadEndingCorrectSuspectImage.sprite =
                     suspectSprites[GameLogicManager.Instance.GuiltyNames.FindIndex(name => name == GameLogicManager.Instance.Guilty)];
-                
+
                 GameLogicManager.Instance.UIManager.BadEndingFailSection.SetActive(false);
                 GameLogicManager.Instance.UIManager.BadEndingPanel.SetActive(true);
             }
             else
             {
                 GameLogicManager.Instance.UIManager.GoodEndingPanel.SetActive(true);
-                GameLogicManager.Instance.UIManager.GoodEndingText.text = 
+                GameLogicManager.Instance.UIManager.GoodEndingText.text =
                     "El culpable era " + GameLogicManager.Instance.Guilty + " y lo has elegido.";
 
-                GameLogicManager.Instance.UIManager.GoodEndingSuspectImage.sprite = 
+                GameLogicManager.Instance.UIManager.GoodEndingSuspectImage.sprite =
                     suspectSprites[GameLogicManager.Instance.GuiltyNames.FindIndex(name => name == GameLogicManager.Instance.Guilty)];
             }
         }
         else if (endScreenType == EndScreenType.AnotherTry)
-        {            
+        {
             GameLogicManager.Instance.UIManager.AnotherTryText.text = "El culpable no era " + selectedGuilty + " y lo has elegido.";
 
-            GameLogicManager.Instance.UIManager.AnotherTrySuspectImage.sprite = 
+            GameLogicManager.Instance.UIManager.AnotherTrySuspectImage.sprite =
                 suspectSprites[GameLogicManager.Instance.GuiltyNames.FindIndex(name => name == selectedGuilty)];
-            
+
             GameLogicManager.Instance.UIManager.AnotherTryPanel.SetActive(true);
-            
+
             GameLogicManager.Instance.EndOpportunities = 1;
         }
         else if (endScreenType == EndScreenType.BadEnding)
-        {            
-            GameLogicManager.Instance.UIManager.BadEndingText.text = 
+        {
+            GameLogicManager.Instance.UIManager.BadEndingText.text =
                 "El culpable era " + GameLogicManager.Instance.Guilty + " y has elegido a " + selectedGuilty + ".";
 
-            GameLogicManager.Instance.UIManager.BadEndingCorrectSuspectImage.sprite = 
+            GameLogicManager.Instance.UIManager.BadEndingCorrectSuspectImage.sprite =
                 suspectSprites[GameLogicManager.Instance.GuiltyNames.FindIndex(name => name == GameLogicManager.Instance.Guilty)];
-            
-            GameLogicManager.Instance.UIManager.BadEndingFailSuspectImage.sprite = 
+
+            GameLogicManager.Instance.UIManager.BadEndingFailSuspectImage.sprite =
                 suspectSprites[GameLogicManager.Instance.GuiltyNames.FindIndex(name => name == selectedGuilty)];
 
             GameLogicManager.Instance.UIManager.BadEndingPanel.SetActive(true);
-            
+
             GameLogicManager.Instance.EndOpportunities = 0;
             GameLogicManager.Instance.IsBadEnding = true;
 
@@ -264,14 +266,14 @@ public class TheEndManager : MonoBehaviour
         }
         else if (endScreenType == EndScreenType.GoodEnding)
         {
-            GameLogicManager.Instance.UIManager.GoodEndingText.text = 
+            GameLogicManager.Instance.UIManager.GoodEndingText.text =
                 "El culpable era " + GameLogicManager.Instance.Guilty + " y lo has elegido.";
 
-            GameLogicManager.Instance.UIManager.GoodEndingSuspectImage.sprite = 
+            GameLogicManager.Instance.UIManager.GoodEndingSuspectImage.sprite =
                 suspectSprites[GameLogicManager.Instance.GuiltyNames.FindIndex(name => name == GameLogicManager.Instance.Guilty)];
-                
+
             GameLogicManager.Instance.UIManager.GoodEndingPanel.SetActive(true);
-            
+
             GameLogicManager.Instance.EndOpportunities = 0;
             GameLogicManager.Instance.IsBadEnding = false;
 
@@ -324,6 +326,7 @@ public class TheEndManager : MonoBehaviour
         isAnySuspectsKnown = false;           
         GameLogicManager.Instance.UIManager.TheEndSection.SetActive(false);
         GameLogicManager.Instance.UIManager.TheEndPanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(false);
 
         PlayerEvents.FinishShowingInformation();
 

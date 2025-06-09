@@ -36,6 +36,7 @@ public class DialogueManager : MonoBehaviour
     private string[] dialogueLines;
     private string[] characterNameLines;
     private int lineIndex;
+    private string objectNameInRange;
     private bool isPlayerInRange;
     private bool isTypingDialogueText;
 
@@ -57,27 +58,31 @@ public class DialogueManager : MonoBehaviour
     }
     
     // Método para comenzar la conversación. Se llama desde otros scripts
-    public void StartConversation(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames)
+    public void StartConversation(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames,
+        System.Action<bool> onComplete = null)
     {
-        StartCoroutine(StartConversationDelay(conversationType, newDialogueLines, newCharacterNames));
+        StartCoroutine(StartConversationDelay(conversationType, newDialogueLines, newCharacterNames, onComplete));
     }
 
     // Corrutina que espera un frame para asegurarse que se ha actualizado correctamente el estado del jugador
-    private IEnumerator StartConversationDelay(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames)
+    private IEnumerator StartConversationDelay(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames,
+        System.Action<bool> onComplete)
     {
         yield return null;
 
-        if(GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is TalkingState)
+        if (GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is TalkingState)
         {
             conversationPhase = ConversationPhase.Started;
             currentConversationType = conversationType;
             dialogueLines = newDialogueLines;
             characterNameLines = newCharacterNames;
             StartDialogue();
+            onComplete?.Invoke(true);
         }
         else
         {
-            Debug.LogError("No se ha iniciado correctamente la conversación.");
+            Debug.LogWarning("No se ha iniciado correctamente la conversación.");
+            onComplete?.Invoke(false);
         }
     }
 
@@ -97,8 +102,11 @@ public class DialogueManager : MonoBehaviour
         GameLogicManager.Instance.UIManager.DialogueConversationSection.SetActive(true);
 
         // Si activa el panel de diálogo si no es un diálogo del tipo de multiples opciones  
-        if(currentConversationType != ConversationType.MultipleChoiceDialogue) 
-        GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(true);
+        if (currentConversationType != ConversationType.MultipleChoiceDialogue)
+        { 
+            GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(true);            
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(true);
+        }
 
         lineIndex = 0;
         ShowProfileImage();
@@ -126,6 +134,7 @@ public class DialogueManager : MonoBehaviour
     {
         GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(false);
         GameLogicManager.Instance.UIManager.DialogueConversationSection.SetActive(false);
+        GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(false);
 
         // Si es un diálogo del tipo de fase de la historia o del tipo de multiples opciones se activa el aviso de diálogo
         if(currentConversationType == ConversationType.StoryPhaseDialogueConversation 
@@ -208,11 +217,12 @@ public class DialogueManager : MonoBehaviour
     // Método para que otros scripts puedan acabar la conversación cuando sea necesario
     public void EndConversation(ConversationType endConversationType)
     {
-        typingDialogueAudioSource.Stop();        
+        typingDialogueAudioSource.Stop();
 
         currentConversationType = endConversationType;
-        
+
         StopAllCoroutines();
+        markCoroutine = StartCoroutine(CheckPlayerStateForMark());
 
         EndDialogue();
     }
@@ -261,7 +271,7 @@ public class DialogueManager : MonoBehaviour
 
             GameLogicManager.Instance.UIManager.DialogueConversationText.text += ch;
             
-            if(charIndex % charsToPlaySound == 0) typingDialogueAudioSource.Play();
+            if (charIndex % charsToPlaySound == 0) typingDialogueAudioSource.Play();
             charIndex++;
 
             yield return new WaitForSeconds(typingTime);
@@ -309,6 +319,12 @@ public class DialogueManager : MonoBehaviour
         get { return isPlayerInRange; }
     }
 
+    // Método para obtener el nombre del objeto a rango para los scripts que necesitan poder iniciar una conversación al hacer clic
+    public string ObjectNameInRange
+    {
+        get { return objectNameInRange; }
+    }
+
     // Métodos para obtener y cambiar la fase en la que se encuentra la conversación
     public ConversationPhase CurrentConversationPhase
     {
@@ -325,17 +341,27 @@ public class DialogueManager : MonoBehaviour
     // Corrutina para activar o desactivar el aviso de diálogo en función de si se está inspeccionando o no 
     private IEnumerator CheckPlayerStateForMark()
     {
+        var previousPlayerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
+
         while (true)
         {
-            var playerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
+            var currentPlayerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
 
-            if (playerState == PlayerStatePhase.Inspection)
+            if (currentPlayerState == PlayerStatePhase.Inspection)
             {
-                if (dialogueMark.activeSelf) dialogueMark.SetActive(false);
+                if (dialogueMark.activeSelf)
+                {
+                    dialogueMark.SetActive(false);
+                    previousPlayerState = PlayerStatePhase.Inspection;
+                }
             }
-            else if (playerState == PlayerStatePhase.Idle)
+            else if (currentPlayerState == PlayerStatePhase.Idle && previousPlayerState == PlayerStatePhase.Inspection)
             {
-                if (!dialogueMark.activeSelf) dialogueMark.SetActive(true);
+                if (!dialogueMark.activeSelf)
+                { 
+                    dialogueMark.SetActive(true);
+                    previousPlayerState = PlayerStatePhase.Idle;
+                } 
             }
 
             yield return null;
@@ -355,6 +381,10 @@ public class DialogueManager : MonoBehaviour
             // Se avisa al jugador que hay un objeto a inspeccionar en rango
             if(inspectDialogue != null) 
             GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = true;
+
+            // Se actualiza el nombre del objeto a rango para los scripts que necesitan poder iniciar una conversación al hacer clic
+            if(multipleChoiceDialogue != null || theEndDialogue != null || storyPhaseDialogue != null) 
+            objectNameInRange = gameObject.name;
 
             // Se llama al método de los scripts auxiliares para que permanezcan atentos a si se inicia la conversación
             if (dialogueLogic != null) dialogueLogic.WaitForDialogueInput();
@@ -379,18 +409,17 @@ public class DialogueManager : MonoBehaviour
             if(inspectDialogue != null)
             GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = false;
 
+            // Se borra el nombre del objeto a rango para los scripts que necesitan poder iniciar una conversación al hacer clic
+            if(multipleChoiceDialogue != null || theEndDialogue != null || storyPhaseDialogue != null) 
+            objectNameInRange = null;
+
             // Se llama al método de los scripts auxiliares para que se deje de esperar a iniciar la conversación
             if (dialogueLogic != null) dialogueLogic.ExitOfDialogueRange();
 
-            StopAllCoroutines();
-
             conversationPhase = ConversationPhase.None;
 
-            if (markCoroutine != null)
-            {
-                StopCoroutine(markCoroutine);
-                markCoroutine = null;
-            }
+            StopAllCoroutines();
+            if (markCoroutine != null) markCoroutine = null;
 
             isPlayerInRange = false;
         }

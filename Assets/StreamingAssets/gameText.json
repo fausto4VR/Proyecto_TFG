@@ -15,7 +15,7 @@
         {
             "phase": "Prologue",
             "subphase": "Inspect the Toaster",
-            "objective": "Tengo hambre, debería ponerle remedio a eso"
+            "objective": "Tengo hambre, debería ponerle remedio a eso haciendome una rebanada de pan"
         },
         {
             "phase": "Puzzle1",
@@ -78,7 +78,7 @@
             "objective": "Tengo que resolver el acertijo que dice 'una esfera con la que ver el mundo completo'"
         },
         {
-            "phase": "Puzzle3",
+            "phase": "Puzzle4",
             "subphase": "Talk to Physio 4",
             "objective": "Una vez he encontrado la llave misteriosa solo se me ocurre que me pueda ayudar Sarah"
         },
@@ -155,10 +155,10 @@
     ],
     "puzzle0": 
     {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
+        "puzzleStatementText": "Estás viendo un tutorial sobre cómo funcionan los puzles en este juego.\n\nPara empezar a entender la dinámica de los acertijos, debes saber que esta sección muestra el enunciado del puzle. El texto aparecerá progresivamente, pero si prefieres que se muestre de inmediato, puedes pulsar la barra espaciadora o hacer clic en cualquier parte de la pantalla.\n\nPara resolver el puzle de este tutorial, simplemente debes desbloquear todas las pistas antes de pulsar el botón de 'Listo'.",
+        "firstSupportText": "Como ya habrás visto, puedes desbloquear las ayudas o pistas pulsando el botón correspondiente. Eso sí, recibirás una penalización en los puntos obtenidos al final del puzle. Además, algo importante a tener en cuenta es que no puedes desbloquear una ayuda sin haber desbloqueado las anteriores.",
+        "secondSupportText": "En todas las pantallas del puzle hay un botón en la esquina inferior derecha que muestra una ayuda para entender bien el puzle o cómo dar la solución. No te preocupes, no ocurre nada negativo por consultarla, así que échale un vistazo también esta vez.",
+        "thirdSupportText": "En cualquier momento puedes regresar al mundo pulsando el botón 'Volver' y continuar con el puzle más adelante.\n\nAdemás, al desbloquear las tres ayudas tendrás la opción de saltarte el puzle. Pero ten cuidado: asegúrate de leer bien la advertencia que aparece."
     },
     "puzzle1": 
     {
