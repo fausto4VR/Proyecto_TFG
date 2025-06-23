@@ -2,8 +2,7 @@
 
 Este videojuego es el resultado de un **Trabajo de Fin de Grado (TFG)** realizado en la **Universidad de Sevilla**, dentro del **Grado en Ingeniería Informática - Ingeniería del Software**.
 
-
-
+<br>
 ## 🛠️ Instrucciones para ejecutar el proyecto en Unity
 
 Si deseas explorar, modificar o ejecutar el proyecto desde Unity:
