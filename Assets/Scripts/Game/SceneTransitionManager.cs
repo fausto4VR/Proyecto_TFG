@@ -11,10 +11,12 @@ public enum TransitionType
 
 public class SceneTransitionManager : MonoBehaviour
 {
-    [Header("Variable Section")]
-    [SerializeField] private List<string> scenesWithoutInTransition;
-    [SerializeField] private List<string> scenesWithoutOutTransition;
-    [SerializeField] private TransitionType defaultTransitionType = TransitionType.Circle;
+    [Header("Configuration Data")]
+    [SerializeField] private GameConfigurationData transitionConfiguration;
+
+    private List<string> scenesWithoutInTransition => transitionConfiguration.scenesWithoutInTransition;
+    private List<string> scenesWithoutOutTransition => transitionConfiguration.scenesWithoutOutTransition;
+    private TransitionType defaultTransitionType => transitionConfiguration.defaultTransitionType;
 
     private GameObject fadeTransition;
     private GameObject circleTransition;

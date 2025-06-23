@@ -17,6 +17,7 @@ public static class PlayerEvents
     public static event Action OnInspectionAborted = delegate { };
     public static event Action OnTalkingFinishedWithoutClue = delegate { };
     public static event Action OnTalkingFinishedWithClue = delegate { };
+    public static event Action OnShowCredits = delegate { };
     public static event Action OnShowingInformationFinished = delegate { };
 
     // Métodos que lanzan los eventos correspondientes 
@@ -27,6 +28,7 @@ public static class PlayerEvents
     public static void AbortInspection() => OnInspectionAborted?.Invoke();
     public static void FinishTalkingWithoutClue() => OnTalkingFinishedWithoutClue?.Invoke();
     public static void FinishTalkingWithClue() => OnTalkingFinishedWithClue?.Invoke();
+    public static void ShowCredits() => OnShowCredits?.Invoke();
     public static void FinishShowingInformation() => OnShowingInformationFinished?.Invoke();
 }
 
@@ -150,6 +152,7 @@ public class TalkingState : PlayerState
     {
         PlayerEvents.OnTalkingFinishedWithoutClue += HandleTalkingFinishedWithoutClue;
         PlayerEvents.OnTalkingFinishedWithClue += HandleTalkingFinishedWithClue;
+        PlayerEvents.OnShowCredits += HandleShowCredits;
         NextPlayerState = PlayerStatePhase.Default;
     }
 
@@ -157,10 +160,12 @@ public class TalkingState : PlayerState
     {
         PlayerEvents.OnTalkingFinishedWithoutClue -= HandleTalkingFinishedWithoutClue;
         PlayerEvents.OnTalkingFinishedWithClue -= HandleTalkingFinishedWithClue;
+        PlayerEvents.OnShowCredits -= HandleShowCredits;
     }
 
     private void HandleTalkingFinishedWithoutClue() => NextPlayerState = PlayerStatePhase.Idle;
     private void HandleTalkingFinishedWithClue() => NextPlayerState = PlayerStatePhase.ShowingInformation;
+    private void HandleShowCredits() => NextPlayerState = PlayerStatePhase.ShowingInformation;
 
     public override PlayerState HandleInput()
     {

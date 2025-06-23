@@ -132,6 +132,11 @@
                     "actions": 1
                 },
                 {
+                    "type": "Dialogue",
+                    "name": "Talk to Janitor 1",
+                    "actions": 1
+                },
+                {
                     "type": "ReadyForPuzzle",
                     "name": "Ready for Puzzle 5",
                     "actions": 1
@@ -153,6 +158,11 @@
                     "actions": 1
                 },
                 {
+                    "type": "Dialogue",
+                    "name": "Talk to Janitor 2",
+                    "actions": 1
+                },
+                {
                     "type": "ReadyForPuzzle",
                     "name": "Ready for Puzzle 6",
                     "actions": 1
@@ -167,6 +177,16 @@
                 {
                     "type": "Dialogue",
                     "name": "Talk to Park Manager 2",
+                    "actions": 1
+                },
+                {
+                    "type": "Investigation",
+                    "name": "Inspect the Barrels",
+                    "actions": 1
+                },
+                {
+                    "type": "Dialogue",
+                    "name": "Talk to Park Manager 3",
                     "actions": 1
                 },
                 {

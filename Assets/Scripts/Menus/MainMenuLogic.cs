@@ -16,6 +16,7 @@ public class MainMenuLogic : MonoBehaviour
     [SerializeField] private GameObject resetGamePanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject controlsPanel;
+    [SerializeField] private GameObject introPanel;
 
     [Header("Detection Section")]
     [SerializeField] private GameObject outSettingsPanelDetectionButton;
@@ -41,6 +42,8 @@ public class MainMenuLogic : MonoBehaviour
 
     void Start()
     {
+        if (!GameStateManager.Instance.IsIntroShown) ShowIntro();
+
         UnlockContinueButton();
         UpdatePoints();
 
@@ -65,6 +68,28 @@ public class MainMenuLogic : MonoBehaviour
     {
         if (cursorTexture != null)
             Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
+    }
+
+    // Método para mostrar la introducción al empezar el juego
+    private void ShowIntro()
+    {
+        introPanel.SetActive(true);
+        GameStateManager.Instance.IsIntroShown = true;
+
+        StartCoroutine(WaitUntilSkipIntro());
+    }
+
+    // Corrutina para esperar que el jugador quiera saltarse la introducción
+    private IEnumerator WaitUntilSkipIntro()
+    {
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonUp(0));
+        yield return null;
+
+        GameStateManager.Instance.TransitionManager.StartOutTransition(TransitionType.Fade);
+        yield return new WaitForSeconds(GameStateManager.Instance.TransitionDuration);
+        
+        introPanel.SetActive(false); 
+        GameStateManager.Instance.TransitionManager.StartInTransition();
     }
 
     // Método para gestionar si se muestra el botón de continuar habilitado o no

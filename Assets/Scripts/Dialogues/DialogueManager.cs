@@ -19,7 +19,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject dialogueMark;
 
     [Header("Character Data Section")]
-    [SerializeField] private Sprite characterProfileImage;  
+    [SerializeField] private Sprite characterProfileImage;
+    [SerializeField] private Color dialogueNameColor = new Color(0f, 0f, 0f, 1f); // Esto es negro
 
     [Header("Variable Section")]
     [SerializeField] private float typingTime = 0.05f;
@@ -148,13 +149,13 @@ public class DialogueManager : MonoBehaviour
         GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
 
         // Si es un diálogo del tipo fase de la historia se comprueba si se hace falta avanzar la historia
-        if(currentConversationType == ConversationType.StoryPhaseDialogueConversation || 
+        if (currentConversationType == ConversationType.StoryPhaseDialogueConversation ||
             currentConversationType == ConversationType.StoryPhaseDialogueTrigger)
         {
             // Se hace avanzar la historia cuando sea necesario
-            if(storyPhaseDialogue.IsAdvanceStory)
+            if (storyPhaseDialogue.IsAdvanceStory)
             {
-                if(GetComponent<AdvanceStoryManager>() != null)
+                if (GetComponent<AdvanceStoryManager>() != null)
                 {
                     GetComponent<AdvanceStoryManager>().AdvanceStoryState();
                 }
@@ -162,19 +163,19 @@ public class DialogueManager : MonoBehaviour
                 {
                     Debug.LogError("No existe el componente necesario para avanzar la historia.");
                 }
-                
+
                 storyPhaseDialogue.IsAdvanceStory = false;
             }
 
             PlayerEvents.FinishTalkingWithoutClue();
         }
         // Si es un diálogo del tipo inspección se comprueba si se hace falta avanzar la historia o mostrar la pista
-        else if(currentConversationType == ConversationType.InspectDialogue)
+        else if (currentConversationType == ConversationType.InspectDialogue)
         {
             // Se hace avanzar la historia cuando sea necesario
-            if(inspectDialogue.IsAdvanceStory)
+            if (inspectDialogue.IsAdvanceStory)
             {
-                if(GetComponent<AdvanceStoryManager>() != null)
+                if (GetComponent<AdvanceStoryManager>() != null)
                 {
                     GetComponent<AdvanceStoryManager>().AdvanceStoryState();
                 }
@@ -182,14 +183,14 @@ public class DialogueManager : MonoBehaviour
                 {
                     Debug.LogError("No existe el componente necesario para avanzar la historia.");
                 }
-                
+
                 inspectDialogue.IsAdvanceStory = false;
             }
 
             // Se muestra la pista cuando sea necesario
-            if(inspectDialogue.IsNecesaryShowClue)
+            if (inspectDialogue.IsNecesaryShowClue)
             {
-                if(GetComponent<CluesDisplayManager>() != null)
+                if (GetComponent<CluesDisplayManager>() != null)
                 {
                     PlayerEvents.FinishTalkingWithClue();
                     GetComponent<CluesDisplayManager>().ShowDiscoveredClue();
@@ -205,6 +206,11 @@ public class DialogueManager : MonoBehaviour
             {
                 PlayerEvents.FinishTalkingWithoutClue();
             }
+        }
+        // Si es un diálogo del tipo final del juego se muestran los créditos
+        else if (currentConversationType == ConversationType.TheEndDialogue)
+        { 
+            theEndDialogue.FinishTheEndDialogue();
         }
         else
         {
@@ -241,17 +247,21 @@ public class DialogueManager : MonoBehaviour
         }        
     }
 
-    // Método para mostrar el nombre del personaje que está hablando
+    // Método para mostrar el nombre (con su respectivo color) del personaje que está hablando
     private void ShowCharacterName()
     {
-        if(characterNameLines[lineIndex] == "Player")
+        if (characterNameLines[lineIndex] == "Player")
         {
-            GameLogicManager.Instance.UIManager.DialogueConversationName.text = 
+            GameLogicManager.Instance.UIManager.DialogueConversationName.text =
                 GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerName;
+
+            GameLogicManager.Instance.UIManager.DialogueConversationName.color = 
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerNameColor;
         }
         else
         {
             GameLogicManager.Instance.UIManager.DialogueConversationName.text = characterNameLines[lineIndex];
+            GameLogicManager.Instance.UIManager.DialogueConversationName.color = dialogueNameColor;
         }        
     }
     

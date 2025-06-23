@@ -7,12 +7,14 @@ public class GameLogicManager : MonoBehaviour
 {
     public static GameLogicManager Instance { get; private set; }
     
-    [Header("Variable Section")]
-    [SerializeField] private string sceneToDestroy = "MenuScene";
-    [SerializeField] private Vector3 newGameStartPosition = new Vector3(-25.5f, 12f, 0f);
-    [SerializeField] private int firstClueSubphaseIndex = 3;
-    [SerializeField] private int secondClueSubphaseIndex = 16;
-    [SerializeField] private int thirdClueSubphaseIndex = 25;
+    [Header("Configuration Data")]
+    [SerializeField] private GameConfigurationData logicConfiguration;
+
+    private string sceneToDestroy => logicConfiguration.sceneToDestroy;
+    private Vector3 newGameStartPosition => logicConfiguration.newGameStartPosition;
+    private int firstClueSubphaseIndex => logicConfiguration.firstClueSubphaseIndex;
+    private int secondClueSubphaseIndex => logicConfiguration.secondClueSubphaseIndex;
+    private int thirdClueSubphaseIndex => logicConfiguration.thirdClueSubphaseIndex;
 
     private GameObject player;
     private GameObject virtualCamera;

@@ -5,33 +5,36 @@ using System.Collections.Generic;
 
 public class GameUIManager : MonoBehaviour
 {
-    [Header("Clues Sprites Section")]
-    [SerializeField] private Sprite firstClueSprite1;    
-    [SerializeField] private Sprite firstClueSprite2;
-    [SerializeField] private Sprite secondClueSprite1;
-    [SerializeField] private Sprite secondClueSprite2;
-    [SerializeField] private Sprite thirdClueSprite1;
-    [SerializeField] private Sprite thirdClueSprite2;
+    [Header("Configuration Data")]
+    [SerializeField] private GameConfigurationData UIConfiguration;
 
-    [Header("Suspects Sprites Section")]
-    [SerializeField] private Sprite suspectSprite1;
-    [SerializeField] private Sprite suspectSprite2;
-    [SerializeField] private Sprite suspectSprite3;
-    [SerializeField] private Sprite suspectSprite4;
-    [SerializeField] private Sprite suspectSprite5;
-    [SerializeField] private Sprite suspectSprite6;
-    [SerializeField] private Sprite suspectSprite7;
-    [SerializeField] private Sprite suspectSprite8;
-    
-    [Header("Default Sprite Section")]
-    [SerializeField] private Sprite defaultSprite;
+    // Clues Sprites Section
+    private Sprite firstClueSprite1 => UIConfiguration.firstClueSprite1;
+    private Sprite firstClueSprite2 => UIConfiguration.firstClueSprite2;
+    private Sprite secondClueSprite1 => UIConfiguration.secondClueSprite1;
+    private Sprite secondClueSprite2 => UIConfiguration.secondClueSprite2;
+    private Sprite thirdClueSprite1 => UIConfiguration.thirdClueSprite1;
+    private Sprite thirdClueSprite2 => UIConfiguration.thirdClueSprite2;
 
-    [Header("Cursors Textures Section")]
-    [SerializeField] private Texture2D defaultCursor;
-    [SerializeField] private Texture2D interactCursor;
-    
-    [Header("Variable Section")]
-    [SerializeField] private Vector2 hotspot = Vector2.zero;
+    // Suspects Sprites Section
+    private Sprite suspectSprite1 => UIConfiguration.suspectSprite1;
+    private Sprite suspectSprite2 => UIConfiguration.suspectSprite2;
+    private Sprite suspectSprite3 => UIConfiguration.suspectSprite3;
+    private Sprite suspectSprite4 => UIConfiguration.suspectSprite4;
+    private Sprite suspectSprite5 => UIConfiguration.suspectSprite5;
+    private Sprite suspectSprite6 => UIConfiguration.suspectSprite6;
+    private Sprite suspectSprite7 => UIConfiguration.suspectSprite7;
+    private Sprite suspectSprite8 => UIConfiguration.suspectSprite8;
+
+    // Default Sprite Section
+    private Sprite defaultSprite => UIConfiguration.defaultSprite;
+
+    // Cursors Textures Section
+    private Texture2D defaultCursor => UIConfiguration.defaultCursor;
+    private Texture2D interactCursor => UIConfiguration.interactCursor;
+
+    // Variable Section
+    private Vector2 hotspot => UIConfiguration.hotspot;
 
     private GameObject canvas;
 
@@ -75,6 +78,7 @@ public class GameUIManager : MonoBehaviour
     private GameObject goodEndingPanel;
     private  TMP_Text goodEndingText;
     private Image goodEndingSuspectImage;
+    private GameObject credits;
 
     private GameObject mapPanel;
     private GameObject thirdOptionKeyInMap;
@@ -187,6 +191,7 @@ public class GameUIManager : MonoBehaviour
         anotherTryPanel = theEndSection?.transform.Find("Another Try Panel")?.gameObject;
         badEndingPanel = theEndSection?.transform.Find("Bad Ending Panel")?.gameObject;
         goodEndingPanel = theEndSection?.transform.Find("Good Ending Panel")?.gameObject;
+        credits = theEndSection?.transform.Find("Credits")?.gameObject;
 
         opportunitiesText = theEndPanel?.transform.GetChild(0).transform.Find("Opportunities Text")?.GetComponent<TMP_Text>();        
         guiltyDropdown = theEndPanel?.transform.GetChild(0).transform.Find("Guilty Dropdown")?.gameObject;
@@ -485,6 +490,12 @@ public class GameUIManager : MonoBehaviour
     public Image GoodEndingSuspectImage
     {
         get { return goodEndingSuspectImage; }
+    }
+
+    // Método para obtener el objeto que refleja los créditos
+    public GameObject Credits
+    {
+        get { return credits; }
     }
 
     // Método para obtener el objeto que refleja el panel del mapa

@@ -26,7 +26,7 @@ public class Puzzle5Logic : MonoBehaviour, IPuzzleLogic
     // Método para comprobar si el resultado proporcionado es acertado o no - Implementación de la interfaz
     public void CheckResult()
     {
-         if(CheckSolution())
+        if(CheckSolution())
         {
             GetComponent<PuzzleUIManager>().ShowSuccessPanel();
         }

@@ -70,8 +70,8 @@ public class PlayerMovement : MonoBehaviour
     // Se ejecuta a intervalos fijos, independientemente de la tasa de FPS, por lo que se usa para la lógica relacionada con la física
     private void FixedUpdate()
     {
-        // Sectualiza la posición del jugador de acuerdo con la entrada de movimiento mediante la física del Rigidbody2D
-        if(GetComponent<PlayerLogicManager>().PlayerState.CanMove())
+        // Se actualiza la posición del jugador de acuerdo con la entrada de movimiento mediante la física del Rigidbody2D
+        if (GetComponent<PlayerLogicManager>().PlayerState.CanMove())
         {
             Vector2 newPosition = playerRb.position + moveInput * speed * Time.fixedDeltaTime;
 
@@ -81,6 +81,12 @@ public class PlayerMovement : MonoBehaviour
                 sortingOrderManager.UpdateSortingOrder();
                 lastPosition = newPosition;
             }
+        }
+        
+        // Se tiene en cuenta para evitar movimientos por empujes residuales
+        if (moveInput == Vector2.zero && playerRb.velocity != Vector2.zero)
+        {
+            playerRb.velocity = Vector2.zero;
         }
     }
 }

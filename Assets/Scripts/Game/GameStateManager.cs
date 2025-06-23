@@ -7,10 +7,12 @@ public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
 
-    [Header("Variable Section")]
-    [SerializeField] private string mainScene = "HomeScene";
-    [SerializeField] private float fadeTransitionDuration = 1.1f;
-    [SerializeField] private float circleTransitionDuration = 0.8f;
+    [Header("Configuration Data")]
+    [SerializeField] private GameConfigurationData stateConfiguration;
+
+    private string mainScene => stateConfiguration.mainScene;
+    private float fadeTransitionDuration => stateConfiguration.fadeTransitionDuration;
+    private float circleTransitionDuration => stateConfiguration.circleTransitionDuration;
 
     // Contenedor de los textos cargados
     public GameTextDictionary gameText { get; private set; }
@@ -22,6 +24,7 @@ public class GameStateManager : MonoBehaviour
     private bool isNewGame;
     private bool isGameStarted;
     private bool isMapTravel;
+    private bool isIntroShown;
 
     
     // En el Awake se define su comportamiento como singleton. Además se genera  la clave de encriptación y se cargan los 
@@ -95,11 +98,18 @@ public class GameStateManager : MonoBehaviour
         set { isGameStarted = value; }
     }
 
-    // Métodos para obtener y para cambiar si se está cambiando de escena mediante el mapa
+    // Métodos para obtener y para cambiar si se está yendo de una escena a otra mediante el mapa
     public bool IsMapTravel
     {
         get { return isMapTravel; }
         set { isMapTravel = value; }
+    }
+
+    // Métodos para obtener y para cambiar si se ha mostrado la intro
+    public bool IsIntroShown
+    {
+        get { return isIntroShown; }
+        set { isIntroShown = value; }
     }
 
     // Métodos para obtener el componente que gestiona la transición entre las escenas
@@ -124,7 +134,7 @@ public class GameStateManager : MonoBehaviour
         LoadPuzzleData();
 
         // Evento que se dispara cuando la escena está cargada
-        if(isNecesaryLoadScene) SceneManager.sceneLoaded += OnSceneLoaded;
+        if (isNecesaryLoadScene) SceneManager.sceneLoaded += OnSceneLoaded;
         else LoadPlayerData();
         
         Debug.Log("Datos cargados");

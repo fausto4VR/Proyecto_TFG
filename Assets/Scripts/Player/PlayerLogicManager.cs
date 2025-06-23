@@ -11,6 +11,7 @@ public class PlayerLogicManager : MonoBehaviour
 
     [Header("Player Data Section")]
     [SerializeField] private string playerName = "Player";
+    [SerializeField] private Color playerNameColor = new Color(0.6588f, 0.0f, 0.0509f); // Esto es #A8000D
     [SerializeField] private Sprite playerImage;
 
     [Header("Variable Section")]
@@ -208,6 +209,12 @@ public class PlayerLogicManager : MonoBehaviour
     public string PlayerName
     {
         get { return playerName; }
+    }
+
+    // Método para obtener el color del nombre del personaje del jugador
+    public Color PlayerNameColor
+    {
+        get { return playerNameColor; }
     }
 
     // Método para obtener la imagen del protagonista
