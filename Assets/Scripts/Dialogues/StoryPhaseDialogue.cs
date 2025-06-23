@@ -20,13 +20,16 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
     private Coroutine restartCoroutine;
     private string advanceStoryPhase;    
     private bool isAdvanceStory;
+    private bool startDialogueFromClick;
     
 
     // Método que se llama cuando se entra en el rango de diálogo de un objeto
     public void WaitForDialogueInput()
     {
-        if (skipCoroutine != null) StopCoroutine(skipCoroutine);        
+        if (skipCoroutine != null) StopCoroutine(skipCoroutine);
         if (restartCoroutine != null) StopCoroutine(restartCoroutine);
+
+        GetComponent<DialogueClickDetector>().StartDetection();
 
         if (dialogueType == StoryPhaseDialogueType.Conversation) waitCoroutine = StartCoroutine(WaitUntilPlayerStartDialogue());
         else if (dialogueType == StoryPhaseDialogueType.Trigger) StartTriggerDialogue();
@@ -35,14 +38,28 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
     // Corrutina para esperar a que el jugador quiera comenzar el diálogo
     private IEnumerator WaitUntilPlayerStartDialogue()
     {
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        yield return new WaitUntil(() => (Input.GetKeyDown(KeyCode.E) || startDialogueFromClick)
+            && GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is IdleState);
         yield return null;
+
+        startDialogueFromClick = false;
 
         PlayerEvents.StartTalking();
         SelectDialogue(ConversationType.StoryPhaseDialogueConversation);
 
         skipCoroutine = StartCoroutine(WaitToSkipDialogue());
         restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
+    }
+
+    // Método para iniciar la conversación al hacer clic con el cursor sobre el personaje
+    public void TryStartDialogueOnClick()
+    {
+        if (!GetComponent<DialogueManager>().IsPlayerInRange
+            || GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is not IdleState
+            || GetComponent<DialogueManager>().CurrentConversationPhase != ConversationPhase.None)
+        return;
+
+        startDialogueFromClick = true;
     }
 
     // Método para seleccionar el diálogo correspondiente en función de la fase de la historia
@@ -61,8 +78,12 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
             .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
 
         CheckIsNecesaryAdvanceStory(validSubphase);
-        
-        GetComponent<DialogueManager>().StartConversation(conversationType, dialogueLines, characterNameLines);
+
+        GetComponent<DialogueManager>().StartConversation(conversationType, dialogueLines, characterNameLines,
+            success =>
+            {
+                if (!success) WaitForDialogueInput();
+            });
     }
 
     // Método para buscar la subfase inmediatamente superior a la actual en la lista de subfases (indican el salto)
@@ -192,23 +213,13 @@ public class StoryPhaseDialogue : MonoBehaviour, IDialogueLogic
     // Método que se llama cuando se sale del rango de diálogo de un objeto
     public void ExitOfDialogueRange()
     {
-        if (waitCoroutine != null)
-        {
-            StopCoroutine(waitCoroutine);
-            waitCoroutine = null;
-        }
+        StopAllCoroutines();
 
-        if (skipCoroutine != null)
-        {
-            StopCoroutine(skipCoroutine);
-            skipCoroutine = null;
-        }
+        if (waitCoroutine != null) waitCoroutine = null;
+        if (skipCoroutine != null) skipCoroutine = null;
+        if (restartCoroutine != null) restartCoroutine = null;
         
-        if (restartCoroutine != null)
-        {
-            StopCoroutine(restartCoroutine);
-            restartCoroutine = null;
-        }
+        GetComponent<DialogueClickDetector>().StopDetection();        
     }
 
     // Método para obtener el tipo de diálogo de fase de la historia que es

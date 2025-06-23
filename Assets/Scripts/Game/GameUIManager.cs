@@ -5,35 +5,40 @@ using System.Collections.Generic;
 
 public class GameUIManager : MonoBehaviour
 {
-    [Header("Clues Sprites Section")]
-    [SerializeField] private Sprite firstClueSprite1;    
-    [SerializeField] private Sprite firstClueSprite2;
-    [SerializeField] private Sprite secondClueSprite1;
-    [SerializeField] private Sprite secondClueSprite2;
-    [SerializeField] private Sprite thirdClueSprite1;
-    [SerializeField] private Sprite thirdClueSprite2;
+    [Header("Configuration Data")]
+    [SerializeField] private GameConfigurationData UIConfiguration;
 
-    [Header("Suspects Sprites Section")]
-    [SerializeField] private Sprite suspectSprite1;
-    [SerializeField] private Sprite suspectSprite2;
-    [SerializeField] private Sprite suspectSprite3;
-    [SerializeField] private Sprite suspectSprite4;
-    [SerializeField] private Sprite suspectSprite5;
-    [SerializeField] private Sprite suspectSprite6;
-    [SerializeField] private Sprite suspectSprite7;
-    [SerializeField] private Sprite suspectSprite8;
-    
-    [Header("Default Sprite Section")]
-    [SerializeField] private Sprite defaultSprite;
+    // Clues Sprites Section
+    private Sprite firstClueSprite1 => UIConfiguration.firstClueSprite1;
+    private Sprite firstClueSprite2 => UIConfiguration.firstClueSprite2;
+    private Sprite secondClueSprite1 => UIConfiguration.secondClueSprite1;
+    private Sprite secondClueSprite2 => UIConfiguration.secondClueSprite2;
+    private Sprite thirdClueSprite1 => UIConfiguration.thirdClueSprite1;
+    private Sprite thirdClueSprite2 => UIConfiguration.thirdClueSprite2;
 
-    [Header("Cursors Textures Section")]
-    [SerializeField] private Texture2D defaultCursor;
-    [SerializeField] private Texture2D interactCursor;
-    
-    [Header("Variable Section")]
-    [SerializeField] private Vector2 hotspot = Vector2.zero;
+    // Suspects Sprites Section
+    private Sprite suspectSprite1 => UIConfiguration.suspectSprite1;
+    private Sprite suspectSprite2 => UIConfiguration.suspectSprite2;
+    private Sprite suspectSprite3 => UIConfiguration.suspectSprite3;
+    private Sprite suspectSprite4 => UIConfiguration.suspectSprite4;
+    private Sprite suspectSprite5 => UIConfiguration.suspectSprite5;
+    private Sprite suspectSprite6 => UIConfiguration.suspectSprite6;
+    private Sprite suspectSprite7 => UIConfiguration.suspectSprite7;
+    private Sprite suspectSprite8 => UIConfiguration.suspectSprite8;
+
+    // Default Sprite Section
+    private Sprite defaultSprite => UIConfiguration.defaultSprite;
+
+    // Cursors Textures Section
+    private Texture2D defaultCursor => UIConfiguration.defaultCursor;
+    private Texture2D interactCursor => UIConfiguration.interactCursor;
+
+    // Variable Section
+    private Vector2 hotspot => UIConfiguration.hotspot;
 
     private GameObject canvas;
+
+    private GameObject outDetectionPanel;
 
     private GameObject dialoguePanel;
     private GameObject dialogueChoiceSection;    
@@ -51,6 +56,8 @@ public class GameUIManager : MonoBehaviour
 
     private GameObject tutorialPanel;
     private TMP_Text tutorialText;
+    private GameObject leftArrowTutorialButton;
+    private GameObject rightArrowTutorialButton;
     private GameObject cluePanel;
     private TMP_Text clueText;
     private Image clueImage;
@@ -71,6 +78,7 @@ public class GameUIManager : MonoBehaviour
     private GameObject goodEndingPanel;
     private  TMP_Text goodEndingText;
     private Image goodEndingSuspectImage;
+    private GameObject credits;
 
     private GameObject mapPanel;
     private GameObject thirdOptionKeyInMap;
@@ -79,6 +87,7 @@ public class GameUIManager : MonoBehaviour
     private GameObject briefcaseIconButton;
     private GameObject pausePanel;
     private TMP_Text objectiveTextInPause;
+    private TMP_Text pointsTextInPause;
     private GameObject outPanelOptions;
     private GameObject afterSavePanel;
     private TMP_Text afterSaveText;
@@ -142,7 +151,9 @@ public class GameUIManager : MonoBehaviour
 
     // Método para obtener todos los elementos del UI necesarios
     private void GetUIElements()
-    {
+    {       
+        outDetectionPanel = canvas.transform.Find("Out Detection Panel")?.gameObject; 
+
         dialoguePanel = canvas.transform.Find("Dialogue Panel").gameObject;
 
         dialogueChoiceSection = dialoguePanel.transform.Find("Choice Section").gameObject;
@@ -163,37 +174,40 @@ public class GameUIManager : MonoBehaviour
             .GetComponent<TMP_Text>();
         dialogueConversationProfile = dialogueConversationSection.transform.Find("Profile Image").GetComponent<Image>();
         
-        tutorialPanel = canvas.transform.Find("Tutorial Panel").gameObject;
+        tutorialPanel = canvas.transform.Find("Tutorial Panel")?.gameObject;
 
-        tutorialText = tutorialPanel.transform.Find("Tutorial Text").GetComponent<TMP_Text>();
+        tutorialText = tutorialPanel?.transform.Find("Tutorial Text")?.GetComponent<TMP_Text>();
+        leftArrowTutorialButton = tutorialPanel?.transform.Find("Left Arrow Button")?.gameObject;
+        rightArrowTutorialButton = tutorialPanel?.transform.Find("Right Arrow Button")?.gameObject;
 
         cluePanel = canvas.transform.Find("Clue Panel").gameObject;
 
         clueText = cluePanel.transform.Find("Clue Text").GetComponent<TMP_Text>();
         clueImage = cluePanel.transform.Find("Clue Image").GetComponent<Image>();
 
-        theEndSection = canvas.transform.Find("The End Section").gameObject;
+        theEndSection = canvas.transform.Find("The End Section")?.gameObject;
 
-        theEndPanel = theEndSection.transform.Find("The End Panel").gameObject;
-        anotherTryPanel = theEndSection.transform.Find("Another Try Panel").gameObject;
-        badEndingPanel = theEndSection.transform.Find("Bad Ending Panel").gameObject;
-        goodEndingPanel = theEndSection.transform.Find("Good Ending Panel").gameObject;
+        theEndPanel = theEndSection?.transform.Find("The End Panel")?.gameObject;
+        anotherTryPanel = theEndSection?.transform.Find("Another Try Panel")?.gameObject;
+        badEndingPanel = theEndSection?.transform.Find("Bad Ending Panel")?.gameObject;
+        goodEndingPanel = theEndSection?.transform.Find("Good Ending Panel")?.gameObject;
+        credits = theEndSection?.transform.Find("Credits")?.gameObject;
 
-        opportunitiesText = theEndPanel.transform.GetChild(0).transform.Find("Opportunities Text").GetComponent<TMP_Text>();        
-        guiltyDropdown = theEndPanel.transform.GetChild(0).transform.Find("Guilty Dropdown").gameObject;
-        sendButtonText = theEndPanel.transform.GetChild(0).transform.Find("Send Yes Button").gameObject.transform.GetChild(0)
+        opportunitiesText = theEndPanel?.transform.GetChild(0).transform.Find("Opportunities Text")?.GetComponent<TMP_Text>();        
+        guiltyDropdown = theEndPanel?.transform.GetChild(0).transform.Find("Guilty Dropdown")?.gameObject;
+        sendButtonText = theEndPanel?.transform.GetChild(0).transform.Find("Send Yes Button")?.gameObject.transform.GetChild(0)
             .GetComponent<TMP_Text>();
         
-        anotherTryText = anotherTryPanel.transform.Find("Guilty Text").GetComponent<TMP_Text>();
-        anotherTrySuspectImage = anotherTryPanel.transform.Find("Fail Section").transform.GetChild(1).GetComponent<Image>();
+        anotherTryText = anotherTryPanel?.transform.Find("Guilty Text").GetComponent<TMP_Text>();
+        anotherTrySuspectImage = anotherTryPanel?.transform.Find("Fail Section").transform.GetChild(1).GetComponent<Image>();
 
-        badEndingFailSection = badEndingPanel.transform.Find("Fail Section").gameObject;
-        badEndingText = badEndingPanel.transform.Find("Guilty Text").GetComponent<TMP_Text>();
-        badEndingFailSuspectImage = badEndingPanel.transform.Find("Fail Section").transform.GetChild(1).GetComponent<Image>();
-        badEndingCorrectSuspectImage = badEndingPanel.transform.Find("Correct Section").transform.GetChild(1).GetComponent<Image>();
+        badEndingFailSection = badEndingPanel?.transform.Find("Fail Section")?.gameObject;
+        badEndingText = badEndingPanel?.transform.Find("Guilty Text")?.GetComponent<TMP_Text>();
+        badEndingFailSuspectImage = badEndingPanel?.transform.Find("Fail Section")?.transform.GetChild(1).GetComponent<Image>();
+        badEndingCorrectSuspectImage = badEndingPanel?.transform.Find("Correct Section")?.transform.GetChild(1).GetComponent<Image>();
         
-        goodEndingText = goodEndingPanel.transform.Find("Guilty Text").GetComponent<TMP_Text>();
-        goodEndingSuspectImage = goodEndingPanel.transform.Find("Correct Section").transform.GetChild(1).GetComponent<Image>();
+        goodEndingText = goodEndingPanel?.transform.Find("Guilty Text")?.GetComponent<TMP_Text>();
+        goodEndingSuspectImage = goodEndingPanel?.transform.Find("Correct Section")?.transform.GetChild(1).GetComponent<Image>();
         
         mapPanel = canvas.transform.Find("Map Panel").gameObject;
 
@@ -204,6 +218,8 @@ public class GameUIManager : MonoBehaviour
         pausePanel = canvas.transform.Find("Pause Menu").transform.GetChild(1).gameObject;
 
         objectiveTextInPause = pausePanel.transform.GetChild(0).transform.Find("Objective Panel").transform.GetChild(1)
+            .GetComponent<TMP_Text>();
+        pointsTextInPause = pausePanel.transform.GetChild(0).transform.Find("Postit Points Image").transform.GetChild(1)
             .GetComponent<TMP_Text>();
         
         outPanelOptions = pausePanel.transform.GetChild(0).transform.Find("Out Panel Options").gameObject;
@@ -252,6 +268,12 @@ public class GameUIManager : MonoBehaviour
 
         Transform puzzleTransform = soundtrack.transform.Find("Puzzle Music");
         if (puzzleTransform != null) puzzleMusic = puzzleTransform.GetComponent<AudioSource>();
+    }
+
+    // Método para obtener el objeto que refleja el panel exterior de las secciones del canvas
+    public GameObject OutDetectionPanel
+    {
+        get { return outDetectionPanel; }
     }
 
     // Método para obtener el objeto que refleja el panel de diálogo
@@ -342,6 +364,18 @@ public class GameUIManager : MonoBehaviour
     public TMP_Text TutorialText
     {
         get { return tutorialText; }
+    }
+
+    // Método para obtener el objeto que refleja la flecha izquierda en el panel del tutorial
+    public GameObject LeftArrowTutorialButton
+    {
+        get { return leftArrowTutorialButton; }
+    }
+
+    // Método para obtener el objeto que refleja la flecha derecha en el panel del tutorial
+    public GameObject RightArrowTutorialButton
+    {
+        get { return rightArrowTutorialButton; }
     }
 
     // Método para obtener el objeto que refleja el panel de pistas
@@ -458,6 +492,12 @@ public class GameUIManager : MonoBehaviour
         get { return goodEndingSuspectImage; }
     }
 
+    // Método para obtener el objeto que refleja los créditos
+    public GameObject Credits
+    {
+        get { return credits; }
+    }
+
     // Método para obtener el objeto que refleja el panel del mapa
     public GameObject MapPanel
     {
@@ -492,6 +532,12 @@ public class GameUIManager : MonoBehaviour
     public TMP_Text ObjectiveTextInPause
     {
         get { return objectiveTextInPause; }
+    }
+
+    // Método para obtener el texto de los puntos obtenidos en el panel de pausa
+    public TMP_Text PointsTextInPause
+    {
+        get { return pointsTextInPause; }
     }
 
     // Método para obtener el panel invisible posterior a abrir alguna opción

@@ -7,8 +7,12 @@ public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
 
-    [Header("Variable Section")]
-    [SerializeField] private string mainScene = "HomeScene";
+    [Header("Configuration Data")]
+    [SerializeField] private GameConfigurationData stateConfiguration;
+
+    private string mainScene => stateConfiguration.mainScene;
+    private float fadeTransitionDuration => stateConfiguration.fadeTransitionDuration;
+    private float circleTransitionDuration => stateConfiguration.circleTransitionDuration;
 
     // Contenedor de los textos cargados
     public GameTextDictionary gameText { get; private set; }
@@ -18,7 +22,9 @@ public class GameStateManager : MonoBehaviour
   
     private bool isLoadGame;
     private bool isNewGame;
-    private bool isGameStarted;  
+    private bool isGameStarted;
+    private bool isMapTravel;
+    private bool isIntroShown;
 
     
     // En el Awake se define su comportamiento como singleton. Además se genera  la clave de encriptación y se cargan los 
@@ -43,10 +49,32 @@ public class GameStateManager : MonoBehaviour
         StoryStateManager.LoadGameStory();
     }
 
-    // Método para consultar la escena principal
+    // Método para consultar el nombre de la escena principal
     public string MainScene
     {
         get { return mainScene; }
+    }
+
+    // Método para consultar el tiempo de duración de la transición entre escenas
+    public float TransitionDuration
+    {
+        get
+        {
+            if (GetComponent<SceneTransitionManager>().CurrentTransitionType == TransitionType.Fade)
+            {
+                return fadeTransitionDuration;
+            }
+            else if (GetComponent<SceneTransitionManager>().CurrentTransitionType == TransitionType.Circle)
+            {
+                return circleTransitionDuration;
+            }
+            else
+            {
+                if (GetComponent<SceneTransitionManager>().DefaultTransitionType == TransitionType.Fade) return fadeTransitionDuration;
+                else if (GetComponent<SceneTransitionManager>().DefaultTransitionType == TransitionType.Circle) return circleTransitionDuration;
+                else return 0f;
+            }
+        }
     }
     
     // Métodos para obtener y para cambiar si es una nueva partida
@@ -70,6 +98,26 @@ public class GameStateManager : MonoBehaviour
         set { isGameStarted = value; }
     }
 
+    // Métodos para obtener y para cambiar si se está yendo de una escena a otra mediante el mapa
+    public bool IsMapTravel
+    {
+        get { return isMapTravel; }
+        set { isMapTravel = value; }
+    }
+
+    // Métodos para obtener y para cambiar si se ha mostrado la intro
+    public bool IsIntroShown
+    {
+        get { return isIntroShown; }
+        set { isIntroShown = value; }
+    }
+
+    // Métodos para obtener el componente que gestiona la transición entre las escenas
+    public SceneTransitionManager TransitionManager
+    {
+        get { return GetComponent<SceneTransitionManager>(); }
+    }
+
     // Método para guardar los datos
     public void SaveData()
     {
@@ -86,7 +134,7 @@ public class GameStateManager : MonoBehaviour
         LoadPuzzleData();
 
         // Evento que se dispara cuando la escena está cargada
-        if(isNecesaryLoadScene) SceneManager.sceneLoaded += OnSceneLoaded;
+        if (isNecesaryLoadScene) SceneManager.sceneLoaded += OnSceneLoaded;
         else LoadPlayerData();
         
         Debug.Log("Datos cargados");
@@ -140,8 +188,11 @@ public class GameStateManager : MonoBehaviour
     // Método para obtener los parámatros de los puzles y guardarlos
     private void SavePuzzleData()
     {
-        List<PuzzleState> puzzleStateList = GameLogicManager.Instance.PuzzleStateList;
-        PuzzleData puzzleData = new PuzzleData(puzzleStateList);
+        List<PuzzleState> puzzleStateList = GameLogicManager.Instance.PuzzleStateList;        
+        int totalPuzzlePoints = GameLogicManager.Instance.TotalPuzzlePoints;
+        int maxPuzzlePoints = GameLogicManager.Instance.MaxPuzzlePoints;
+
+        PuzzleData puzzleData = new PuzzleData(puzzleStateList, totalPuzzlePoints, maxPuzzlePoints);
         SaveManager.SavePuzzleData(puzzleData);
     }
 
@@ -171,6 +222,8 @@ public class GameStateManager : MonoBehaviour
     {
         PuzzleData puzzleData = SaveManager.LoadPuzzleData();
         GameLogicManager.Instance.PuzzleStateList = puzzleData.gamePuzzleStates;
+        GameLogicManager.Instance.TotalPuzzlePoints = puzzleData.gameTotalPuzzlePoints;
+        GameLogicManager.Instance.MaxPuzzlePoints = puzzleData.gameMaxPuzzlePoints;
     }
 
     // Método que se llama cuando una escena es completamente cargada
@@ -222,7 +275,8 @@ public class GameStateManager : MonoBehaviour
     public class GameTextDictionary
     {
         public List<string> guiltyNames;
-        public List<ObjectiveInfo> objectivesInMenu;
+        public List<ObjectiveInfo> objectivesInMenu;        
+        public TextPuzzle puzzle0;
         public TextPuzzle puzzle1;
         public TextPuzzle puzzle2;        
         public TextPuzzle puzzle3;

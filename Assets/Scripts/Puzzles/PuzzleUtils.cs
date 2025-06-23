@@ -35,13 +35,6 @@ public static class PuzzleUtils
         return textToRemoveCharacters;
     }
 
-    // Método estático para eliminar caracteres no alfanuméricos de una cadena
-    public static string RemoveNonClockSymbols(string textToRemoveCharacters)
-    {
-        textToRemoveCharacters = Regex.Replace(textToRemoveCharacters, @"[^0-9IVX:]", "");
-        return textToRemoveCharacters;
-    }
-
     // Método estático para eliminar caracteres no numéricos de una cadena
     public static string RemoveNonNumeric(string textToRemoveCharacters)
     {
@@ -92,7 +85,7 @@ public static class PuzzleUtils
     public static bool ValidateDisplaySolution(List<string> activeElements, List<string> requiredElements, string filter = null)
     {
         if (!string.IsNullOrEmpty(filter))
-        activeElements = activeElements.Where(e => e.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
+            activeElements = activeElements.Where(e => e.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
 
         if (activeElements.Count != requiredElements.Count) return false;
 

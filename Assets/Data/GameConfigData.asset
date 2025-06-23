@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4632ddf0b28e88e49a2026ee71cc16c1, type: 3}
+  m_Name: GameConfigData
+  m_EditorClassIdentifier: 
+  mainScene: HomeScene
+  fadeTransitionDuration: 1.1
+  circleTransitionDuration: 0.8
+  scenesWithoutInTransition: []
+  scenesWithoutOutTransition: []
+  defaultTransitionType: 1
+  sceneToDestroy: MenuScene
+  newGameStartPosition: {x: -25.5, y: 12, z: 0}
+  firstClueSubphaseIndex: 3
+  secondClueSubphaseIndex: 16
+  thirdClueSubphaseIndex: 29
+  firstClueSprite1: {fileID: 21300000, guid: d4cf8dc31e1c57342980148d829e6c5a, type: 3}
+  firstClueSprite2: {fileID: 21300000, guid: ab7927c0322b5a44e85546ece307a316, type: 3}
+  secondClueSprite1: {fileID: 21300000, guid: 4dea4bf159606e44aa76503fe394ebb9, type: 3}
+  secondClueSprite2: {fileID: 21300000, guid: 8d8e4f0bd71628341a581f393e15c010, type: 3}
+  thirdClueSprite1: {fileID: 21300000, guid: ffb5c07ce34e49b488af043f9aac8199, type: 3}
+  thirdClueSprite2: {fileID: 21300000, guid: b557c6c2c03e49743ae662ddcc3e5023, type: 3}
+  suspectSprite1: {fileID: 21300000, guid: 25334985c41743c42a4416dbe6d741b9, type: 3}
+  suspectSprite2: {fileID: 21300000, guid: 45141008366c2b747b51a2043e8abd8b, type: 3}
+  suspectSprite3: {fileID: 21300000, guid: f7c679fa962d9a84aaba75fe935cfded, type: 3}
+  suspectSprite4: {fileID: 21300000, guid: f3c3ac615a0bd3347a344f1980768ea6, type: 3}
+  suspectSprite5: {fileID: 21300000, guid: 6322f6c357d43f14bbfc04812ceda2d5, type: 3}
+  suspectSprite6: {fileID: 21300000, guid: 1a05a15e7c62bff4d9267568bb81fc58, type: 3}
+  suspectSprite7: {fileID: 21300000, guid: 9a42e03debacaa54c8f672562a8a14f9, type: 3}
+  suspectSprite8: {fileID: 21300000, guid: 239a4ccdbb6048b40bbb57021b10297c, type: 3}
+  defaultSprite: {fileID: 21300000, guid: 938d1abbeff623643ae6397128860483, type: 3}
+  defaultCursor: {fileID: 2800000, guid: e24ad077717a53b48aaeb4d8b14b709e, type: 3}
+  interactCursor: {fileID: 2800000, guid: 952f530815545ad40abb4a40ff6ceab1, type: 3}
+  hotspot: {x: 0, y: 0}

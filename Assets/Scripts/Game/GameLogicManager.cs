@@ -7,13 +7,14 @@ public class GameLogicManager : MonoBehaviour
 {
     public static GameLogicManager Instance { get; private set; }
     
-    [Header("Variable Section")]
-    [SerializeField] private string sceneToDestroy = "MenuScene";
-    // [SerializeField] private Vector3 newGameStartPosition = new Vector3(-25.5f, 12f, 0f);
-    [SerializeField] private Vector3 newGameStartPosition = new Vector3(0f, 0f, 0f);
-    [SerializeField] private int firstClueSubphaseIndex = 3;
-    [SerializeField] private int secondClueSubphaseIndex = 16;
-    [SerializeField] private int thirdClueSubphaseIndex = 25;
+    [Header("Configuration Data")]
+    [SerializeField] private GameConfigurationData logicConfiguration;
+
+    private string sceneToDestroy => logicConfiguration.sceneToDestroy;
+    private Vector3 newGameStartPosition => logicConfiguration.newGameStartPosition;
+    private int firstClueSubphaseIndex => logicConfiguration.firstClueSubphaseIndex;
+    private int secondClueSubphaseIndex => logicConfiguration.secondClueSubphaseIndex;
+    private int thirdClueSubphaseIndex => logicConfiguration.thirdClueSubphaseIndex;
 
     private GameObject player;
     private GameObject virtualCamera;
@@ -28,10 +29,13 @@ public class GameLogicManager : MonoBehaviour
     private Dictionary<string, bool> knownDialogues;
     private bool isBadEnding;
     private int endOpportunities;
-    private List<PuzzleState> puzzleStateList;
+    private List<PuzzleState> puzzleStateList;    
+    private int totalPuzzlePoints;
+    private int maxPuzzlePoints;
 
     private float[] temporarilyPlayerPosition = new float[3];
     private float[] temporarilyCameraPosition = new float[3];
+    private string temporarilyPuzzleObject;
     private PlayerState temporarilyPlayerState;
     private List<string> firstClueGroup1;
     private List<string> firstClueGroup2;
@@ -87,44 +91,24 @@ public class GameLogicManager : MonoBehaviour
 
         if(GameStateManager.Instance.IsNewGame && SceneManager.GetActiveScene().name == GameStateManager.Instance.MainScene)
         {
-            Debug.Log("Se ha comenzado una nueva partida.");
-
-            GameStateManager.Instance.IsGameStarted = true;
-            GameStateManager.Instance.SaveData();
+            Debug.Log("Se ha comenzado una nueva partida.");            
 
             // Para empezar en un juego nuevo al lado de la cama
             if (player != null) player.transform.position = newGameStartPosition;
             else Debug.LogError("No se ha podido situar al jugador en la posición inicial al comenzar una nueva partida.");
 
-            GameStateManager.Instance.IsNewGame = false;
+            GameStateManager.Instance.IsGameStarted = true;
+
+            GameStateManager.Instance.SaveData();
         }
 
         if(GameStateManager.Instance.IsLoadGame)
         {
-            GameStateManager.Instance.LoadData(false);
-            GameStateManager.Instance.IsLoadGame = false; 
+            GameStateManager.Instance.LoadData(false); 
         }
 
         UpdateKnownClues();
     }
-
-    /*
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            GameStateManager.Instance.ResetData();
-        }
-        if(Input.GetKeyDown(KeyCode.G))
-        {
-            GameStateManager.Instance.SaveData();
-        }
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            GameStateManager.Instance.LoadData(true);
-        }
-    }
-    */
 
     // Métodos para obtener y para cambiar el objeto player, es decir, el avatar del jugador
     public GameObject Player
@@ -278,6 +262,20 @@ public class GameLogicManager : MonoBehaviour
         set { puzzleStateList = new List<PuzzleState>(value); }
     }
 
+    // Métodos para obtener y para cambiar el número total de puntos obtenidos
+    public int TotalPuzzlePoints
+    {
+        get { return totalPuzzlePoints; }
+        set { totalPuzzlePoints = value; }
+    }
+
+    // Métodos para obtener y para cambiar el número máximo de puntos obtenidos
+    public int MaxPuzzlePoints
+    {
+        get { return maxPuzzlePoints; }
+        set { maxPuzzlePoints = value; }
+    }
+
     // Métodos para obtener y para cambiar si se ha completado el último puzle
     public bool IsPuzzleCompleted
     {
@@ -299,7 +297,13 @@ public class GameLogicManager : MonoBehaviour
         set { isPlayerInicialized = value; }
     }
 
-    // Métodos para obtener y para cambiar el estado actual del jugador
+    // Método para obtener el nombre del objeto que lanza el puzle
+    public string TemporalPuzzleObject
+    {
+        get { return temporarilyPuzzleObject; }
+    }
+
+    // Métodos para obtener y para cambiar el estado temporal del jugador
     public PlayerState TemporalPlayerState
     {
         get { return temporarilyPlayerState; }
@@ -459,16 +463,20 @@ public class GameLogicManager : MonoBehaviour
     // Método para cargar la información de los puzles o crear una lista vacía de PuzzleState
     private void FoundPuzzles(PuzzleData puzzleData)
     {
-        if(puzzleData != null && puzzleData.gamePuzzleStates != null && puzzleData.gamePuzzleStates.Count > 0)
+        if (puzzleData != null && puzzleData.gamePuzzleStates != null && puzzleData.gamePuzzleStates.Count > 0)
         {
             puzzleStateList = puzzleData.gamePuzzleStates;
             PuzzleState lastCompletedPuzzle = puzzleData.gamePuzzleStates.Where(p => p.gameIsPuzzleComplete).LastOrDefault();
             lastPuzzleComplete = lastCompletedPuzzle != null ? lastCompletedPuzzle.gamePuzzleName : "";
+            totalPuzzlePoints = puzzleData.gameTotalPuzzlePoints;
+            maxPuzzlePoints = puzzleData.gameMaxPuzzlePoints;
         }
         else
         {
             puzzleStateList = new List<PuzzleState>();
             lastPuzzleComplete = "";
+            totalPuzzlePoints = 0;
+            maxPuzzlePoints = 0;
         }
     }
 
@@ -515,8 +523,8 @@ public class GameLogicManager : MonoBehaviour
         }
 
         // Se busca el objeto canvas que haya en esta escena
-        GetComponent<GameUIManager>().FindCanvas();
-
+        if (!scene.name.Contains("Puzzle") && scene.name != sceneToDestroy) GetComponent<GameUIManager>().FindCanvas();
+        
         // Se busca el objeto soundtrack que haya en esta escena
         GetComponent<GameUIManager>().FindAudio();
 
@@ -526,13 +534,13 @@ public class GameLogicManager : MonoBehaviour
             GameData gameData = SaveManager.LoadGameData();
             GameObject theEndObject = GameObject.Find("The End Object");
 
-            if(gameData != null && !gameData.gameIsBadEnding && gameData.gameEndOpportunities == 0
+            if (gameData != null && !gameData.gameIsBadEnding && gameData.gameEndOpportunities == 0
                 && gameData.gameStoryPhase.ToStoryPhase().phaseName == StoryPhaseOption.Ending)
             {
                 GameObject victim = theEndObject.transform.Find("Victim").gameObject;
                 victim.transform.GetChild(0).gameObject.SetActive(true);
             }
-            else if(gameData != null && gameData.gameIsBadEnding && gameData.gameEndOpportunities == 0
+            else if (gameData != null && gameData.gameIsBadEnding && gameData.gameEndOpportunities == 0
                 && gameData.gameStoryPhase.ToStoryPhase().phaseName == StoryPhaseOption.Ending)
             {
                 GameObject father = theEndObject.transform.Find("Father").gameObject;
@@ -549,9 +557,10 @@ public class GameLogicManager : MonoBehaviour
     }
 
     // Método para guardar la posición del jugador y de la cámara antes de lanzar un puzle
-    public void SaveTemporarilyPosition()
+    public void SaveTemporarilyPosition(string puzzleObjectName)
     {
         temporarilyPlayerState = Player.GetComponent<PlayerLogicManager>().PlayerState;
+        temporarilyPuzzleObject = puzzleObjectName;
 
         temporarilyPlayerPosition[0] = player.transform.position.x;
         temporarilyPlayerPosition[1] = player.transform.position.y;

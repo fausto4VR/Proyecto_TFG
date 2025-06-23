@@ -14,7 +14,7 @@
             [
                 {
                     "speaker": "Player",
-                    "line": "Qué hambre, por Dios. Con lo bueno que está un pan calentito a esta hora de la maña..."
+                    "line": "Qué hambre, por Dios. Con lo buena que está una tostada a esta hora de la maña..."
                 },
                 {
                     "speaker": "Player",
@@ -73,7 +73,7 @@
             ]
         },
         {
-            "objectName": "Clue Object - Backpack",
+            "objectName": "Puzzle Display - Backpack",
             "currentDialogue": 
             [
                 {
@@ -83,6 +83,13 @@
                 {
                     "speaker": "Player",
                     "line": "Aunque antes podría echar un vistazo... (Se escucha una cremallera abrirse)"
+                }
+            ],
+            "afterRecentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "He conseguido abrir la mochila. A ver qué hay..."
                 },
                 {
                     "speaker": "Player",
@@ -113,17 +120,6 @@
                     "line": "Gracias, vieja maniática. Ahora sé el color de los ojos del culpable."
                 }
             ],
-            "afterRecentDialogue": 
-            [
-                {
-                    "speaker": "Player",
-                    "line": "Tengo que decirle al inspector Montgomery que he encontrado su mochila."
-                },
-                {
-                    "speaker": "Player",
-                    "line": "Lo de que he visto la prueba me lo puedo ahorrar."
-                }
-            ],
             "afterDistantDialogue": 
             [
                 {
@@ -149,7 +145,15 @@
             [
                 {
                     "speaker": "Player",
-                    "line": "La palabra que he descubierto es 'TIEMPO'. ¿Qué podrá significar?"
+                    "line": "Con lo palabra que he descifrado he conseguido terminar de entender las instrucciones."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Si las aplico en esta hoja parece que se forma una nueva expresión..."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Diría que puedo distinguir la palabra 'TIEMPO'. ¿Tendrá algún sentido?"
                 },
                 {
                     "speaker": "Player",
@@ -534,7 +538,7 @@
                 },
                 {
                     "speaker": "Player",
-                    "line": "Veamos este... Pone que la encargada del parque está repartiendo limonada hoy."
+                    "line": "Veamos este... Pone que la encargada del parque está repartiendo limonada gratis hoy."
                 },
                 {
                     "speaker": "Player",
@@ -570,11 +574,7 @@
                 },
                 {
                     "speaker": "Player",
-                    "line": "Cualquiera diría que alguien quería deshacerse de él."
-                },
-                {
-                    "speaker": "Player",
-                    "line": "Un momento, todavía tiene piezas puestas... parecen reinas."
+                    "line": "Un momento, todavía tiene piezas puestas... parece que todas son reinas."
                 },
                 {
                     "speaker": "Player",
@@ -601,11 +601,11 @@
                 },
                 {
                     "speaker": "Player",
-                    "line": "El sonido que hacen se repite en bucle: tic, tac, tac, tic..."
+                    "line": "El sonido que hacen se repite en bucle: tic, tac, tic, tac..."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Un momento, ¡es código morse! Parece que dice: p-o-n-m-e... e-n..."
+                    "line": "Un momento, ¡es código morse! Parece que dice: v-e-r-á-s... m-á..."
                 },
                 {
                     "speaker": "Player",
@@ -630,7 +630,7 @@
             [
                 {
                     "speaker": "Player",
-                    "line": "Así que estos prismáticos son los de 'Verás más si me pones en tus ojos'."
+                    "line": "Así que estos prismáticos es a lo que se refería con 'Verás más si me pones en tus ojos'."
                 },
                 {
                     "speaker": "Player",
@@ -654,7 +654,7 @@
                 },
                 {
                     "speaker": "Player",
-                    "line": "Necesito encontrarlo."
+                    "line": "Necesito encontrar lo que intercede en mi visión."
                 }
             ],
             "afterRecentDialogue": 
@@ -694,7 +694,7 @@
                 },
                 {
                     "speaker": "Player",
-                    "line": "Supongo que refleja la luz de forma extraña. A simple vista no se nota, pero con un cristal... se ve claro."
+                    "line": "Supongo que refleja la luz de forma extraña. A simple vista no se nota, pero a través de un cristal se ve más brillante de lo normal."
                 },
                 {
                     "speaker": "Player",
@@ -706,7 +706,7 @@
                 },
                 {
                     "speaker": "Player",
-                    "line": "Diría que es un globo rojo. A lo mejor quien lo dibujó también quiere que lo encuentre."
+                    "line": "Diría que es un globo rojo. A lo mejor Mike tiene idea de lo que puede significar."
                 }
             ],
             "afterRecentDialogue": 
@@ -717,7 +717,7 @@
                 },
                 {
                     "speaker": "Player",
-                    "line": "Quizá debería buscar uno real y comparar."
+                    "line": "Quizá debería hablar con Mike para decidir cuál es el siguiente paso."
                 }
             ],
             "afterDistantDialogue": 
@@ -749,7 +749,7 @@
             [
                 {
                     "speaker": "Player",
-                    "line": "He averiguado la combinación del acertijo. Voy a probarla en el candado..."
+                    "line": "He averiguado la combinación gracias a resolver el acertijo. Voy a probarla en el candado..."
                 },
                 {
                     "speaker": "Player",
@@ -761,7 +761,7 @@
                 },
                 {
                     "speaker": "Player",
-                    "line": "Qué raro. Es una carta de una baraja de póker."
+                    "line": "Qué raro. Es una ficha de plástico."
                 },
                 {
                     "speaker": "Player",
@@ -773,39 +773,87 @@
                 {
                     "speaker": "Player",
                     "line": "El globo sigue flotando. Sí que resiste."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Espero que Mike no venga a quitarlo. Le da cierto encanto a la casa del árbol."
                 }
             ]
         },    
         {
-            "objectName": "Inspect Object - Sandbox",
+            "objectName": "Inspect Object - Barrels",
             "currentDialogue": 
             [
                 {
                     "speaker": "Player",
-                    "line": "Un niño con arena... la única solución lógica era mirar en el arenero."
+                    "line": "Esto encaja perfectamente con la pista: 'Tres iguales, de madera y barrigones, guardan lo que quieras'."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Tampoco hay que ser el mejor detective para llegar a esta conclusión."
+                    "line": "Cinfío en mi instinto. Así que voy a buscar bien en cualquier recoveco."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Voy a mirar por aquí un poco... (sonido de escarbar)."
+                    "line": "Ajá... Aquí está la primera parte del ticket."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Efectivamente, aquí está la moneda especial de la que hablaba Grace."
-                },
-                {
-                    "speaker": "Player",
-                    "line": "Ahora solo tengo que ir a la cabaña caribeña que hay en el lago."
+                    "line": "Ahora debería volver con Grace para que me diga la siguiente indicación."
                 }
             ],
             "afterRecentDialogue": 
             [
                 {
                     "speaker": "Player",
-                    "line": "Ahora, con la moneda en mi poder, solo debo dirigirme a la cabaña caribeña que hay en el lago."
+                    "line": "Con la primera parte del ticket en mi poder, tengo que volver y hablar con Grace."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Seguro que está dispuesta a ayudarme diciéndome la siguiente pista."
+                }
+            ],
+            "afterDistantDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Es verdad que estos barriles siempre me han parecido sospechosos."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "A saber qué habrá dentro..."
+                }
+            ]
+        }, 
+        {
+            "objectName": "Inspect Object - Sandbox",
+            "currentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Considerar esto una playa en miniatura es tener mucha imaginación."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Supongo que por eso esta gincana estaba pensada para entretener a los niños."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Bueno, me tendré que poner manos a la obra... (Sonido de escarbar)"
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Aunque haya acabado con arena hasta en los calzoncillos, aquí está la segunda parte del ticket."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Mi siguiente paso será unirlas e ir a la máquina de arcade junto a Grace."
+                }
+            ],
+            "afterRecentDialogue": 
+            [
+                {
+                    "speaker": "Player",
+                    "line": "Ahora que tengo la segunda parte del ticket, solo me falta unirlo e ir al arcade que está cerca de Grace."
                 },
                 {
                     "speaker": "Player",
@@ -816,71 +864,75 @@
             [
                 {
                     "speaker": "Player",
-                    "line": "A saber qué más cosas habrá perdidas en este arenero."
+                    "line": "Quién sabe qué cosas estarán perdidas en este arenero."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Parece más bien una trampa mortal."
+                    "line": "Parece más una trampa mortal sacada de Indiana Jones."
                 }
             ]
         },   
         {
-            "objectName": "Puzzle Display - Drinks Hut",
+            "objectName": "Puzzle Display - Arcade Machine",
             "currentDialogue": 
             [
                 {
                     "speaker": "Player",
-                    "line": "Bueno, he llegado aquí con la carta que faltaba y la moneda perdida."
+                    "line": "Bueno, ya estoy aquí con la ficha de plástico y el ticket."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Supongo que tengo que dejar la carta junto con las otras 4 y meter la moneda aquí. Y comenzará el juego."
+                    "line": "Supongo que solo tengo que insertarlos en sus ranuras correspondientes... y comenzará el juego."
                 },
                 {
                     "speaker": "Player",
-                    "line": "A ver de qué va..."
+                    "line": "Veamos de qué se trata."
                 }
             ],
             "afterRecentDialogue": 
             [
                 {
                     "speaker": "Player",
-                    "line": "Ya he resuelto el juego. La verdad es que no era tan complicado."
+                    "line": "Ya he resuelto el juego. La verdad es que tenía su gracia."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Parece que no te dan nada, solo el poder apuntarte en un ranking global de tiempos."
+                    "line": "Parece que no te dan ningún premio, solo la posibilidad de aparecer en un ranking global de tiempos."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Según esto he obtenido la máxima puntuación."
+                    "line": "Según esto, he obtenido la puntuación más alta."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Un momento... En el ranking aparece una persona que ha jugado hace relativamente poco."
+                    "line": "Un momento... En el ranking aparece alguien que jugó hace relativamente poco."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Pero eso es imposible si la moneda lleva perdida unos días. Eso significa que la persona tenía que conocer el código secreto."
+                    "line": "Pero eso es imposible si las partes del ticket seguían en su sitio desde que las dejó el mayordomo."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Por lo tanto, ha tenido que decírselo el señor Martin. Probablemente sea el culpable. Es la única explicación posible."
+                    "line": "Eso solo puede significar una cosa: esa persona conocía el código secreto."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Además, para nuestra suerte, el ranking del juego te saca automáticamente una foto."
+                    "line": "Y si lo sabía, es porque el señor Martin se lo dijo. Probablemente sea el culpable. No hay otra explicación."
                 },
                 {
                     "speaker": "Player",
-                    "line": "Es verdad que se ve borrosa, pero aun así se distingue un rasgo facial inequívoco..."
+                    "line": "Y parece que hoy es mi día de suerte. El ranking del juego toma automáticamente una foto del jugador."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Está algo borrosa, sí... pero hay un rasgo facial que no deja lugar a dudas."
                 }
             ],
             "afterDistantDialogue": 
             [
                 {
                     "speaker": "Player",
-                    "line": "Con las ganas que tenía de resolver el puzle, nunca llegué a pedirme una bebida aquí."
+                    "line": "Qué pena que esta máquina no tenga un juego más normal, como el Tetris o el Space Invaders."
                 }
             ]
         }
@@ -1108,7 +1160,11 @@
                 {
                     "speaker": "Harold",
                     "line": "Y la creo. Aunque no sé si le encantan por mí o por el odio que le tiene al verde."
-                },                
+                },
+                {
+                    "speaker": "Harold",
+                    "line": "En cualquier caso, supongo que ayuda que los tenga algo más oscuros de lo habitual."
+                },               
                 {
                     "speaker": "Player",
                     "line": "Pues ya sabe. La próxima vez que lo vea, espero que sea sin esas gafas..."
@@ -1138,6 +1194,10 @@
                 {
                     "speaker": "Diana",
                     "line": "Digamos que es demasiado rural para mi gusto... Pero, en líneas generales, es bastante bonito."
+                },
+                {
+                    "speaker": "Player",
+                    "line": "Su simpleza no es para todo el mundo, pero me alegro de que resulte agradable."
                 }
             ],
             "secondDialogue": 
@@ -2004,7 +2064,7 @@
                 },
                 {
                     "phase": "Puzzle5",
-                    "subphase": "Ready for Puzzle 5",
+                    "subphase": "Talk to Janitor 1",
                     "advanceStory": true,
                     "dialogue":
                     [
@@ -2015,8 +2075,8 @@
                     ]
                 },
                 {
-                    "phase": "Puzzle6",
-                    "subphase": "Inspect the Binoculars",
+                    "phase": "Puzzle5",
+                    "subphase": "Ready for Puzzle 5",
                     "advanceStory": true,
                     "dialogue":
                     [
@@ -2028,7 +2088,7 @@
                 },
                 {
                     "phase": "Puzzle6",
-                    "subphase": "Inspect the Painting",
+                    "subphase": "Inspect the Binoculars",
                     "advanceStory": true,
                     "dialogue":
                     [
@@ -2040,7 +2100,7 @@
                 },
                 {
                     "phase": "Puzzle6",
-                    "subphase": "Ready for Puzzle 6",
+                    "subphase": "Inspect the Painting",
                     "advanceStory": true,
                     "dialogue":
                     [
@@ -2051,8 +2111,8 @@
                     ]
                 },
                 {
-                    "phase": "Puzzle7",
-                    "subphase": "Talk to Park Manager 2",
+                    "phase": "Puzzle6",
+                    "subphase": "Talk to Janitor 2",
                     "advanceStory": true,
                     "dialogue":
                     [
@@ -2063,8 +2123,8 @@
                     ]
                 },
                 {
-                    "phase": "Puzzle7",
-                    "subphase": "Inspect the Sandbox",
+                    "phase": "Puzzle6",
+                    "subphase": "Ready for Puzzle 6",
                     "advanceStory": true,
                     "dialogue":
                     [
@@ -2076,13 +2136,61 @@
                 },
                 {
                     "phase": "Puzzle7",
-                    "subphase": "Ready for Puzzle 7",
+                    "subphase": "Talk to Park Manager 2",
                     "advanceStory": true,
                     "dialogue":
                     [
                         {
                             "speaker": "Player",
                             "line": "26"
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle7",
+                    "subphase": "Inspect the Barrels",
+                    "advanceStory": true,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Player",
+                            "line": "27"
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle7",
+                    "subphase": "Talk to Park Manager 3",
+                    "advanceStory": true,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Player",
+                            "line": "28"
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle7",
+                    "subphase": "Inspect the Sandbox",
+                    "advanceStory": true,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Player",
+                            "line": "29"
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle7",
+                    "subphase": "Ready for Puzzle 7",
+                    "advanceStory": true,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Player",
+                            "line": "30"
                         }
                     ]
                 },
@@ -2094,7 +2202,7 @@
                     [
                         {
                             "speaker": "Player",
-                            "line": "27"
+                            "line": "31"
                         }
                     ]
                 },
@@ -2160,7 +2268,11 @@
                         },
                         {
                             "speaker": "Player",
-                            "line": "Vale, papá. Yo también te tengo que dejar, que aún no he desayunado. Adiós."
+                            "line": "Vale, papá. Yo también te tengo que dejar, que aún no he desayunado y no soy persona hasta que me tome mi pan calentito."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Adiós."
                         },
                         {
                             "speaker": "Papá",
@@ -2177,6 +2289,10 @@
                         {
                             "speaker": "Player",
                             "line": "No creo que deba volver a llamarlo hasta que termine de desayunar."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Y mi rebanada de pan no se va a terminar de hacer sola..."
                         }
                     ]
                 },
@@ -2460,12 +2576,8 @@
                             "line": "Y al final, después de estos meses juntos, ha llegado a caerme muy bien."
                         },
                         {
-                            "speaker": "Sarah",
-                            "line": "Solo espero que no le haya pasado nada malo."
-                        },
-                        {
                             "speaker": "Player",
-                            "line": "Seguro que está bien. Yo me encargaré de encontrarle."
+                            "line": "Normal. Tengo entendido que era un hombre muy agradable."
                         }
                     ]
                 },
@@ -2689,15 +2801,27 @@
                         },
                         {
                             "speaker": "Sarah",
-                            "line": "Prueba suerte ahí. Eso sí, según hacía él, para que funcione primero tienes que mojarla en cafeína."
+                            "line": "Prueba suerte ahí. Eso sí, según tengo entendido, antes tienes que hacer algo para que funcione bien."
                         },
                         {
                             "speaker": "Sarah",
-                            "line": "Era su última barrera de seguridad, pero un día lo pillé de reojo haciéndolo en la cocina."
+                            "line": "Como la llave es de metal, hay que expandirla aplicándole calor antes de usarla."
+                        },
+                        {
+                            "speaker": "Sarah",
+                            "line": "Y no basta con acercarla a un fuego. Tiene que calentarse a una temperatura alta, pero de forma uniforme."
+                        },
+                        {
+                            "speaker": "Sarah",
+                            "line": "La única manera de hacerlo bien es sumergiéndola en un líquido que haya sido calentado previamente."
+                        },
+                        {
+                            "speaker": "Sarah",
+                            "line": "Era su último sistema de seguridad... aunque una vez lo vi hacerlo de reojo en la cocina."
                         },
                         {
                             "speaker": "Player",
-                            "line": "Perfecto entonces. Solo tengo que encontrar cómo mojarla en algo que tenga cafeína."
+                            "line": "Perfecto. Solo tengo que encontrar una forma de mojar la llave en algún líquido caliente."
                         }
                     ]
                 },
@@ -2717,11 +2841,15 @@
                         },
                         {
                             "speaker": "Sarah",
-                            "line": "Te dije que debías buscar una manera de mojar la llave en algo que lleve cafeína."
+                            "line": "Te dije que debías buscar una manera de mojar la llave en algún líquido caliente."
+                        },
+                        {
+                            "speaker": "Sarah",
+                            "line": "Y que una vez vi al señor Martin salir de la cocina después de hacerlo."
                         },
                         {
                             "speaker": "Player",
-                            "line": "Es verdad. Me sigue pareciendo raro, pero confío en ti. Muchas gracias."
+                            "line": "Es verdad. Esa era la última medida de seguridad que había que superar. Muchas gracias."
                         }
                     ]
                 },
@@ -2819,47 +2947,55 @@
                         },
                         {
                             "speaker": "Grace",
-                            "line": "En ese caso, tal vez te sirva de ayuda lo que voy a contarte."
+                            "line": "En ese caso, tal vez te sirva lo que voy a contarte."
                         },
                         {
                             "speaker": "Grace",
-                            "line": "El otro día, su mayordomo me pidió las llaves del parque. Dijo que era una orden directa."
+                            "line": "El otro día, su mayordomo me pidió que dejara abierto el parque por la noche. Dijo que era una orden directa."
                         },
                         {
                             "speaker": "Grace",
-                            "line": "Se las di porque es nuestro mayor donante. Pero me pareció un poco raro."
+                            "line": "Accedí, claro, porque es nuestro mayor donante, aunque me pareció algo extraño."
                         },
                         {
                             "speaker": "Grace",
-                            "line": "Más aún cuando, al día siguiente, el propio señor Martin me llamó y me dijo que se había dejado aquí su ajedrez."
+                            "line": "Por lo que tengo entendido, esa noche solo estuvo aquí el propio mayordomo."
                         },
                         {
                             "speaker": "Grace",
-                            "line": "Dijo que era el tablero más especial que había tenido nunca."
+                            "line": "Sé que no es exactamente lo que estás buscando, pero tal vez te ayude."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Si necesitas más detalles, deberías hablar con el conserje del parque. Fue él quien le abrió esa noche."
                         },
                         {
                             "speaker": "Player",
-                            "line": "Eso parece interesante. Intentaré ver si puedo encontrarlo."
+                            "line": "Muchas gracias. Veré si consigo hablar con él."
                         }
                     ]
                 },
                 {
                     "phase": "Puzzle5",
-                    "subphase": "Ready for Puzzle 5",
+                    "subphase": "Talk to Janitor 1",
                     "advanceStory": false,
                     "dialogue":
                     [
                         {
                             "speaker": "Grace",
-                            "line": "¿Has encontrado el tablero de ajedrez del señor Martin?"
-                        },
-                        {
-                            "speaker": "Player",
-                            "line": "La verdad es que no estoy teniendo suerte. Se podría decir que... estoy en jaque."
+                            "line": "¿Has hablado ya con el conserje?"
                         },
                         {
                             "speaker": "Grace",
-                            "line": "No te echo del parque de milagro."
+                            "line": "Seguro que te sirve de ayuda."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Aun lo estoy buscando."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Últimamente hay mucho trabajo, así que seguro que está liado con algo."
                         }
                     ]
                 },
@@ -2899,7 +3035,7 @@
                         },
                         {
                             "speaker": "Player",
-                            "line": "He encontrado una carta de póker y creo que tiene algo que ver con la desaparición del señor Martin."
+                            "line": "He encontrado una ficha de plástico y creo que tiene algo que ver con la desaparición del señor Martin."
                         },
                         {
                             "speaker": "Player",
@@ -2911,39 +3047,107 @@
                         },
                         {
                             "speaker": "Grace",
-                            "line": "En la cabaña caribeña que tenemos en el lago hay un juego de cartas, pero desde hace unos días falta una."
+                            "line": "Esa ficha es para poder jugar en la máquina de arcade que tenemos aquí al lado."
                         },
                         {
                             "speaker": "Grace",
-                            "line": "A lo mejor es esa."
-                        },
-                        {
-                            "speaker": "Grace",
-                            "line": "Pero ten cuidado, para participar necesitas una moneda especial."
-                        },
-                        {
-                            "speaker": "Grace",
-                            "line": "O un código secreto que solo sabe el señor Martin, ya que fue quien donó el juego."
+                            "line": "El señor Martin fue quien donó ese artefacto cuando hicimos la gincana infantil para recaudar fondos."
                         },
                         {
                             "speaker": "Player",
-                            "line": "Perfecto, entonces solo dame esa moneda."
+                            "line": "Perfecto, entonces solo necesito dirigirme al arcade a ver qué me espera allí."
                         },
                         {
                             "speaker": "Grace",
-                            "line": "Bueno... no es tan sencillo. Resulta que la hemos perdido. Llevamos días buscándola sin éxito."
+                            "line": "Bueno... no es tan sencillo. Resulta que para empezar la partida necesitas un ticket especial."
                         },
                         {
                             "speaker": "Grace",
-                            "line": "Lo único que sé es que la última vez la tenía un niño bastante revoltoso."
+                            "line": "De hecho, la gincana se basaba en encontrar las dos partes que componían ese ticket y unirlas."
                         },
                         {
                             "speaker": "Grace",
-                            "line": "De esos que no se están quietos, siempre nervioso, intranquilo... y lleno de arena."
+                            "line": "Es eso o meter un código de mantenimiento que solo el propio señor Martin conoce."
                         },
                         {
                             "speaker": "Player",
-                            "line": "No se preocupe, yo me encargo de todo."
+                            "line": "Dado que no conozco el código, esto complica un poco las cosas..."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Ahora que lo pienso, tendría sentido que las partes del ticket estén donde se encontraban durante la gincana."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Seguro que el mayordomo las volvió a colocar. ¿Podrías ayudarme con eso?"
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Claro. Aunque no me acuerdo de dónde están, sí recuerdo las pistas."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "La primera dice: 'Tres iguales, de madera y barrigones, guardan lo que quieras'."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Espero que te ayude a encontrar la parte del ticket que falta."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Seguro que sí. Voy a ver si encuentro la solución."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle7",
+                    "subphase": "Inspect the Barrels",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Player",
+                            "line": "¿Puedes repetirme la pista inicial de la gincana para encontrar la primera parte del ticket?"
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Por supuesto. Decía: 'Tres iguales, de madera y barrigones, guardan lo que quieras'."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Espero que te sirva de ayuda."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle7",
+                    "subphase": "Talk to Park Manager 3",
+                    "advanceStory": true,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Player",
+                            "line": "Resolví la primera prueba de la gincana. Resulta que se refería a los barriles que hay en el lago."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Gracias a eso he encontrado la primera parte del ticket."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "¿Puedes decirme cuál es la siguiente pista que había que seguir?"
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Hmmm... Si no recuerdo mal decía: 'Soy como una playa en miniatura, aunque no dispongo de agua'."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Siempre me pareció una indicación curiosa, por eso me acuerdo."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "A mí también me parece curiosa. Me pondré a investigar qué puede significar."
                         }
                     ]
                 },
@@ -2955,11 +3159,19 @@
                     [
                         {
                             "speaker": "Grace",
-                            "line": "¿Has encontrado ya la moneda especial? ¿O ese niño está siendo más listo que tú?"
+                            "line": "¿Has encontrado ya la segunda parte del ticket?"
                         },
                         {
                             "speaker": "Player",
-                            "line": "Pues creo que por ahora va ganando el niño."
+                            "line": "Aún no. Creo que la gincana no era tan fácil como esperaba."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "No te preocupes, te repito la pista por si te ayuda."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "Decía: 'Soy como una playa en miniatura, aunque no dispongo de agua'."
                         }
                     ]
                 },
@@ -3008,6 +3220,272 @@
                         {
                             "speaker": "Grace",
                             "line": "Bueno, eso también."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "objectName": "Supporting NPC - Mike",
+            "dialogues": 
+            [
+                {
+                    "phase": "Puzzle4",
+                    "subphase": "Ready for Puzzle 4",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {                            
+                            "speaker": "Player",
+                            "line": "No deberíamos estar hablando."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle5",
+                    "subphase": "Talk to Park Manager 1",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {                            
+                            "speaker": "Mike",
+                            "line": "Ey, Alex, te veo bien."
+                        },
+                        {                            
+                            "speaker": "Mike",
+                            "line": "Ahora estoy terminando de hacer el mantenimiento del lago."
+                        },
+                        {                            
+                            "speaker": "Mike",
+                            "line": "Pero después podemos hablar si quieres."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle5",
+                    "subphase": "Talk to Janitor 1",
+                    "advanceStory": true,
+                    "dialogue":
+                    [                                                
+                        {
+                            "speaker": "Player",
+                            "line": "Ey, Mike. ¿Cómo va el trabajo hoy?"
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "No me puedo quejar. Cuando toca hacer algo cerca del lago, al menos se está fresquito."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "¿Necesitas algo?"
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "La verdad es que sí. Estoy buscando al señor Martin y quería preguntarte algo."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Según tengo entendido, tú le abriste la puerta a su mayordomo el otro día por la noche."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Así es."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "¿Viste algo fuera de lo común?"
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "La verdad es que sí. Cuando llegó, el mayordomo traía una bolsa repleta de cosas."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Solo conseguí distinguir un tablero de ajedrez que sobresalía, así que le pregunté por él."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Me dijo que el señor Martin lo consideraba el tablero más especial que había tenido nunca."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Cuando se marchó, me fijé y ya no lo llevaba consigo. Me pareció extraño."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Quizá lo dejó por aquí. Voy a ver si consigo encontrarlo."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Muchas gracias, Mike."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle5",
+                    "subphase": "Ready for Puzzle 5",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Mike",
+                            "line": "¿Has encontrado el tablero de ajedrez del señor Martin?"
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "La verdad es que no estoy teniendo suerte. Se podría decir que... estoy en jaque."
+                        },
+                        {
+                            "speaker": "Grace",
+                            "line": "No te doy con una pala de milagro."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle6",
+                    "subphase": "Inspect the Painting",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Mike",
+                            "line": "No paro de pensar en lo de la otra noche, cuando vino el mayordomo del señor Martin."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Seguro que tiene algo que ver con su desaparición."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "No te calientes la cabeza ahora con eso. Es lo peor que puedes hacer en este momento."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Supongo que tienes razón."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Además, yo me voy a encargar de encontrarlo."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Gracias. Tu positividad ayuda mucho en momentos como este."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle6",
+                    "subphase": "Talk to Janitor 2",
+                    "advanceStory": true,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Player",
+                            "line": "Ya estoy por aquí otra vez. Y esta vez con novedades."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Para empezar, encontré el tablero de ajedrez después de buscar un buen rato."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Y no fue lo único que el señor Martin dejó escondido por aquí."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "También encontré un cuadro en el que habían pintado por encima un globo rojo."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "¿Un globo rojo, dices?"
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Pues justo antes, mientras limpiaba el parque, vi uno. Me pareció raro, porque aquí no se suelen ver globos, y menos de ese color."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Lo dejé en su sitio por si era de algún niño y volvía a buscarlo... pero no recuerdo exactamente dónde lo vi."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "No te preocupes, yo me encargo de encontrarlo."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Puzzle6",
+                    "subphase": "Ready for Puzzle 6",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Mike",
+                            "line": "¿Cómo va tu búsqueda del globo rojo?"
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Todavía sigo con ello. Me habría sido más fácil si lo hubieras guardado en el cuarto de materiales."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "La próxima vez lo tendré en cuenta."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Ending",
+                    "subphase": "Ending Beginning",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Mike",
+                            "line": "No paro de pensar en lo de la otra noche, cuando vino el mayordomo del señor Martin."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Seguro que tiene algo que ver con su desaparición."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "No te calientes la cabeza ahora con eso. Es lo peor que puedes hacer en este momento."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Supongo que tienes razón."
+                        },
+                        {
+                            "speaker": "Player",
+                            "line": "Además, yo me voy a encargar de encontrarlo."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Gracias. Tu positividad ayuda mucho en momentos como este."
+                        }
+                    ]
+                },
+                {
+                    "phase": "Ending",
+                    "subphase": "Post End",
+                    "advanceStory": false,
+                    "dialogue":
+                    [
+                        {
+                            "speaker": "Mike",
+                            "line": "El señor Martin hacía mucho por el pueblo, y aún más por el parque."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Es una gran noticia que haya aparecido."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Seguro que la gente ya empezaba a imaginarse cualquier cosa horrible."
+                        },
+                        {
+                            "speaker": "Mike",
+                            "line": "Yo, sin ir más lejos, llegué a pensar que se había caído al lago… o algo peor."
                         }
                     ]
                 }
@@ -4789,11 +5267,15 @@
             [
                 {
                     "speaker": "***",
-                    "line": "Esto es un tutorial. Cuando quieras continuar, pulsa la barra espaciadora para mostrar la siguiente parte."
+                    "line": "Esto es un tutorial. Para avanzar o retroceder entre sus distintas fases, utiliza las flechas izquierda y derecha del teclado o pulsa los botones naranjas."
                 },
                 {
                     "speaker": "***",
-                    "line": "Al final del tutorial, pulsa la barra espaciadora para cerrarlo. También puedes pulsar la tecla E en cualquier momento para salir inmediatamente."
+                    "line": "Como ya habrás notado, puedes desplazarte por el mundo usando las flechas de dirección o las teclas WASD."
+                },
+                {
+                    "speaker": "***",
+                    "line": "Cuando quieras terminar el tutorial, presiona la tecla E en la última fase."
                 }
             ]
         },
@@ -4807,19 +5289,19 @@
                 },
                 {
                     "speaker": "***",
-                    "line": "Para lograrlo, deberás avanzar en la investigación, hablar con tus vecinos, reunir pistas y conocer a los distintos sospechosos."
+                    "line": "Para lograrlo, deberás avanzar en la investigación hablando con tus vecinos, reuniendo pistas y preguntando a los distintos sospechosos."
                 },
                 {
                     "speaker": "***",
-                    "line": "Cualquiera puede ser culpable, así que presta atención a cada pista que descubras."
+                    "line": "Cualquiera de los sospechosos puede ser culpable, así que presta atención a cada pista que descubras."
                 },
                 {
                     "speaker": "***",
-                    "line": "En cualquier momento puedes decirle a la policía quién crees que es el culpable desde el ordenador de tu casa. Simplemente acercate y presiona la tecla E."
+                    "line": "En cualquier momento puedes decirle a la policía quién crees que es el culpable. Simplemente acércate al ordenador de tu casa y presiona la tecla E."
                 },
                 {
                     "speaker": "***",
-                    "line": "Pero ten cuidado, solo tienes un intento. Si fallas, obtendrás el final malo."
+                    "line": "Pero ten cuidado: solo tienes un intento. Si fallas, obtendrás el peor final posible."
                 },
                 {
                     "speaker": "***",
@@ -4827,7 +5309,7 @@
                 },
                 {
                     "speaker": "***",
-                    "line": "Si aciertas, obtendrás el final bueno. Ese debería ser tu objetivo."
+                    "line": "Si aciertas, obtendrás el final feliz que buscas para tu aventura. Intenta ver si eres capaz de conseguirlo."
                 }
             ]
         },
@@ -4837,15 +5319,15 @@
             [
                 {
                     "speaker": "***",
-                    "line": "Durante el juego podrás conversar con distintos personajes. Para iniciar el diálogo, pulsa la tecla E."
+                    "line": "Durante el juego podrás conversar con distintos personajes. Para iniciar el diálogo, acercate a uno y pulsa la tecla E."
                 },
                 {
                     "speaker": "***",
-                    "line": "Si pulsas la barra espaciadora mientras se escribe el texto, este se completará al instante. Si la vuelves a pulsar, continuarás con la charla."
+                    "line": "Si presionas la barra espaciadora mientras se escribe el texto, este se completará al instante. Si la vuelves a oprimir, continuarás con la charla."
                 },
                 {
                     "speaker": "***",
-                    "line": "Al final del diálogo, pulsa la barra espaciadora para cerrarla. También puedes pulsar E en cualquier momento para terminarla."
+                    "line": "Al final del diálogo, pulsa la barra espaciadora para cerrarlo. También puedes pulsar E en cualquier momento y terminará al instante."
                 },
                 {
                     "speaker": "***",
@@ -4863,11 +5345,15 @@
             [
                 {
                     "speaker": "***",
-                    "line": "En algunos momentos de la historia tendrás que inspeccionar un objeto, ya sea para seguir investigando o para activar un puzle."
+                    "line": "En algunos momentos de tu aventura tendrás que inspeccionar un objeto, ya sea para avanzar en la historia o para activar un puzle."
                 },
                 {
                     "speaker": "***",
-                    "line": "Para hacerlo, acércate a lo que quieras inspeccionar y mantén pulsada la tecla Q. Luego verás si has dado con el correcto o no."
+                    "line": "Para hacerlo, acércate a lo que quieras inspeccionar y mantén pulsada la tecla Q. Luego verás si has dado con el elemento correcto o no."
+                },
+                {
+                    "speaker": "***",
+                    "line": "Ten en cuenta que esta es tu única forma de interactuar con los objetos del mundo."
                 }
             ]
         },
@@ -4877,19 +5363,19 @@
             [
                 {
                     "speaker": "***",
-                    "line": "Puedes abrir o cerrar el menú de pausa en cualquier momento pulsando el maletín en la esquina superior izquierda o presionando la tecla I."
+                    "line": "Puedes abrir o cerrar el menú de pausa en cualquier momento, ya sea haciendo clic en el maletín de la esquina superior izquierda o presionando la tecla I."
                 },
                 {
                     "speaker": "***",
-                    "line": "En el menú encontrarás la lista de pistas que has descubierto y los sospechosos que conoces. Esto te será muy útil para descubrir al culpable."
+                    "line": "En este menú encontrarás una lista de las pistas que has descubierto y otra con los sospechosos que conoces. Te será muy útil para identificar al culpable."
                 },
                 {
                     "speaker": "***",
-                    "line": "Aquí también podrás guardar la partida o salir al menú principal. Incluso verás una ayuda con lo que debes hacer en ese momento."
+                    "line": "También tendrás la opción de guardar la partida o salir al menú principal. Incluso se mostrará una ayuda sobre el objetivo a seguir en ese momento."
                 },
                 {
                     "speaker": "***",
-                    "line": "Además del menú de pausa, podrás usar el mapa en ciertas zonas presionando la tecla M cuando veas el icono sobre ti."
+                    "line": "Además del menú de pausa, podrás usar el mapa en ciertas zonas al presionar la tecla M cuando salga el icono sobre tu personaje."
                 },
                 {
                     "speaker": "***",

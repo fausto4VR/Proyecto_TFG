@@ -15,7 +15,7 @@
         {
             "phase": "Prologue",
             "subphase": "Inspect the Toaster",
-            "objective": "Tengo hambre, debería ponerle remedio a eso"
+            "objective": "Tengo hambre, debería ponerle remedio a eso haciendome una rebanada de pan"
         },
         {
             "phase": "Puzzle1",
@@ -78,14 +78,14 @@
             "objective": "Tengo que resolver el acertijo que dice 'una esfera con la que ver el mundo completo'"
         },
         {
-            "phase": "Puzzle3",
+            "phase": "Puzzle4",
             "subphase": "Talk to Physio 4",
             "objective": "Una vez he encontrado la llave misteriosa solo se me ocurre que me pueda ayudar Sarah"
         },
         {
             "phase": "Puzzle4",
             "subphase": "Inspect the Coffe Maker",
-            "objective": "Como me ha dicho Sarah, debo encontrar algo para mojar la llave en cafeína"
+            "objective": "Como me ha dicho Sarah, debo encontrar algo para mojar la llave en un líquido caliente. Probablemente tenga suerte en la cocina"
         },
         {
             "phase": "Puzzle4",
@@ -95,7 +95,7 @@
         {
             "phase": "Puzzle5",
             "subphase": "Inspect the Signboard",
-            "objective": "Con esta nueva información, mi siguiente paso es ir al parque, seguramente en la entrada haya algún cartel que ayude a seguir"
+            "objective": "Con esta nueva información, mi siguiente paso es ir al parque. Seguramente en la entrada haya algún cartel que me ayude a seguir"
         },
         {
             "phase": "Puzzle5",
@@ -104,8 +104,13 @@
         },
         {
             "phase": "Puzzle5",
+            "subphase": "Talk to Janitor 1",
+            "objective": "Grace me dijo que buscara al conserje, que quizá él sepa algo"
+        },
+        {
+            "phase": "Puzzle5",
             "subphase": "Ready for Puzzle 5",
-            "objective": "El señor Martin ha perdido un tablero de ajedrez, a lo mejor encontrarlo me da pistas de cómo seguir"
+            "objective": "El señor Martin se dejó un tablero de ajedrez en el parque, a lo mejor encontrarlo me da pistas de cómo seguir"
         },
         {
             "phase": "Puzzle6",
@@ -119,28 +124,38 @@
         },
         {
             "phase": "Puzzle6",
+            "subphase": "Talk to Janitor 2",
+            "objective": "En la pintura que vi antes había un globo rojo, y creo que tiene que significar algo. Voy a preguntarle a Mike"
+        },
+        {
+            "phase": "Puzzle6",
             "subphase": "Ready for Puzzle 6",
-            "objective": "En la pintura que miré antes había un globo rojo, tiene que significar algo"
+            "objective": "Mike me dijo que vio un globo rojo mientras limpiaba. Tengo que encontrarlo"
         },
         {
             "phase": "Puzzle7",
             "subphase": "Talk to Park Manager 2",
-            "objective": "He encontrado una carta de una baraja de póker, no sé lo que significa pero Grace a lo mejor sí"
+            "objective": "He encontrado una ficha de plástico. No sé qué significa, pero quizá Grace sí tenga alguna idea"
+        },
+        {
+            "phase": "Puzzle7",
+            "subphase": "Inspect the Barrels",
+            "objective": "Necesito resolver la pista de la gincana que dice: 'Tres iguales, de madera y barrigones, guardan lo que quieras'"
+        },
+        {
+            "phase": "Puzzle7",
+            "subphase": "Talk to Park Manager 3",
+            "objective": "Debería volver a hablar con Grace para que me dé la siguiente pista de la gincana"
         },
         {
             "phase": "Puzzle7",
             "subphase": "Inspect the Sandbox",
-            "objective": "Grace me ha dicho que necesito una moneda especial, la última vez fue vista con un niño revoltoso y lleno de arena"
+            "objective": "Tengo que pensar en la segunda pista de la gincana: 'Soy como una playa en miniatura, aunque no dispongo de agua'"
         },
         {
             "phase": "Puzzle7",
             "subphase": "Ready for Puzzle 7",
-            "objective": "Simplemente debo dirigirme a la cabaña caribeña que hay en el lago"
-        },
-        {
-            "phase": "Ending",
-            "subphase": "Ending Beginning",
-            "objective": "Tengo todos los elementos para resolver el caso"
+            "objective": "Ya tengo el ticket completo. Solo me falta ir a la máquina de arcade"
         },
         {
             "phase": "Ending",
@@ -155,24 +170,24 @@
     ],
     "puzzle0": 
     {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
+        "puzzleStatementText": "Estás viendo un tutorial sobre cómo funcionan los puzles en este juego.\n\nPara empezar a entender la dinámica de los acertijos, debes saber que esta sección muestra el enunciado del puzle. El texto aparecerá progresivamente, pero si prefieres que se muestre de inmediato, puedes pulsar la barra espaciadora o hacer clic en cualquier parte de la pantalla.\n\nPara resolver el puzle de este tutorial, simplemente debes desbloquear todas las pistas antes de pulsar el botón de 'Listo'.",
+        "firstSupportText": "Como ya habrás visto, puedes desbloquear las ayudas o pistas pulsando el botón correspondiente. Eso sí, recibirás una penalización en los puntos obtenidos al final del puzle. Además, algo importante a tener en cuenta es que no puedes desbloquear una ayuda sin haber desbloqueado las anteriores.",
+        "secondSupportText": "En todas las pantallas del puzle hay un botón en la esquina inferior derecha que muestra una ayuda para entender bien el puzle o cómo dar la solución. No te preocupes, no ocurre nada negativo por consultarla, así que échale un vistazo también esta vez.",
+        "thirdSupportText": "En cualquier momento puedes regresar al mundo pulsando el botón 'Volver' y continuar con el puzle más adelante.\n\nAdemás, al desbloquear las tres ayudas tendrás la opción de saltarte el puzle. Pero ten cuidado: asegúrate de leer bien la advertencia que aparece."
     },
     "puzzle1": 
     {
-        "puzzleStatementText": "Parece que en la nota hecha por la víctima no se puede ver ni el principio ni el final de lo que había escrito. Lo único que se distingue es una palabra. Por lo visto, ha probado varios términos hasta que ha conseguido encontrar lo que quería escribir.\n\nHe descubierto que hay un patrón claro entre todos los intentos que ha hecho, pero aún así no logro ver la palabra que estaba buscando. ¿Cuál podrá ser?\n\nEl patrón que he pensado me dice que una letra del abecedario puede aparecer o no en la palabra final. En función de esto, cada letra se presenta de manera diferente: \n\n- Si la letra sale tachada no está presente en la palabra final.\n- Si la letra sale rodeada por un círculo está presente en la palabra final pero no en su posición correcta.\n- Si la letra aparece sin nada está presente en la palabra final y en su posición.\n\nAdemás, en algunas letras no se han dibujado bien al hacer la transcripción y puede que falte una o dos líneas. Aún así, debería ser capaz de encontrar la palabra que quería escribir la víctima.",
-        "firstSupportText": "Si te fijas bien en todos los intentos que se han realizado las palabras existen de verdad (aunque puede ser dificil de ver al principio ya que se ha perdido alguna línea). Esto debería ayudarte a sacar las letras que están incompletas. Sobretodo si te fijas en la segunda palabra. Si aún así no puedes, mira en el abecedario cuáles podrían entrar en ese hueco yendo una por una.",
-        "secondSupportText": "La víctima solo ha tenido un fallo y es que se le ha olvidado poner una letra que sabía que estaba en la primera palabra en el siguiente intento. Lo que no ha hecho nunca es poner una letra en la misma posición, en el siguiente intento, si sabe que ahí no va.",
-        "thirdSupportText": "Sabiendo que hay una letra que aparece en todos los intentos, y otra que solo lo hace en los dos últimos, deberías ser capaz de colocar esas dos. Junto con las dos que ya están su sitio, es coser y cantar."
+        "puzzleStatementText": "Parece que la nota escrita por la víctima contiene una serie de instrucciones relacionadas con la propia hoja de papel. Sin embargo, debido a su mal estado tras haber sido arrojada a la basura, la última palabra del mensaje no se distingue con claridad.\n\nPor suerte, la víctima cometió varios errores al escribirla y dejó visibles varios intentos antes de llegar a la expresión correcta.\n\nHe detectado un patrón claro entre esos intentos. Al parecer, cada letra del abecedario puede estar o no presente en la palabra final, y en función de eso, aparece representada de una forma distinta en los intentos anteriores:\n\n- Si la letra está tachada, significa que no forma parte de la palabra final.\n- Si la letra está rodeada por un círculo, está en la palabra final, pero en una posición incorrecta.\n- Si la letra no tiene ninguna marca, está en la palabra final y en la posición correcta.\n\nCon esta información, debería ser posible deducir la instrucción que me falta para saber que hacer con la nota.",
+        "firstSupportText": "La mejor manera de empezar a descifrar la palabra final es fijarse en las letras que ya están colocadas en su posición correcta. Esto te da una ventaja importante.",
+        "secondSupportText": "Fíjate bien: hay una letra que se repite en todos los intentos, pero nunca aparece en la posición correcta. Combinando esta observación con la primera pista, deberías poder deducir su ubicación.",
+        "thirdSupportText": "Si has seguido bien las pistas hasta este punto, ya deberías tener tres letras correctamente colocadas en la palabra final. Además, como todas las letras que componen la palabra aparecen en los intentos previos, puedes observar cuál de ellas se repite más sin estar aún bien posicionada. Si repites este proceso, acabarás deduciendo la posición correcta de cada letra."
     },
     "puzzle2": 
     {
-        "puzzleStatementText": "Se ve justo encima del péndulo una placa que dice:\n\n“El reloj presenta tres manecillas para marcar la hora, los minutos y los segundos. Estas son el horario, el minutero y el segundero, respectivamente. Además, tenga en cuenta que para un correcto mantenimiento del reloj, el mecanismo de seguridad solo permite su apertura una vez al día, cuando las manecillas están en una posición concreta que cumple las siguientes condiciones:\n\n1) El horario y el minutero deben señalar dos números, que, combinados, contengan mínimo los tres dígitos romanos: I, V y X.\n2) El minutero siempre se encuentra debajo del horario.\n3) La suma de los números romanos que indican el horario y el minutero debe dar como resultado un número impar.\n4) Las manecillas del horario y el minutero forman siempre un ángulo mayor a 90 grados.\n5) Los números romanos señalados por las tres manecillas deben tener una cantidad diferente de dígitos cada uno.\n6) El segundero se encuentra en el ángulo más pequeño que forman el horario y el minutero.\n7) El segundero no tiene ninguna otra manecilla señalando los números adyacentes al suyo.”\n\n¿A qué hora puedo abrir ya el reloj?",
-        "firstSupportText": "Intenta averiguar primero a dónde señala el horario y el minutero. Una vez tengas esto, colocar el segundero se hace directamente siguiendo las dos últimas condiciones.",
-        "secondSupportText": "Si lo piensas detenidamente no existe en un reloj ningún número que tenga los dígitos romanos X y V a la vez. Con esta información, la primera indicación cobra especial relevancia. Sumado a la segunda, deberías ser capaz de ver que solo hay unos pocos números en los que se puede encontrar el horario y el minutero. ",
-        "thirdSupportText": "Para que una suma sea impar, tiene que darse que uno de los sumandos sea par y el otro no. A partir de aquí, probando todas las combinaciones posibles, según la tercera y cuarta condición, solo hay una que cumpla lo que dice la quinta."
+        "puzzleStatementText": "Se ve justo encima del péndulo una placa que dice:\n\nEl reloj presenta tres manecillas para marcar la hora, los minutos y los segundos. Estas son el horario, el minutero y el segundero, respectivamente. Además, para un correcto mantenimiento del reloj, el mecanismo de seguridad solo permite su apertura una vez al día, cuando las manecillas están en una posición concreta que cumple las siguientes condiciones:\n\n1. El horario y el minutero deben señalar dos números que, combinados, contengan al menos los tres dígitos romanos: I, V y X.\n2. El minutero siempre debe estar por debajo del horario.\n3. La suma de los números romanos que marcan el horario y el minutero debe dar como resultado un número impar.\n4. El ángulo entre el horario y el minutero debe ser siempre mayor de 90 grados.\n5. Los números romanos señalados por las tres manecillas deben tener una cantidad distinta de dígitos cada uno.\n6. El segundero debe colocarse en el ángulo más pequeño de los dos que forman el horario y el minutero.\n7. El segundero no debe tener ninguna otra manecilla señalando los números adyacentes al suyo.\n\nSiguiendo las instrucciones en orden: ¿A qué hora puedo abrir ya el reloj?",
+        "firstSupportText": "Que te digan que hay que seguir las instrucciones en orden no es casualidad. Las cinco primeras indicaciones te ayudarán a colocar el horario y el minutero, mientras que las dos últimas sirven para el segundero. Por eso, intenta colocar primero las dos primeras manecillas y, después, llegará el turno de la última.",
+        "secondSupportText": "Si lo piensas detenidamente, no existe en un reloj ningún número que tenga a la vez los dígitos romanos X y V. Con esta información, ya sabes que el horario y el minutero deben estar, cada uno, en un número que contenga una X o una V. Si además tenemos en cuenta la segunda instrucción, que indica que el minutero debe estar por debajo del horario, solo quedan unos pocos números posibles para colocar el horario y otros pocos para situar el minutero.",
+        "thirdSupportText": "Otra cosa importante a tener en cuenta es que, para que una suma sea impar, uno de los sumandos debe ser par y el otro impar. A partir de aquí, probando todas las combinaciones posibles según la tercera y cuarta condición, solo hay una que cumple lo que dice la quinta. Con el horario y el minutero colocados, ya solo queda buscarle sitio al segundero."
     },
     "puzzle3": 
     {

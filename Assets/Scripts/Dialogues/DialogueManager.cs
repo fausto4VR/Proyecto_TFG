@@ -19,7 +19,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject dialogueMark;
 
     [Header("Character Data Section")]
-    [SerializeField] private Sprite characterProfileImage;  
+    [SerializeField] private Sprite characterProfileImage;
+    [SerializeField] private Color dialogueNameColor = new Color(0f, 0f, 0f, 1f); // Esto es negro
 
     [Header("Variable Section")]
     [SerializeField] private float typingTime = 0.05f;
@@ -36,6 +37,7 @@ public class DialogueManager : MonoBehaviour
     private string[] dialogueLines;
     private string[] characterNameLines;
     private int lineIndex;
+    private string objectNameInRange;
     private bool isPlayerInRange;
     private bool isTypingDialogueText;
 
@@ -57,27 +59,31 @@ public class DialogueManager : MonoBehaviour
     }
     
     // Método para comenzar la conversación. Se llama desde otros scripts
-    public void StartConversation(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames)
+    public void StartConversation(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames,
+        System.Action<bool> onComplete = null)
     {
-        StartCoroutine(StartConversationDelay(conversationType, newDialogueLines, newCharacterNames));
+        StartCoroutine(StartConversationDelay(conversationType, newDialogueLines, newCharacterNames, onComplete));
     }
 
     // Corrutina que espera un frame para asegurarse que se ha actualizado correctamente el estado del jugador
-    private IEnumerator StartConversationDelay(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames)
+    private IEnumerator StartConversationDelay(ConversationType conversationType, string[] newDialogueLines, string[] newCharacterNames,
+        System.Action<bool> onComplete)
     {
         yield return null;
 
-        if(GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is TalkingState)
+        if (GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is TalkingState)
         {
             conversationPhase = ConversationPhase.Started;
             currentConversationType = conversationType;
             dialogueLines = newDialogueLines;
             characterNameLines = newCharacterNames;
             StartDialogue();
+            onComplete?.Invoke(true);
         }
         else
         {
-            Debug.LogError("No se ha iniciado correctamente la conversación.");
+            Debug.LogWarning("No se ha iniciado correctamente la conversación.");
+            onComplete?.Invoke(false);
         }
     }
 
@@ -97,8 +103,11 @@ public class DialogueManager : MonoBehaviour
         GameLogicManager.Instance.UIManager.DialogueConversationSection.SetActive(true);
 
         // Si activa el panel de diálogo si no es un diálogo del tipo de multiples opciones  
-        if(currentConversationType != ConversationType.MultipleChoiceDialogue) 
-        GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(true);
+        if (currentConversationType != ConversationType.MultipleChoiceDialogue)
+        { 
+            GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(true);            
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(true);
+        }
 
         lineIndex = 0;
         ShowProfileImage();
@@ -126,6 +135,7 @@ public class DialogueManager : MonoBehaviour
     {
         GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(false);
         GameLogicManager.Instance.UIManager.DialogueConversationSection.SetActive(false);
+        GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(false);
 
         // Si es un diálogo del tipo de fase de la historia o del tipo de multiples opciones se activa el aviso de diálogo
         if(currentConversationType == ConversationType.StoryPhaseDialogueConversation 
@@ -139,13 +149,13 @@ public class DialogueManager : MonoBehaviour
         GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectionComplete = false;
 
         // Si es un diálogo del tipo fase de la historia se comprueba si se hace falta avanzar la historia
-        if(currentConversationType == ConversationType.StoryPhaseDialogueConversation || 
+        if (currentConversationType == ConversationType.StoryPhaseDialogueConversation ||
             currentConversationType == ConversationType.StoryPhaseDialogueTrigger)
         {
             // Se hace avanzar la historia cuando sea necesario
-            if(storyPhaseDialogue.IsAdvanceStory)
+            if (storyPhaseDialogue.IsAdvanceStory)
             {
-                if(GetComponent<AdvanceStoryManager>() != null)
+                if (GetComponent<AdvanceStoryManager>() != null)
                 {
                     GetComponent<AdvanceStoryManager>().AdvanceStoryState();
                 }
@@ -153,19 +163,19 @@ public class DialogueManager : MonoBehaviour
                 {
                     Debug.LogError("No existe el componente necesario para avanzar la historia.");
                 }
-                
+
                 storyPhaseDialogue.IsAdvanceStory = false;
             }
 
             PlayerEvents.FinishTalkingWithoutClue();
         }
         // Si es un diálogo del tipo inspección se comprueba si se hace falta avanzar la historia o mostrar la pista
-        else if(currentConversationType == ConversationType.InspectDialogue)
+        else if (currentConversationType == ConversationType.InspectDialogue)
         {
             // Se hace avanzar la historia cuando sea necesario
-            if(inspectDialogue.IsAdvanceStory)
+            if (inspectDialogue.IsAdvanceStory)
             {
-                if(GetComponent<AdvanceStoryManager>() != null)
+                if (GetComponent<AdvanceStoryManager>() != null)
                 {
                     GetComponent<AdvanceStoryManager>().AdvanceStoryState();
                 }
@@ -173,14 +183,14 @@ public class DialogueManager : MonoBehaviour
                 {
                     Debug.LogError("No existe el componente necesario para avanzar la historia.");
                 }
-                
+
                 inspectDialogue.IsAdvanceStory = false;
             }
 
             // Se muestra la pista cuando sea necesario
-            if(inspectDialogue.IsNecesaryShowClue)
+            if (inspectDialogue.IsNecesaryShowClue)
             {
-                if(GetComponent<CluesDisplayManager>() != null)
+                if (GetComponent<CluesDisplayManager>() != null)
                 {
                     PlayerEvents.FinishTalkingWithClue();
                     GetComponent<CluesDisplayManager>().ShowDiscoveredClue();
@@ -197,6 +207,11 @@ public class DialogueManager : MonoBehaviour
                 PlayerEvents.FinishTalkingWithoutClue();
             }
         }
+        // Si es un diálogo del tipo final del juego se muestran los créditos
+        else if (currentConversationType == ConversationType.TheEndDialogue)
+        { 
+            theEndDialogue.FinishTheEndDialogue();
+        }
         else
         {
             PlayerEvents.FinishTalkingWithoutClue();
@@ -208,11 +223,12 @@ public class DialogueManager : MonoBehaviour
     // Método para que otros scripts puedan acabar la conversación cuando sea necesario
     public void EndConversation(ConversationType endConversationType)
     {
-        typingDialogueAudioSource.Stop();        
+        typingDialogueAudioSource.Stop();
 
         currentConversationType = endConversationType;
-        
+
         StopAllCoroutines();
+        markCoroutine = StartCoroutine(CheckPlayerStateForMark());
 
         EndDialogue();
     }
@@ -231,17 +247,21 @@ public class DialogueManager : MonoBehaviour
         }        
     }
 
-    // Método para mostrar el nombre del personaje que está hablando
+    // Método para mostrar el nombre (con su respectivo color) del personaje que está hablando
     private void ShowCharacterName()
     {
-        if(characterNameLines[lineIndex] == "Player")
+        if (characterNameLines[lineIndex] == "Player")
         {
-            GameLogicManager.Instance.UIManager.DialogueConversationName.text = 
+            GameLogicManager.Instance.UIManager.DialogueConversationName.text =
                 GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerName;
+
+            GameLogicManager.Instance.UIManager.DialogueConversationName.color = 
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerNameColor;
         }
         else
         {
             GameLogicManager.Instance.UIManager.DialogueConversationName.text = characterNameLines[lineIndex];
+            GameLogicManager.Instance.UIManager.DialogueConversationName.color = dialogueNameColor;
         }        
     }
     
@@ -261,7 +281,7 @@ public class DialogueManager : MonoBehaviour
 
             GameLogicManager.Instance.UIManager.DialogueConversationText.text += ch;
             
-            if(charIndex % charsToPlaySound == 0) typingDialogueAudioSource.Play();
+            if (charIndex % charsToPlaySound == 0) typingDialogueAudioSource.Play();
             charIndex++;
 
             yield return new WaitForSeconds(typingTime);
@@ -309,6 +329,12 @@ public class DialogueManager : MonoBehaviour
         get { return isPlayerInRange; }
     }
 
+    // Método para obtener el nombre del objeto a rango para los scripts que necesitan poder iniciar una conversación al hacer clic
+    public string ObjectNameInRange
+    {
+        get { return objectNameInRange; }
+    }
+
     // Métodos para obtener y cambiar la fase en la que se encuentra la conversación
     public ConversationPhase CurrentConversationPhase
     {
@@ -325,17 +351,27 @@ public class DialogueManager : MonoBehaviour
     // Corrutina para activar o desactivar el aviso de diálogo en función de si se está inspeccionando o no 
     private IEnumerator CheckPlayerStateForMark()
     {
+        var previousPlayerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
+
         while (true)
         {
-            var playerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
+            var currentPlayerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
 
-            if (playerState == PlayerStatePhase.Inspection)
+            if (currentPlayerState == PlayerStatePhase.Inspection)
             {
-                if (dialogueMark.activeSelf) dialogueMark.SetActive(false);
+                if (dialogueMark.activeSelf)
+                {
+                    dialogueMark.SetActive(false);
+                    previousPlayerState = PlayerStatePhase.Inspection;
+                }
             }
-            else if (playerState == PlayerStatePhase.Idle)
+            else if (currentPlayerState == PlayerStatePhase.Idle && previousPlayerState == PlayerStatePhase.Inspection)
             {
-                if (!dialogueMark.activeSelf) dialogueMark.SetActive(true);
+                if (!dialogueMark.activeSelf)
+                { 
+                    dialogueMark.SetActive(true);
+                    previousPlayerState = PlayerStatePhase.Idle;
+                } 
             }
 
             yield return null;
@@ -355,6 +391,10 @@ public class DialogueManager : MonoBehaviour
             // Se avisa al jugador que hay un objeto a inspeccionar en rango
             if(inspectDialogue != null) 
             GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = true;
+
+            // Se actualiza el nombre del objeto a rango para los scripts que necesitan poder iniciar una conversación al hacer clic
+            if(multipleChoiceDialogue != null || theEndDialogue != null || storyPhaseDialogue != null) 
+            objectNameInRange = gameObject.name;
 
             // Se llama al método de los scripts auxiliares para que permanezcan atentos a si se inicia la conversación
             if (dialogueLogic != null) dialogueLogic.WaitForDialogueInput();
@@ -379,18 +419,17 @@ public class DialogueManager : MonoBehaviour
             if(inspectDialogue != null)
             GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().IsInspectObjectInRange = false;
 
+            // Se borra el nombre del objeto a rango para los scripts que necesitan poder iniciar una conversación al hacer clic
+            if(multipleChoiceDialogue != null || theEndDialogue != null || storyPhaseDialogue != null) 
+            objectNameInRange = null;
+
             // Se llama al método de los scripts auxiliares para que se deje de esperar a iniciar la conversación
             if (dialogueLogic != null) dialogueLogic.ExitOfDialogueRange();
 
-            StopAllCoroutines();
-
             conversationPhase = ConversationPhase.None;
 
-            if (markCoroutine != null)
-            {
-                StopCoroutine(markCoroutine);
-                markCoroutine = null;
-            }
+            StopAllCoroutines();
+            if (markCoroutine != null) markCoroutine = null;
 
             isPlayerInRange = false;
         }

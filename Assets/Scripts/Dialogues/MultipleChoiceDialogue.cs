@@ -16,6 +16,7 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
     private Coroutine skipCoroutine;
     private Coroutine restartCoroutine;
     private bool isThirdOptionUnlock;
+    private bool startDialogueFromClick;
     
     // REVISAR AUDIO
     private AudioSource buttonsAudioSource;
@@ -33,6 +34,8 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
     {
         if (skipCoroutine != null) StopCoroutine(skipCoroutine);        
         if (restartCoroutine != null) StopCoroutine(restartCoroutine);
+        
+        GetComponent<DialogueClickDetector>().StartDetection();
 
         waitCoroutine = StartCoroutine(WaitUntilPlayerStartDialogue());
     }
@@ -40,8 +43,11 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
     // Corrutina para esperar a que el jugador quiera comenzar el diálogo
     private IEnumerator WaitUntilPlayerStartDialogue()
     {
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        yield return new WaitUntil(() => (Input.GetKeyDown(KeyCode.E) || startDialogueFromClick)
+            && GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is IdleState);
         yield return null;
+
+        startDialogueFromClick = false;
 
         PlayerEvents.StartTalking();
 
@@ -59,6 +65,7 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
 
         GameLogicManager.Instance.UIManager.DialoguePanel.SetActive(true);
         GameLogicManager.Instance.UIManager.DialogueChoiceSection.SetActive(true);
+        GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(true);
 
         skipCoroutine = StartCoroutine(WaitToSkipDialogue());
 
@@ -82,6 +89,17 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
 
             yield return null;
         }        
+    }
+
+    // Método para iniciar la conversación al hacer clic con el cursor sobre el personaje
+    public void TryStartDialogueOnClick()
+    {
+        if (!GetComponent<DialogueManager>().IsPlayerInRange
+            || GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState is not IdleState
+            || GetComponent<DialogueManager>().CurrentConversationPhase != ConversationPhase.None)
+        return;
+
+        startDialogueFromClick = true;
     }
 
     // Método para gestionar la lógica de los botones y que al pulsarlos hagan lo mismo que al seleccionar un número
@@ -153,8 +171,11 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
                 .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.firstDialogue
                 .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
             
-            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, 
-                dialogueLines, characterNameLines);
+            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, dialogueLines, characterNameLines,
+                success =>
+                {
+                    if (!success) WaitForDialogueInput();
+                });
             
             restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
         }
@@ -168,8 +189,11 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
                 .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.secondDialogue
                 .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
             
-            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, 
-                dialogueLines, characterNameLines);
+            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, dialogueLines, characterNameLines,
+                success =>
+                {
+                    if (!success) WaitForDialogueInput();
+                });
             
             restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
         }
@@ -183,8 +207,11 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
                 .FirstOrDefault(conversation => conversation.objectName == gameObject.name)?.thirdDialogue
                 .Select(dialogue => dialogue.speaker).ToArray() ?? new string[0];
             
-            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, 
-                dialogueLines, characterNameLines);
+            GetComponent<DialogueManager>().StartConversation(ConversationType.MultipleChoiceDialogue, dialogueLines, characterNameLines,
+                success =>
+                {
+                    if (!success) WaitForDialogueInput();
+                });
             
             restartCoroutine = StartCoroutine(WaitUntilPlayerRestartDialogue());
         }
@@ -227,25 +254,16 @@ public class MultipleChoiceDialogue: MonoBehaviour, IDialogueLogic
    // Método que se llama cuando se sale del rango de diálogo de un objeto
    public void ExitOfDialogueRange()
     {
-        if (waitCoroutine != null)
-        {
-            StopCoroutine(waitCoroutine);
-            waitCoroutine = null;
-        }
-
-        if (skipCoroutine != null)
-        {
-            StopCoroutine(skipCoroutine);
-            skipCoroutine = null;
-        }
+        StopAllCoroutines();
         
-        if (restartCoroutine != null)
-        {
-            StopCoroutine(restartCoroutine);
-            restartCoroutine = null;
-        }
+        if (waitCoroutine != null) waitCoroutine = null;
+        if (skipCoroutine != null) skipCoroutine = null;        
+        if (restartCoroutine != null) restartCoroutine = null;
         
         isThirdOptionUnlock = false;
+        
+        GetComponent<DialogueClickDetector>().StopDetection();
+
         GameLogicManager.Instance.UIManager.ThirdOptionKeyInChoice.SetActive(false);
         GameLogicManager.Instance.UIManager.ThirdOptionButtonInChoice.SetActive(false);
     }

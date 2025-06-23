@@ -34,11 +34,11 @@ public class Puzzle1Logic : MonoBehaviour, IPuzzleLogic
         solutionString = PuzzleUtils.RemoveNonAlphanumeric(solutionString);        
         solutionString = solutionString.ToUpper();
 
-        if(solutionString == "TIEMPO")
+        if(solutionString == "SOPLAR")
         {
             GetComponent<PuzzleUIManager>().ShowSuccessPanel();
         }
-        else if (!(solutionString == "TIEMPO" || solutionString == ""))
+        else if (!(solutionString == "SOPLAR" || solutionString == ""))
         {
             GetComponent<PuzzleUIManager>().ShowFailurePanel();
         }

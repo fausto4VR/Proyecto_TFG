@@ -63,7 +63,8 @@ public class MapManager : MonoBehaviour
             PlayerEvents.StartShowingInformation();
 
             ShowThirdOption();
-            GameLogicManager.Instance.UIManager.MapPanel.SetActive(true);
+            GameLogicManager.Instance.UIManager.MapPanel.SetActive(true);            
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(true);
 
             closeCoroutine = StartCoroutine(WaitUntilPlayerClosePanel());
             selectCoroutine = StartCoroutine(WaitUntilPlayerSelectOption());
@@ -126,51 +127,79 @@ public class MapManager : MonoBehaviour
         selectSoundCoroutine = StartCoroutine(WaitForSoundAndSendScene(sceneIndex));
     }
 
-    // Corrutina para esperar que suene el sonido del botón y se vaya a la escena seleccionada
+    // Corrutina para esperar que suene el sonido del botón (que tarda menos que la transición) y se vaya a la escena seleccionada
     private IEnumerator WaitForSoundAndSendScene(int sceneIndex)
     {
-        if (sceneIndex == 0)
-        {
-            yield return new WaitForSeconds(buttonsAudioSource.clip.length);
-            
-            GameLogicManager.Instance.TemporalPlayerState = 
-                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
-            ClosePanel();
-            yield return null;
+        string currentSceneName = SceneManager.GetActiveScene().name;
 
+        if (sceneIndex == 0 && currentSceneName != "HomeScene")
+        {
+            GameStateManager.Instance.TransitionManager.StartOutTransition(TransitionType.Fade);
+
+            // yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+            yield return new WaitForSeconds(GameStateManager.Instance.TransitionDuration);
+
+            GameLogicManager.Instance.TemporalPlayerState =
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
+
+            ClosePanel();
+
+            GameStateManager.Instance.IsMapTravel = true;
             SceneManager.LoadScene("HomeScene");
         }
-        else if (sceneIndex == 1)
-        {           
-            yield return new WaitForSeconds(buttonsAudioSource.clip.length);
-            
-            GameLogicManager.Instance.TemporalPlayerState = 
-                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
-            ClosePanel();
-            yield return null;
+        else if (sceneIndex == 1 && currentSceneName != "MansionScene")
+        {
+            GameStateManager.Instance.TransitionManager.StartOutTransition(TransitionType.Fade);
 
+            // yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+            yield return new WaitForSeconds(GameStateManager.Instance.TransitionDuration);
+
+            GameLogicManager.Instance.TemporalPlayerState =
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
+
+            ClosePanel();
+
+            GameStateManager.Instance.IsMapTravel = true;
             SceneManager.LoadScene("MansionScene");
         }
-        else if (sceneIndex == 2 && isThirdOptionUnlock)
+        else if (sceneIndex == 2 && currentSceneName != "ParkScene" && isThirdOptionUnlock)
+        {
+            GameStateManager.Instance.TransitionManager.StartOutTransition(TransitionType.Fade);
+
+            // yield return new WaitForSeconds(buttonsAudioSource.clip.length);
+            yield return new WaitForSeconds(GameStateManager.Instance.TransitionDuration);
+
+            GameLogicManager.Instance.TemporalPlayerState =
+                GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
+
+            ClosePanel();
+
+            GameStateManager.Instance.IsMapTravel = true;
+            SceneManager.LoadScene("ParkScene");
+        }
+        else
         {
             yield return new WaitForSeconds(buttonsAudioSource.clip.length);
-
-            GameLogicManager.Instance.TemporalPlayerState = 
+            
+            GameLogicManager.Instance.TemporalPlayerState =
                 GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().DefaultStateInitialized;
+
             ClosePanel();
+
             yield return null;
 
-            SceneManager.LoadScene("ParkScene");
-        }    
+            waitCoroutine = StartCoroutine(WaitUntilPlayerOpenMap());
+        }   
     }
 
     // Método para cerrar el panel del mapa
     private void ClosePanel()
     {        
-        GameLogicManager.Instance.UIManager.MapPanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.MapPanel.SetActive(false);        
+            GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(false);
 
         if (isThirdOptionUnlock)
-        {            
+        {
             GameLogicManager.Instance.UIManager.ThirdOptionKeyInMap.SetActive(false);
             GameLogicManager.Instance.UIManager.ThirdOptionPanelInMap.SetActive(false);
         }
@@ -183,17 +212,36 @@ public class MapManager : MonoBehaviour
     // Corrutina para activar o desactivar la marca del mapa en función de si se está inspeccionando o no 
     private IEnumerator CheckPlayerStateForMark()
     {
+        var previousPlayerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
+
         while (true)
         {
-            var playerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
+            var currentPlayerState = GameLogicManager.Instance.Player.GetComponent<PlayerLogicManager>().PlayerState.StateName;
 
-            if (playerState == PlayerStatePhase.Inspection)
+            if (currentPlayerState == PlayerStatePhase.Inspection)
             {
-                if (mapMark.activeSelf) mapMark.SetActive(false);
+                if (mapMark.activeSelf)
+                {
+                    mapMark.SetActive(false);
+                    previousPlayerState = PlayerStatePhase.Inspection;
+                }
             }
-            else if (playerState == PlayerStatePhase.Idle)
+            else if (currentPlayerState == PlayerStatePhase.Talking)
             {
-                if (!mapMark.activeSelf) mapMark.SetActive(true);
+                if (mapMark.activeSelf)
+                {
+                    mapMark.SetActive(false);
+                    previousPlayerState = PlayerStatePhase.Talking;
+                }
+            }
+            else if (currentPlayerState == PlayerStatePhase.Idle
+                && (previousPlayerState == PlayerStatePhase.Inspection || previousPlayerState == PlayerStatePhase.Talking))
+            {
+                if (!mapMark.activeSelf)
+                {
+                    mapMark.SetActive(true);
+                    previousPlayerState = PlayerStatePhase.Idle;
+                }
             }
 
             yield return null;
