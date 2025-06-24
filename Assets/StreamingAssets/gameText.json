@@ -198,10 +198,10 @@
     },
     "puzzle4": 
     {
-        "puzzleStatementText": "He metido la llave en la cerradura, pero aún así sigue sin abrirse el cajón del escritorio. Buscando cómo solucionar esto me he fijado que hay tres filas de símbolos encima del cierre, formando cada una un patrón concreto. Además, justo al lado de cada sucesión de cuadros hay uno vacío, que parece que funciona como panel donde se puede poner algo.\n\nDespués de darle un par de vueltas, tengo claro que para poder mirar lo que hay dentro del cajón, tengo que encontrar el siguiente símbolo en cada una de las tres sucesiones.\n\n¿Cómo sigue cada patrón?",
+        "puzzleStatementText": "He metido la llave en la cerradura, pero aún así sigue sin abrirse el cajón del escritorio. Buscando cómo solucionarlo me he fijado que hay tres filas de símbolos encima del cierre, formando cada una un patrón concreto. Además, justo al lado de cada sucesión de cuadros hay uno vacío, que parece que funciona como un panel donde se pueden pulsar varios botones para seguir con el patrón.\n\nDespués de darle un par de vueltas, tengo claro que para poder mirar lo que hay dentro del cajón, tengo que encontrar el siguiente símbolo en cada una de las tres sucesiones. Al observarlos con más atención, noto que mientras los dos primeros patrones parecen tener una lógica propia, el tercero parece depender de los otros dos.\n\n¿Cómo sigue cada patrón?",
         "firstSupportText": "Para descifrar el patrón de la primera secuencia simplemente fíjate en cómo va moviendo la “T” de un cuadro al siguiente.",
         "secondSupportText": "Parece que el segundo patrón tiene que ver más que nada con la simetría. Por lo tanto, para poder resolverlo, simplemente preguntaté qué pasa cuándo se introduce un nuevo cuadrado.",
-        "thirdSupportText": "La tercera sucesión de símbolos es un poco diferente a las anteriores. Mientras que en las otras había que mirar solo el cuadro previo de la misma fila, aquí hay que tener una visión más global. Simplemente digamos que es el único patrón en el que hay que mirar también a los demás. "
+        "thirdSupportText": "Como se dice en el enunciado, la tercera sucesión de símbolos es un poco diferente a las anteriores. Mientras que en las otras había que fijarse en cómo cambia cada cuadro respecto al anterior dentro de la misma fila, aquí hay que adoptar una visión más global. Si no lo terminas de ver, observa en cada cuadro del tercer patrón los dos que están inmediatamente por encima. ¿Qué ocurre si te fijas en qué puntos coinciden y en cuáles no?"
     },
     "puzzle5": 
     {
@@ -223,12 +223,5 @@
         "firstSupportText": "Cuando se indica que el as de picas debe ir dos posiciones a la derecha del as de diamantes, esto puede parecer simple, pero en realidad te proporciona más información de la que parece. Hay solo tres posiciones posibles donde puedes colocar el as de diamantes para que esto se cumpla. Además, sabes que el as de picas aparecerá necesariamente después de este. Con esta información, ya deberías tener una idea más clara de dónde pueden ir cada uno de los dos ases.",
         "secondSupportText": "Recuerda que el as de corazones siempre debe estar a la izquierda del as de diamantes, que es el otro as de su mismo color. Considerando la primera pista, esto restringe las opciones y deja solo dos posiciones posibles para el as de corazones y otras dos para el as de diamantes. Recuerda también seguir el orden de los ases: primero el as de corazones, luego el as de diamantes y, finalmente, el as de picas.",
         "thirdSupportText": "Con todo lo que sabes hasta ahora por las pistas, también debes considerar que ni el Joker ni el as de tréboles pueden estar al inicio o al final de la secuencia. Por lo tanto, ya deberías saber cuál es la primera y la última carta entre las otras tres que quedan. Sumando la última indicación que te da el problema, solo existe una posibilidad que cumpla con todos los criterios."
-    },
-    "puzzle8": 
-    {
-        "puzzleStatementText": "",
-        "firstSupportText": "",
-        "secondSupportText": "",
-        "thirdSupportText": ""
     }
 }
