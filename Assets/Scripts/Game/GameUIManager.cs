@@ -117,6 +117,14 @@ public class GameUIManager : MonoBehaviour
     private TMP_Text suspectText6;
     private TMP_Text suspectText7;
     private TMP_Text suspectText8;
+    private GameObject guiltyCircle1;
+    private GameObject guiltyCircle2;
+    private GameObject guiltyCircle3;
+    private GameObject guiltyCircle4;
+    private GameObject guiltyCircle5;
+    private GameObject guiltyCircle6;
+    private GameObject guiltyCircle7;
+    private GameObject guiltyCircle8;
 
     private GameObject soundtrack;
 
@@ -256,6 +264,15 @@ public class GameUIManager : MonoBehaviour
         suspectText6 = suspectsPanelInPause.transform.Find("Suspect 6").transform.Find("Suspect Text").GetComponent<TMP_Text>();
         suspectText7 = suspectsPanelInPause.transform.Find("Suspect 7").transform.Find("Suspect Text").GetComponent<TMP_Text>();
         suspectText8 = suspectsPanelInPause.transform.Find("Suspect 8").transform.Find("Suspect Text").GetComponent<TMP_Text>();
+
+        guiltyCircle1 = suspectsPanelInPause.transform.Find("Suspect 1").transform.Find("Guilty Red Circle").gameObject;
+        guiltyCircle2 = suspectsPanelInPause.transform.Find("Suspect 2").transform.Find("Guilty Red Circle").gameObject;
+        guiltyCircle3 = suspectsPanelInPause.transform.Find("Suspect 3").transform.Find("Guilty Red Circle").gameObject;
+        guiltyCircle4 = suspectsPanelInPause.transform.Find("Suspect 4").transform.Find("Guilty Red Circle").gameObject;
+        guiltyCircle5 = suspectsPanelInPause.transform.Find("Suspect 5").transform.Find("Guilty Red Circle").gameObject;
+        guiltyCircle6 = suspectsPanelInPause.transform.Find("Suspect 6").transform.Find("Guilty Red Circle").gameObject;
+        guiltyCircle7 = suspectsPanelInPause.transform.Find("Suspect 7").transform.Find("Guilty Red Circle").gameObject;
+        guiltyCircle8 = suspectsPanelInPause.transform.Find("Suspect 8").transform.Find("Guilty Red Circle").gameObject;
     }
 
     // Método para obtener todos los elementos del sonido necesarios
@@ -753,6 +770,75 @@ public class GameUIManager : MonoBehaviour
             };
 
             return suspectSpritesList; 
+        }
+    }
+
+    // Método para obtener el objeto que refleja el círculo que tiene el culpable 1
+    public GameObject GuiltyCircle1 
+    { 
+        get { return guiltyCircle1; } 
+    }
+
+    // Método para obtener el objeto que refleja el círculo que tiene el culpable 2
+    public GameObject GuiltyCircle2 
+    { 
+        get { return guiltyCircle2; } 
+    }
+
+    // Método para obtener el objeto que refleja el círculo que tiene el culpable 3
+    public GameObject GuiltyCircle3 
+    { 
+        get { return guiltyCircle3; } 
+    }
+
+    // Método para obtener el objeto que refleja el círculo que tiene el culpable 4
+    public GameObject GuiltyCircle4 
+    { 
+        get { return guiltyCircle4; } 
+    }
+
+    // Método para obtener el objeto que refleja el círculo que tiene el culpable 5
+    public GameObject GuiltyCircle5 
+    { 
+        get { return guiltyCircle5; } 
+    }
+
+    // Método para obtener el objeto que refleja el círculo que tiene el culpable 6
+    public GameObject GuiltyCircle6 
+    { 
+        get { return guiltyCircle6; } 
+    }
+
+    // Método para obtener el objeto que refleja el círculo que tiene el culpable 7
+    public GameObject GuiltyCircle7 
+    { 
+        get { return guiltyCircle7; } 
+    }
+
+    // Método para obtener el objeto que refleja el círculo que tiene el culpable 8
+    public GameObject GuiltyCircle8 
+    { 
+        get { return guiltyCircle8; } 
+    }
+
+    // Método para obtener una lista de los objetos de los círculos que tienen los culpables
+    public List<GameObject> GuiltyCircleList
+    {
+        get 
+        {
+            List<GameObject> guiltyCircleList = new List<GameObject>
+            {
+                GuiltyCircle1,
+                GuiltyCircle2,
+                GuiltyCircle3,
+                GuiltyCircle4,
+                GuiltyCircle5,
+                GuiltyCircle6,
+                GuiltyCircle7,
+                GuiltyCircle8
+            };
+
+            return guiltyCircleList; 
         }
     }
 

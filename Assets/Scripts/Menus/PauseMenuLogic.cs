@@ -200,7 +200,8 @@ public class PauseMenuLogic : MonoBehaviour
     // Método para desbloquear las pistas que se pueden mostrar
     private void UnlockClues()
     {
-        if (GameLogicManager.Instance.KnownClues[0])
+        if (GameLogicManager.Instance.KnownClues[0]
+            || GameLogicManager.Instance.CurrentStoryPhase.ComparePhase("Ending.Post End") == SubphaseTemporaryOrder.IsCurrent)
         {
             GameLogicManager.Instance.UIManager.FirstClueText.text = GameLogicManager.Instance.Clues[0];
 
@@ -219,7 +220,8 @@ public class PauseMenuLogic : MonoBehaviour
             GameLogicManager.Instance.UIManager.FirstClueImage.sprite = GameLogicManager.Instance.UIManager.DefaultSprite;
         }
 
-        if (GameLogicManager.Instance.KnownClues[1])
+        if (GameLogicManager.Instance.KnownClues[1]
+            || GameLogicManager.Instance.CurrentStoryPhase.ComparePhase("Ending.Post End") == SubphaseTemporaryOrder.IsCurrent)
         {
             GameLogicManager.Instance.UIManager.SecondClueText.text = GameLogicManager.Instance.Clues[1];
 
@@ -238,7 +240,8 @@ public class PauseMenuLogic : MonoBehaviour
             GameLogicManager.Instance.UIManager.SecondClueImage.sprite = GameLogicManager.Instance.UIManager.DefaultSprite;
         }
 
-        if (GameLogicManager.Instance.KnownClues[2])
+        if (GameLogicManager.Instance.KnownClues[2]
+            || GameLogicManager.Instance.CurrentStoryPhase.ComparePhase("Ending.Post End") == SubphaseTemporaryOrder.IsCurrent)
         {
             GameLogicManager.Instance.UIManager.ThirdClueText.text = GameLogicManager.Instance.Clues[2];
 
@@ -286,6 +289,12 @@ public class PauseMenuLogic : MonoBehaviour
             {
                 suspectTexts[i].text = GameLogicManager.Instance.GuiltyNames[i];
                 suspectImages[i].sprite = suspectSprites[i];
+
+                if (GameLogicManager.Instance.GuiltyNames[i] == GameLogicManager.Instance.Guilty 
+                    && GameLogicManager.Instance.CurrentStoryPhase.ComparePhase("Ending.Post End") == SubphaseTemporaryOrder.IsCurrent)
+                {
+                    GameLogicManager.Instance.UIManager.GuiltyCircleList[i].SetActive(true);
+                }
             }
             else
             {
