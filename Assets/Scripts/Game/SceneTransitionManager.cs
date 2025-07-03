@@ -110,14 +110,26 @@ public class SceneTransitionManager : MonoBehaviour
 
         outTransitionPanel?.SetActive(false);
 
-        if (GameStateManager.Instance.IsNewGame || GameStateManager.Instance.IsLoadGame || GameStateManager.Instance.IsMapTravel)
+        if (GameStateManager.Instance.IsNewGame)
         {
-            PlayerEvents.FinishShowingInformation();
-
             GameStateManager.Instance.IsNewGame = false;
-            GameStateManager.Instance.IsLoadGame = false;
-            GameStateManager.Instance.IsMapTravel = false;
+        }
 
+        if (GameStateManager.Instance.IsMapTravel)
+        {
+            GameStateManager.Instance.IsMapTravel = false;
+            PlayerEvents.FinishShowingInformation();
+        }
+
+        if (GameStateManager.Instance.IsLoadGame
+            && (!GameLogicManager.Instance.KnownTutorials.TryGetValue("Tutorial Trigger - Tutorial", out bool isKnown) || !isKnown))
+        {
+            GameStateManager.Instance.IsLoadGame = false;
+        }
+        else if (GameStateManager.Instance.IsLoadGame)
+        { 
+            GameStateManager.Instance.IsLoadGame = false;
+            PlayerEvents.FinishShowingInformation();
         }
     }
 

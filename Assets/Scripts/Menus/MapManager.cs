@@ -81,7 +81,8 @@ public class MapManager : MonoBehaviour
     {
         int indexCurrentClue = (int) clueToUnlockThirdOption;
 
-        if(GameLogicManager.Instance.KnownClues[indexCurrentClue])
+        if(GameLogicManager.Instance.KnownClues[indexCurrentClue] 
+            || GameLogicManager.Instance.CurrentStoryPhase.ComparePhase("Ending.Post End") == SubphaseTemporaryOrder.IsCurrent)
         {
             isThirdOptionUnlock = true;
             GameLogicManager.Instance.UIManager.ThirdOptionKeyInMap.SetActive(true);

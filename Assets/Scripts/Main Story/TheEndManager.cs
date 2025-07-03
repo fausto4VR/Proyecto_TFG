@@ -257,6 +257,10 @@ public class TheEndManager : MonoBehaviour
             GameLogicManager.Instance.UIManager.BadEndingFailSuspectImage.sprite =
                 suspectSprites[GameLogicManager.Instance.GuiltyNames.FindIndex(name => name == selectedGuilty)];
 
+            bool[] knownSuspects = GameLogicManager.Instance.KnownSuspects;
+            knownSuspects[GameLogicManager.Instance.GuiltyNames.FindIndex(name => name == GameLogicManager.Instance.Guilty)] = true;
+            GameLogicManager.Instance.KnownSuspects = knownSuspects;
+
             GameLogicManager.Instance.UIManager.BadEndingPanel.SetActive(true);
 
             GameLogicManager.Instance.EndOpportunities = 0;
@@ -305,6 +309,11 @@ public class TheEndManager : MonoBehaviour
         GameLogicManager.Instance.UIManager.AnotherTryPanel.SetActive(false);
         GameLogicManager.Instance.UIManager.BadEndingPanel.SetActive(false);
         GameLogicManager.Instance.UIManager.GoodEndingPanel.SetActive(false);
+
+        
+        GameLogicManager.Instance.UIManager.TheEndSection.SetActive(false);
+        GameLogicManager.Instance.UIManager.TheEndPanel.SetActive(false);
+        GameLogicManager.Instance.UIManager.OutDetectionPanel.SetActive(false);
         
         PlayerEvents.FinishShowingInformation();
         

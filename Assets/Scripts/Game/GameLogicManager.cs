@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.Collections;
 
 public class GameLogicManager : MonoBehaviour
 {
@@ -98,6 +99,8 @@ public class GameLogicManager : MonoBehaviour
             else Debug.LogError("No se ha podido situar al jugador en la posición inicial al comenzar una nueva partida.");
 
             GameStateManager.Instance.IsGameStarted = true;
+
+            PlayerEvents.StartShowingInformation();
 
             GameStateManager.Instance.SaveData();
         }
